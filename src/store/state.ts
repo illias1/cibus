@@ -33,4 +33,8 @@ export const initialState: TStore = {
     open: false,
     message: "",
   },
+  menu: {
+    categories: [],
+    itemsByCategory: [],
+  },
 };

@@ -1,5 +1,6 @@
 import { TypedUseSelectorHook, useSelector } from "react-redux";
-import { TItems } from "../sampleData";
+import { GetMenuItemQuery } from "../API";
+import { TItems } from "../types";
 
 export type TStore = {
   userName: string;
@@ -11,6 +12,12 @@ export type TStore = {
     open: boolean;
     message: string;
   };
+  menu: TMenu;
+};
+
+type TMenu = {
+  categories: string[];
+  itemsByCategory: { category: string; items: GetMenuItemQuery["getMenuItem"][] }[];
 };
 
 export type TCartItem = {

@@ -8,12 +8,14 @@ import {
   setCartItemsStatus,
   setGroupOrderPlaced,
   setFeedback,
+  setupMenu,
 } from "./actions";
 import {
   LOCAL_STORAGE_USER_NAME,
   LOCAL_STORAGE_USER_ALREADY_VISITED,
   LOCAL_STORAGE_CART,
 } from "../utils/_constants";
+import { GetMenuItemQuery } from "../API";
 
 export const reducer = reducerWithInitialState(initialState)
   .case(setUserName, (state, userName) => {
@@ -58,4 +60,33 @@ export const reducer = reducerWithInitialState(initialState)
   .case(setFeedback, (state, feedback) => ({
     ...state,
     feedback,
-  }));
+  }))
+  .case(setupMenu, (state, payload) => {
+    const categories = [...(payload.map((item) => item!.i18n[0].category) as string[]), ""];
+    const categoriesWithoutRepetition = categories.reduce(
+      (prev, curr) => {
+        if (prev.indexOf(curr) === -1 && curr) {
+          return [...prev, curr];
+        }
+        return prev;
+      },
+      [categories[0]]
+    );
+    const itemsByCategory = categoriesWithoutRepetition.map((item) => ({
+      category: item,
+      items: [] as GetMenuItemQuery["getMenuItem"][],
+    }));
+    payload.forEach((menuItem) => {
+      const indexOfCategoryOfMenuItem = menuItem!.i18n[0].category
+        ? categoriesWithoutRepetition.indexOf(menuItem!.i18n[0].category)
+        : categoriesWithoutRepetition.length - 1;
+      itemsByCategory[indexOfCategoryOfMenuItem].items.push(menuItem);
+    });
+    return {
+      ...state,
+      menu: {
+        categories: categoriesWithoutRepetition,
+        itemsByCategory,
+      },
+    };
+  });

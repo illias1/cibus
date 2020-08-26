@@ -1,5 +1,6 @@
 import actionCreatorFactory from "typescript-fsa";
 import { TCartItem, TCartItemStatus } from "./types";
+import { GetMenuItemQuery } from "../API";
 
 const actionCreator = actionCreatorFactory();
 
@@ -14,3 +15,5 @@ export const setFeedback = actionCreator<{
   open: boolean;
   message: string;
 }>("setFeedback");
+
+export const setupMenu = actionCreator<GetMenuItemQuery["getMenuItem"][]>("setupMenu");
