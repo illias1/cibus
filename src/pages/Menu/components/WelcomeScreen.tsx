@@ -15,7 +15,7 @@ const Menu: React.FC<IMenuProps> = ({ ...props }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [name, setname] = React.useState<string>("");
-  let { tableNumber } = useParams<TParams>();
+  let { tableName } = useParams<TParams>();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,7 +43,7 @@ const Menu: React.FC<IMenuProps> = ({ ...props }) => {
           </Typography>
           <div className={classes.divider} />
           <Typography variant="subtitle1" className={classes.text}>
-            Table #{tableNumber}
+            Table #{tableName}
           </Typography>
         </Box>
       </Box>

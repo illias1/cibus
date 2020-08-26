@@ -1,3 +1,9 @@
+/*
+===================
+depreceated - only use MenuScreen
+===================
+*/
+
 import React, { Suspense, lazy } from "react";
 import { useTypedSelector } from "../../store/types";
 // fallbacks

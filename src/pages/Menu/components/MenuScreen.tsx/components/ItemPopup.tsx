@@ -1,30 +1,36 @@
 import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { Typography, TextField, Box, ButtonBase } from "@material-ui/core";
+import Modal from "@material-ui/core/Modal";
+import Typography from "@material-ui/core/Typography";
+import ButtonBase from "@material-ui/core/ButtonBase";
+import Box from "@material-ui/core/Box";
+import TextField from "@material-ui/core/TextField";
 import { useTranslation } from "react-i18next";
 import { StyledButton } from "../../../../../components/Button";
 import { useDispatch } from "react-redux";
 import { addToCart, setFeedback } from "../../../../../store/actions";
 import { useTypedSelector } from "../../../../../store/types";
 import image from "../../../../../assets/popup.png";
-import { TItems } from "../../../../../sampleData";
+import { TItems } from "../../../../../types";
 
 type IItemPopupProps = {
   items: TItems;
   handleClose: () => void;
+  open: boolean;
 };
 
 const ItemPopup: React.FC<IItemPopupProps> = ({
   items: { title, price, ingredients, allergy, notes, cal, img },
   handleClose,
+  open,
 }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const cartItems = useTypedSelector((state) => state.cart);
   const { t } = useTranslation();
   const [quantity, setquantity] = React.useState<number>(1);
-  return (
+  const body = (
     <Container className={classes.root}>
       <div
         style={{
@@ -99,6 +105,17 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
       </Container>
     </Container>
   );
+  return (
+    <Modal
+      className={classes.modal}
+      onClose={handleClose}
+      open={open}
+      aria-labelledby="item-details-popup"
+      aria-describedby="area-to-see-details-and-add-to-cart"
+    >
+      {body}
+    </Modal>
+  );
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -110,6 +127,9 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: theme.spacing(3),
       height: "80%",
       overflowY: "scroll",
+      "&:focus": {
+        outline: "none",
+      },
     },
     image: {
       width: "100%",
@@ -136,6 +156,10 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: "0 auto 1em",
       display: "block",
       width: "80%",
+    },
+    modal: {
+      display: "flex",
+      alignItems: "center",
     },
   })
 );

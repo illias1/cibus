@@ -9,7 +9,7 @@ import { CustomTheme } from "../../../../../utils/customCreateTheme";
 type TItem = {
   title: string;
   price: number;
-  ingredients?: string[];
+  ingredients?: string;
   img: string;
   onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined;
 };

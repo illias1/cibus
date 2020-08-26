@@ -4,7 +4,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { augmentedTheme, CustomTheme } from "./utils/customCreateTheme";
 import WithSnackbar from "./components/withSnackbar";
-const MenuPage = lazy(() => import("./pages/Menu"));
+const MenuScreen = lazy(() => import("./pages/Menu/components/MenuScreen.tsx/MenuScreen"));
 const HomePage = lazy(() => import("./pages/Home"));
 const CartPage = lazy(() => import("./pages/Cart"));
 
@@ -27,8 +27,8 @@ function App() {
           <CssBaseline />
           <Suspense fallback={<Loader />}>
             <Switch>
-              <Route exact path="/:restaurantId/:tableNumber" component={MenuPage} />
-              <Route path="/:restaurantId/:tableNumber/cart" component={CartPage} />
+              <Route exact path="/:restaurantNameUrl/:tableName" component={MenuScreen} />
+              <Route path="/:restaurantNameUrl/:tableName/cart" component={CartPage} />
               <Route exact path="/" component={HomePage} />
             </Switch>
           </Suspense>

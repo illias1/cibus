@@ -103,6 +103,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       padding: "10px 10px 10px 23px",
+      flexGrow: 1,
     },
     cover: {
       minWidth: 107,
