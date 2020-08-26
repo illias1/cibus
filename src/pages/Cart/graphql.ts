@@ -17,3 +17,23 @@ export const createOrder = /* GraphQL */ `
     }
   }
 `;
+
+export const getPropertyForCart = /* GraphQL */ `
+  query GetProperty($name: String!) {
+    getProperty(name: $name) {
+      name
+      NonUniqueName
+      open
+      tables
+    }
+  }
+`;
+
+export type GetPropertyQueryForCart = {
+  getProperty: {
+    name: string;
+    NonUniqueName: string;
+    open: boolean;
+    tables: Array<string | null>;
+  };
+};

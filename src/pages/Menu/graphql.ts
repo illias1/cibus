@@ -2,28 +2,30 @@ export const getProperty = /* GraphQL */ `
   query GetProperty($name: String!) {
     getProperty(name: $name) {
       name
+      NonUniqueName
+      open
       ownerId
       tables
       createdAt
       updatedAt
-      owner
       menu {
         items {
           id
           propertyName
-          price
-          status
-          allergyInfo
-          callories
-          image
-          createdAt
-          updatedAt
           i18n {
             description
             name
             language
             category
           }
+          price
+          status
+          allergyInfo
+          callories
+          image
+          notes
+          createdAt
+          updatedAt
           owner
         }
         nextToken

@@ -1,5 +1,5 @@
 import actionCreatorFactory from "typescript-fsa";
-import { TCartItem, TCartItemStatus } from "./types";
+import { TCartItem, TCartItemStatus, TStore } from "./types";
 import { GetMenuItemQuery } from "../API";
 
 const actionCreator = actionCreatorFactory();
@@ -11,9 +11,7 @@ export const removeItemFromCart = actionCreator<string>("removeItemFromCart");
 export const setCartItemsStatus = actionCreator<TCartItemStatus>("setCartItemsStatus");
 export const setGroupOrderPlaced = actionCreator<boolean>("setGroupOrderPlaced");
 
-export const setFeedback = actionCreator<{
-  open: boolean;
-  message: string;
-}>("setFeedback");
+export const setFeedback = actionCreator<TStore["feedback"]>("setFeedback");
 
 export const setupMenu = actionCreator<GetMenuItemQuery["getMenuItem"][]>("setupMenu");
+export const setValid = actionCreator<boolean>("setValid");

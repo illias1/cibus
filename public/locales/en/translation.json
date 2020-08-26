@@ -32,5 +32,7 @@
   "cart_order_not_placed_yet": "Order not placed yet",
   "cart_order_placed": "Order Placed",
   "cart_waiting_to_place_order_automatically": "Waiting for your friends to place order automatically",
-  "feedback_item_added_to_cart": "Added to cart!"
+  "feedback_item_added_to_cart": "Added to cart!",
+  "feedback_is_closed": "{{name}} is closed",
+  "feedback_table_number_is_wrong": "Table number is wrong"
 }

@@ -11,8 +11,10 @@ export type TStore = {
   feedback: {
     open: boolean;
     message: string;
+    duration?: number | null;
   };
   menu: TMenu;
+  valid: boolean;
 };
 
 type TMenu = {

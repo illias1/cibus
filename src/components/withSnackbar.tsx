@@ -8,7 +8,7 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core";
 type IwithSnackbarProps = {};
 
 const WithSnackbar: React.FC = ({ children }) => {
-  const { open, message } = useTypedSelector((state) => state.feedback);
+  const { open, message, duration } = useTypedSelector((state) => state.feedback);
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -16,7 +16,7 @@ const WithSnackbar: React.FC = ({ children }) => {
     if (reason === "clickaway") {
       return;
     }
-    dispatch(setFeedback({ open: false, message: "" }));
+    dispatch(setFeedback({ open: false, message: "", duration: 1500 }));
   };
 
   return (
@@ -28,7 +28,7 @@ const WithSnackbar: React.FC = ({ children }) => {
         }}
         open={open}
         className={classes.root}
-        autoHideDuration={1500}
+        autoHideDuration={duration}
         onClose={handleClose}
         message={message}
       />

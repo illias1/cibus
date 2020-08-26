@@ -20,12 +20,15 @@ import { GetPropertyQuery, GetPropertyQueryVariables } from "../../../../API";
 import { getProperty } from "../../graphql";
 import { useDispatch } from "react-redux";
 import { setupMenu } from "../../../../store/actions";
+import { useTranslation } from "react-i18next";
+import { validateOpeningAndTable } from "../../../../utils/validateOpeningAndTable";
 type IMenuScreenProps = {};
 
 const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const cartItemsLength = useTypedSelector((state) => state.cart.length);
   const { itemsByCategory, categories } = useTypedSelector((state) => state.menu);
   const { restaurantNameUrl, tableName } = useParams<TParams>();
@@ -37,6 +40,7 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
       // ts doesnt't give error in vscode but throws at runtime
       // @ts-ignore
       dispatch(setupMenu(data.getProperty.menu.items));
+      validateOpeningAndTable(tableName, data, dispatch, t);
     }
   }, [data]);
 

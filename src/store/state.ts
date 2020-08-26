@@ -32,9 +32,11 @@ export const initialState: TStore = {
   feedback: {
     open: false,
     message: "",
+    duration: 1500,
   },
   menu: {
     categories: [],
     itemsByCategory: [],
   },
+  valid: false,
 };

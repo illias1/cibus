@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import Box from "@material-ui/core/Box";
 import { useHistory, useParams } from "react-router-dom";
 import { TParams, OrderStatus } from "../../../types";
-import { createOrder } from "../graphql";
+import { createOrder, GetPropertyQueryForCart, getPropertyForCart } from "../graphql";
 // components
 import TwoButtons from "./TwoButtons";
 import CartTotal from "./TotalPrice";
@@ -15,27 +15,41 @@ import ConfrimationPopup from "./ConfrimationPopup";
 import { setCartItemsStatus } from "../../../store/actions";
 import { convertNumberToPrecision } from "../../../utils/numberToPrecision";
 import { mutation } from "../../../utils/useMutation";
-import { CreateOrderMutationVariables, CreateOrderMutation } from "../../../API";
+import {
+  CreateOrderMutationVariables,
+  CreateOrderMutation,
+  GetPropertyQueryVariables,
+} from "../../../API";
+import { useQuery } from "../../../utils/useQuery";
+import { validateOpeningAndTable } from "../../../utils/validateOpeningAndTable";
 
 type IIndividualTabProps = {};
 const PENDING: OrderStatus = "AWAITING";
 
 const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   const classes = useStyles();
-  const cartItems = useTypedSelector((state) => state.cart);
+  const { cart, valid } = useTypedSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
   const { restaurantNameUrl, tableName } = useParams<TParams>();
   const { t } = useTranslation();
-  const [open, setopen] = React.useState<boolean>(false);
+  const [popupOpen, setpopupOpen] = React.useState<boolean>(false);
   const handleClose = () => {
-    setopen(false);
+    setpopupOpen(false);
   };
-
+  const { data } = useQuery<GetPropertyQueryForCart, GetPropertyQueryVariables>(
+    getPropertyForCart,
+    { name: restaurantNameUrl }
+  );
+  React.useEffect(() => {
+    if (data.getProperty) {
+      validateOpeningAndTable(tableName, data, dispatch, t);
+    }
+  }, [data]);
   return (
     <div>
       <ConfrimationPopup
-        open={open}
+        open={popupOpen}
         handleClose={handleClose}
         message={t("cart_after_order_place_message")}
         onConfirmationClick={async () => {
@@ -47,7 +61,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
                 status: PENDING,
                 tableName,
                 orderItem: [
-                  ...cartItems
+                  ...cart
                     .filter((item) => item.status !== "placed")
                     .map((item) => ({
                       name: item.item.title,
@@ -63,7 +77,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         }}
       />
       <Box className={classes.items}>
-        {cartItems.map((item) => (
+        {cart.map((item) => (
           <CartItem
             key={item.item.title}
             status={item.status}
@@ -77,7 +91,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
       </Box>
       <CartTotal
         price={convertNumberToPrecision(
-          cartItems.reduce((prev, curr): number => prev + curr.quantity * curr.item.price, 0)
+          cart.reduce((prev, curr): number => prev + curr.quantity * curr.item.price, 0)
         )}
       />
 
@@ -85,10 +99,12 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         onCLickLeft={() => {
           history.push(`/${restaurantNameUrl}/${tableName}`);
         }}
-        onCLickRight={() => setopen(true)}
+        onCLickRight={() => setpopupOpen(true)}
         leftLabel="cart_add_more"
         rightLabel="cart_place_my_order"
-        rightDisable={cartItems.findIndex((item) => item.status === "added") < 0 ? true : false}
+        rightDisable={
+          cart.findIndex((item) => item.status === "added") < 0 || !valid ? true : false
+        }
       />
     </div>
   );

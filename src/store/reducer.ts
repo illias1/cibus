@@ -9,6 +9,7 @@ import {
   setGroupOrderPlaced,
   setFeedback,
   setupMenu,
+  setValid,
 } from "./actions";
 import {
   LOCAL_STORAGE_USER_NAME,
@@ -18,6 +19,10 @@ import {
 import { GetMenuItemQuery } from "../API";
 
 export const reducer = reducerWithInitialState(initialState)
+  .case(setValid, (state, valid) => ({
+    ...state,
+    valid,
+  }))
   .case(setUserName, (state, userName) => {
     localStorage.setItem(LOCAL_STORAGE_USER_NAME, userName);
     return {
