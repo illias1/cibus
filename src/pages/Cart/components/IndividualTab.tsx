@@ -9,6 +9,7 @@ import { TParams, OrderStatus } from "../../../types";
 import { createOrder, GetPropertyQueryForCart, getPropertyForCart } from "../graphql";
 // components
 import TwoButtons from "./TwoButtons";
+import Loader from "../../../components/Loader";
 import CartTotal from "./TotalPrice";
 import CartItem from "./CartItem";
 import ConfrimationPopup from "./ConfrimationPopup";
@@ -37,7 +38,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   const handleClose = () => {
     setpopupOpen(false);
   };
-  const { data } = useQuery<GetPropertyQueryForCart, GetPropertyQueryVariables>(
+  const { data, loading } = useQuery<GetPropertyQueryForCart, GetPropertyQueryVariables>(
     getPropertyForCart,
     { name: restaurantNameUrl }
   );
@@ -46,8 +47,12 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
       validateOpeningAndTable(tableName, data, dispatch, t);
     }
   }, [data]);
+  // if (loading) {
+  //   return <Loader />;
+  // }
   return (
     <div>
+      {loading && <Loader />}
       <ConfrimationPopup
         open={popupOpen}
         handleClose={handleClose}

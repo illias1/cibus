@@ -51,13 +51,24 @@ export const reducer = reducerWithInitialState(initialState)
       cart: state.cart.filter((item) => item.item.title !== title),
     };
   })
-  .case(setCartItemsStatus, (state, status) => ({
-    ...state,
-    cart: state.cart.map((item) => ({
-      ...item,
-      status,
-    })),
-  }))
+  .case(setCartItemsStatus, (state, status) => {
+    localStorage.setItem(
+      LOCAL_STORAGE_CART,
+      JSON.stringify(
+        state.cart.map((item) => ({
+          ...item,
+          status,
+        }))
+      )
+    );
+    return {
+      ...state,
+      cart: state.cart.map((item) => ({
+        ...item,
+        status,
+      })),
+    };
+  })
   .case(setGroupOrderPlaced, (state, payload) => ({
     ...state,
     groupCartOrderPlaced: payload,
