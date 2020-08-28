@@ -46,12 +46,14 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
           <Button className={classes.button} endIcon={<ExpandMoreIcon />}>
             {t("cart_item_customize_option")}
           </Button>
-          <IconButton
-            onClick={() => dispatch(removeItemFromCart(title))}
-            className={classes.iconButton}
-          >
-            <DeleteOutlineIcon />
-          </IconButton>
+          {status === "added" && (
+            <IconButton
+              onClick={() => dispatch(removeItemFromCart(title))}
+              className={classes.iconButton}
+            >
+              <DeleteOutlineIcon />
+            </IconButton>
+          )}
         </Box>
       </Box>
 

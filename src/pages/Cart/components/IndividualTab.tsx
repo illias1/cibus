@@ -55,7 +55,6 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   // if (loading) {
   //   return <Loader />;
   // }
-  console.log("priceTottal", priceTotal);
   return (
     <div>
       {loading && <Loader />}
