@@ -3,7 +3,7 @@ export type TParams = {
   tableName: string;
 };
 
-export type OrderStatus = "ACCEPTED" | "REJECTED" | "AWAITING" | "COMPLETED";
+export type OrderStatus = "ACCEPTED" | "REJECTED" | "REQUESTED" | "COMPLETED";
 
 export type TItems = {
   title: string;

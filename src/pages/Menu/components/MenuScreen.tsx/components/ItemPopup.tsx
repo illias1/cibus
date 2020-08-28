@@ -81,7 +81,13 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
         </Box>
         <StyledButton
           className={classes.cartBtn}
-          disabled={cartItems.findIndex((item) => item.item.title === title) < 0 ? false : true}
+          disabled={
+            cartItems
+              .filter((item) => item.status === "added")
+              .findIndex((item) => item.item.title === title) < 0
+              ? false
+              : true
+          }
           onCLick={() => {
             dispatch(
               addToCart({
@@ -96,6 +102,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
               setFeedback({
                 open: true,
                 message: t("feedback_item_added_to_cart"),
+                duration: 1500,
               })
             );
           }}

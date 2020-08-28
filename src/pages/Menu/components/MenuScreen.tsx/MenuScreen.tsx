@@ -29,7 +29,9 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const cartItemsLength = useTypedSelector((state) => state.cart.length);
+  const cartItemsLength = useTypedSelector(
+    (state) => state.cart.filter((item) => item.status === "added").length
+  );
   const { itemsByCategory, categories } = useTypedSelector((state) => state.menu);
   const { restaurantNameUrl, tableName } = useParams<TParams>();
   const { loading, data } = useQuery<GetPropertyQuery, GetPropertyQueryVariables>(getProperty, {

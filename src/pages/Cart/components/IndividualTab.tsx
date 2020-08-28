@@ -25,13 +25,18 @@ import { useQuery } from "../../../utils/useQuery";
 import { validateOpeningAndTable } from "../../../utils/validateOpeningAndTable";
 
 type IIndividualTabProps = {};
-const PENDING: OrderStatus = "AWAITING";
+const PENDING: OrderStatus = "REQUESTED";
 
 const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   const classes = useStyles();
   const { cart, valid } = useTypedSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
+  const priceTotal = convertNumberToPrecision(
+    cart
+      .filter((item) => item.status === "added")
+      .reduce((prev, curr): number => prev + curr.quantity * curr.item.price, 0)
+  );
   const { restaurantNameUrl, tableName } = useParams<TParams>();
   const { t } = useTranslation();
   const [popupOpen, setpopupOpen] = React.useState<boolean>(false);
@@ -50,6 +55,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   // if (loading) {
   //   return <Loader />;
   // }
+  console.log("priceTottal", priceTotal);
   return (
     <div>
       {loading && <Loader />}
@@ -58,12 +64,13 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         handleClose={handleClose}
         message={t("cart_after_order_place_message")}
         onConfirmationClick={async () => {
-          await mutation<CreateOrderMutation, CreateOrderMutationVariables>(
+          const mutationResult = await mutation<CreateOrderMutation, CreateOrderMutationVariables>(
             createOrder,
             {
               input: {
                 propertyName: restaurantNameUrl,
                 status: PENDING,
+                priceTotal: priceTotal,
                 tableName,
                 orderItem: [
                   ...cart
@@ -78,13 +85,17 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
             },
             "AWS_IAM"
           );
-          dispatch(setCartItemsStatus("placed"));
+          if (mutationResult.data) {
+            dispatch(setCartItemsStatus("placed"));
+          } else {
+            alert(JSON.stringify(mutationResult.error));
+          }
         }}
       />
       <Box className={classes.items}>
-        {cart.map((item) => (
+        {cart.map((item, index) => (
           <CartItem
-            key={item.item.title}
+            key={index}
             status={item.status}
             img={item.img}
             title={item.item.title}
@@ -94,11 +105,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
           />
         ))}
       </Box>
-      <CartTotal
-        price={convertNumberToPrecision(
-          cart.reduce((prev, curr): number => prev + curr.quantity * curr.item.price, 0)
-        )}
-      />
+      <CartTotal price={priceTotal} />
 
       <TwoButtons
         onCLickLeft={() => {

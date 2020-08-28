@@ -55,6 +55,171 @@ export type ModelSizeInput = {
   between?: Array<number | null> | null;
 };
 
+export enum Currency {
+  AED = "AED",
+  AFN = "AFN",
+  ALL = "ALL",
+  AMD = "AMD",
+  ANG = "ANG",
+  AOA = "AOA",
+  ARS = "ARS",
+  AUD = "AUD",
+  AWG = "AWG",
+  AZN = "AZN",
+  BAM = "BAM",
+  BBD = "BBD",
+  BDT = "BDT",
+  BGN = "BGN",
+  BHD = "BHD",
+  BIF = "BIF",
+  BMD = "BMD",
+  BND = "BND",
+  BOB = "BOB",
+  BRL = "BRL",
+  BSD = "BSD",
+  BTN = "BTN",
+  BWP = "BWP",
+  BYN = "BYN",
+  BZD = "BZD",
+  CAD = "CAD",
+  CDF = "CDF",
+  CHF = "CHF",
+  CLP = "CLP",
+  CNY = "CNY",
+  COP = "COP",
+  CRC = "CRC",
+  CUC = "CUC",
+  CUP = "CUP",
+  CVE = "CVE",
+  CZK = "CZK",
+  DJF = "DJF",
+  DKK = "DKK",
+  DOP = "DOP",
+  DZD = "DZD",
+  EGP = "EGP",
+  ERN = "ERN",
+  ETB = "ETB",
+  EUR = "EUR",
+  FJD = "FJD",
+  FKP = "FKP",
+  GBP = "GBP",
+  GEL = "GEL",
+  GGP = "GGP",
+  GHS = "GHS",
+  GIP = "GIP",
+  GMD = "GMD",
+  GNF = "GNF",
+  GTQ = "GTQ",
+  GYD = "GYD",
+  HKD = "HKD",
+  HNL = "HNL",
+  HRK = "HRK",
+  HTG = "HTG",
+  HUF = "HUF",
+  IDR = "IDR",
+  ILS = "ILS",
+  IMP = "IMP",
+  INR = "INR",
+  IQD = "IQD",
+  IRR = "IRR",
+  ISK = "ISK",
+  JEP = "JEP",
+  JMD = "JMD",
+  JOD = "JOD",
+  JPY = "JPY",
+  KES = "KES",
+  KGS = "KGS",
+  KHR = "KHR",
+  KMF = "KMF",
+  KPW = "KPW",
+  KRW = "KRW",
+  KWD = "KWD",
+  KYD = "KYD",
+  KZT = "KZT",
+  LAK = "LAK",
+  LBP = "LBP",
+  LKR = "LKR",
+  LRD = "LRD",
+  LSL = "LSL",
+  LYD = "LYD",
+  MAD = "MAD",
+  MDL = "MDL",
+  MGA = "MGA",
+  MKD = "MKD",
+  MMK = "MMK",
+  MNT = "MNT",
+  MOP = "MOP",
+  MRU = "MRU",
+  MUR = "MUR",
+  MVR = "MVR",
+  MWK = "MWK",
+  MXN = "MXN",
+  MYR = "MYR",
+  MZN = "MZN",
+  NAD = "NAD",
+  NGN = "NGN",
+  NIO = "NIO",
+  NOK = "NOK",
+  NPR = "NPR",
+  NZD = "NZD",
+  OMR = "OMR",
+  PAB = "PAB",
+  PEN = "PEN",
+  PGK = "PGK",
+  PHP = "PHP",
+  PKR = "PKR",
+  PLN = "PLN",
+  PYG = "PYG",
+  QAR = "QAR",
+  RON = "RON",
+  RSD = "RSD",
+  RUB = "RUB",
+  RWF = "RWF",
+  SAR = "SAR",
+  SBD = "SBD",
+  SCR = "SCR",
+  SDG = "SDG",
+  SEK = "SEK",
+  SGD = "SGD",
+  SHP = "SHP",
+  SLL = "SLL",
+  SOS = "SOS",
+  SPL = "SPL",
+  SRD = "SRD",
+  STN = "STN",
+  SVC = "SVC",
+  SYP = "SYP",
+  SZL = "SZL",
+  THB = "THB",
+  TJS = "TJS",
+  TMT = "TMT",
+  TND = "TND",
+  TOP = "TOP",
+  TRY = "TRY",
+  TTD = "TTD",
+  TVD = "TVD",
+  TWD = "TWD",
+  TZS = "TZS",
+  UAH = "UAH",
+  UGX = "UGX",
+  USD = "USD",
+  UYU = "UYU",
+  UZS = "UZS",
+  VEF = "VEF",
+  VND = "VND",
+  VUV = "VUV",
+  WST = "WST",
+  XAF = "XAF",
+  XCD = "XCD",
+  XDR = "XDR",
+  XOF = "XOF",
+  XPF = "XPF",
+  YER = "YER",
+  ZAR = "ZAR",
+  ZMW = "ZMW",
+  ZWD = "ZWD",
+}
+
 export type UpdateUserInput = {
   id: string;
   email?: string | null;
@@ -71,12 +236,14 @@ export type CreatePropertyInput = {
   open: boolean;
   ownerId: string;
   tables: Array<string | null>;
+  currency: Currency;
 };
 
 export type ModelPropertyConditionInput = {
   NonUniqueName?: ModelStringInput | null;
   open?: ModelBooleanInput | null;
   tables?: ModelStringInput | null;
+  currency?: ModelCurrencyInput | null;
   and?: Array<ModelPropertyConditionInput | null> | null;
   or?: Array<ModelPropertyConditionInput | null> | null;
   not?: ModelPropertyConditionInput | null;
@@ -87,6 +254,11 @@ export type ModelBooleanInput = {
   eq?: boolean | null;
   attributeExists?: boolean | null;
   attributeType?: ModelAttributeTypes | null;
+};
+
+export type ModelCurrencyInput = {
+  eq?: Currency | null;
+  ne?: Currency | null;
 };
 
 export enum MenuItemStatus {
@@ -100,6 +272,7 @@ export type UpdatePropertyInput = {
   open?: boolean | null;
   ownerId?: string | null;
   tables?: Array<string | null> | null;
+  currency?: Currency | null;
 };
 
 export type DeletePropertyInput = {
@@ -234,6 +407,7 @@ export type UpdateOrderInput = {
   createdAt?: string | null;
   status?: string | null;
   tableName?: string | null;
+  priceTotal?: number | null;
 };
 
 export type OrderItemInput = {
@@ -249,6 +423,7 @@ export type ModelOrderConditionInput = {
   createdAt?: ModelStringInput | null;
   status?: ModelStringInput | null;
   tableName?: ModelStringInput | null;
+  priceTotal?: ModelFloatInput | null;
   and?: Array<ModelOrderConditionInput | null> | null;
   or?: Array<ModelOrderConditionInput | null> | null;
   not?: ModelOrderConditionInput | null;
@@ -264,7 +439,8 @@ export type CreateOrderInput = {
   orderItem: Array<OrderItemInput>;
   createdAt?: string | null;
   status: string;
-  tableName?: string | null;
+  tableName: string;
+  priceTotal: number;
 };
 
 export type ModelUserFilterInput = {
@@ -298,6 +474,7 @@ export type ModelPropertyFilterInput = {
   open?: ModelBooleanInput | null;
   ownerId?: ModelIDInput | null;
   tables?: ModelStringInput | null;
+  currency?: ModelCurrencyInput | null;
   and?: Array<ModelPropertyFilterInput | null> | null;
   or?: Array<ModelPropertyFilterInput | null> | null;
   not?: ModelPropertyFilterInput | null;
@@ -328,6 +505,7 @@ export type ModelOrderFilterInput = {
   createdAt?: ModelStringInput | null;
   status?: ModelStringInput | null;
   tableName?: ModelStringInput | null;
+  priceTotal?: ModelFloatInput | null;
   and?: Array<ModelOrderFilterInput | null> | null;
   or?: Array<ModelOrderFilterInput | null> | null;
   not?: ModelOrderFilterInput | null;
@@ -341,6 +519,21 @@ export type ModelStringKeyConditionInput = {
   gt?: string | null;
   between?: Array<string | null> | null;
   beginsWith?: string | null;
+};
+
+export type ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyConditionInput = {
+  eq?: ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyInput | null;
+  le?: ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyInput | null;
+  lt?: ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyInput | null;
+  ge?: ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyInput | null;
+  gt?: ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyInput | null;
+  between?: Array<ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyInput | null> | null;
+  beginsWith?: ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyInput | null;
+};
+
+export type ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyInput = {
+  createdAt?: string | null;
+  status?: string | null;
 };
 
 export type CreateUserMutationVariables = {
@@ -366,6 +559,7 @@ export type CreateUserMutation = {
         open: boolean;
         ownerId: string;
         tables: Array<string | null>;
+        currency: Currency;
         createdAt: string;
         updatedAt: string;
       } | null> | null;
@@ -397,6 +591,7 @@ export type UpdateUserMutation = {
         open: boolean;
         ownerId: string;
         tables: Array<string | null>;
+        currency: Currency;
         createdAt: string;
         updatedAt: string;
       } | null> | null;
@@ -428,6 +623,7 @@ export type DeleteUserMutation = {
         open: boolean;
         ownerId: string;
         tables: Array<string | null>;
+        currency: Currency;
         createdAt: string;
         updatedAt: string;
       } | null> | null;
@@ -449,6 +645,7 @@ export type CreatePropertyMutation = {
     open: boolean;
     ownerId: string;
     tables: Array<string | null>;
+    currency: Currency;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -477,7 +674,8 @@ export type CreatePropertyMutation = {
         propertyName: string;
         createdAt: string;
         status: string;
-        tableName: string | null;
+        tableName: string;
+        priceTotal: number;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -498,6 +696,7 @@ export type UpdatePropertyMutation = {
     open: boolean;
     ownerId: string;
     tables: Array<string | null>;
+    currency: Currency;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -526,7 +725,8 @@ export type UpdatePropertyMutation = {
         propertyName: string;
         createdAt: string;
         status: string;
-        tableName: string | null;
+        tableName: string;
+        priceTotal: number;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -547,6 +747,7 @@ export type DeletePropertyMutation = {
     open: boolean;
     ownerId: string;
     tables: Array<string | null>;
+    currency: Currency;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -575,7 +776,8 @@ export type DeletePropertyMutation = {
         propertyName: string;
         createdAt: string;
         status: string;
-        tableName: string | null;
+        tableName: string;
+        priceTotal: number;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -690,7 +892,8 @@ export type UpdateOrderMutation = {
     }>;
     createdAt: string;
     status: string;
-    tableName: string | null;
+    tableName: string;
+    priceTotal: number;
     updatedAt: string;
   } | null;
 };
@@ -715,7 +918,8 @@ export type DeleteOrderMutation = {
     }>;
     createdAt: string;
     status: string;
-    tableName: string | null;
+    tableName: string;
+    priceTotal: number;
     updatedAt: string;
   } | null;
 };
@@ -740,7 +944,8 @@ export type CreateOrderMutation = {
     }>;
     createdAt: string;
     status: string;
-    tableName: string | null;
+    tableName: string;
+    priceTotal: number;
     updatedAt: string;
   } | null;
 };
@@ -767,6 +972,7 @@ export type GetUserQuery = {
         open: boolean;
         ownerId: string;
         tables: Array<string | null>;
+        currency: Currency;
         createdAt: string;
         updatedAt: string;
       } | null> | null;
@@ -813,6 +1019,7 @@ export type GetPropertyQuery = {
     open: boolean;
     ownerId: string;
     tables: Array<string | null>;
+    currency: Currency;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -841,7 +1048,8 @@ export type GetPropertyQuery = {
         propertyName: string;
         createdAt: string;
         status: string;
-        tableName: string | null;
+        tableName: string;
+        priceTotal: number;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -867,6 +1075,7 @@ export type ListPropertysQuery = {
       open: boolean;
       ownerId: string;
       tables: Array<string | null>;
+      currency: Currency;
       createdAt: string;
       updatedAt: string;
       menu: {
@@ -999,7 +1208,8 @@ export type GetOrderQuery = {
     }>;
     createdAt: string;
     status: string;
-    tableName: string | null;
+    tableName: string;
+    priceTotal: number;
     updatedAt: string;
   } | null;
 };
@@ -1027,7 +1237,8 @@ export type ListOrdersQuery = {
       }>;
       createdAt: string;
       status: string;
-      tableName: string | null;
+      tableName: string;
+      priceTotal: number;
       updatedAt: string;
     } | null> | null;
     nextToken: string | null;
@@ -1060,7 +1271,42 @@ export type OrderByPropertyByCreatedAtQuery = {
       }>;
       createdAt: string;
       status: string;
-      tableName: string | null;
+      tableName: string;
+      priceTotal: number;
+      updatedAt: string;
+    } | null> | null;
+    nextToken: string | null;
+  } | null;
+};
+
+export type OrderByPropertyByCreatedAtByStatusQueryVariables = {
+  propertyName?: string | null;
+  createdAtStatus?: ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyConditionInput | null;
+  sortDirection?: ModelSortDirection | null;
+  filter?: ModelOrderFilterInput | null;
+  limit?: number | null;
+  nextToken?: string | null;
+};
+
+export type OrderByPropertyByCreatedAtByStatusQuery = {
+  orderByPropertyByCreatedAtByStatus: {
+    __typename: "ModelOrderConnection";
+    items: Array<{
+      __typename: "Order";
+      id: string;
+      propertyName: string;
+      orderItem: Array<{
+        __typename: "OrderItem";
+        name: string;
+        price: number;
+        quantity: number;
+        allergyInfo: string | null;
+        customerComment: string | null;
+      }>;
+      createdAt: string;
+      status: string;
+      tableName: string;
+      priceTotal: number;
       updatedAt: string;
     } | null> | null;
     nextToken: string | null;
@@ -1093,7 +1339,8 @@ export type OrderByPropertyByStatusQuery = {
       }>;
       createdAt: string;
       status: string;
-      tableName: string | null;
+      tableName: string;
+      priceTotal: number;
       updatedAt: string;
     } | null> | null;
     nextToken: string | null;
@@ -1119,7 +1366,8 @@ export type OnCreateOrderSubscription = {
     }>;
     createdAt: string;
     status: string;
-    tableName: string | null;
+    tableName: string;
+    priceTotal: number;
     updatedAt: string;
   } | null;
 };
@@ -1144,7 +1392,8 @@ export type OnUpdateOrderSubscription = {
     }>;
     createdAt: string;
     status: string;
-    tableName: string | null;
+    tableName: string;
+    priceTotal: number;
     updatedAt: string;
   } | null;
 };
@@ -1171,6 +1420,7 @@ export type OnCreateUserSubscription = {
         open: boolean;
         ownerId: string;
         tables: Array<string | null>;
+        currency: Currency;
         createdAt: string;
         updatedAt: string;
       } | null> | null;
@@ -1201,6 +1451,7 @@ export type OnUpdateUserSubscription = {
         open: boolean;
         ownerId: string;
         tables: Array<string | null>;
+        currency: Currency;
         createdAt: string;
         updatedAt: string;
       } | null> | null;
@@ -1231,6 +1482,7 @@ export type OnDeleteUserSubscription = {
         open: boolean;
         ownerId: string;
         tables: Array<string | null>;
+        currency: Currency;
         createdAt: string;
         updatedAt: string;
       } | null> | null;
@@ -1251,6 +1503,7 @@ export type OnCreatePropertySubscription = {
     open: boolean;
     ownerId: string;
     tables: Array<string | null>;
+    currency: Currency;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -1279,7 +1532,8 @@ export type OnCreatePropertySubscription = {
         propertyName: string;
         createdAt: string;
         status: string;
-        tableName: string | null;
+        tableName: string;
+        priceTotal: number;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -1299,6 +1553,7 @@ export type OnUpdatePropertySubscription = {
     open: boolean;
     ownerId: string;
     tables: Array<string | null>;
+    currency: Currency;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -1327,7 +1582,8 @@ export type OnUpdatePropertySubscription = {
         propertyName: string;
         createdAt: string;
         status: string;
-        tableName: string | null;
+        tableName: string;
+        priceTotal: number;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -1347,6 +1603,7 @@ export type OnDeletePropertySubscription = {
     open: boolean;
     ownerId: string;
     tables: Array<string | null>;
+    currency: Currency;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -1375,7 +1632,8 @@ export type OnDeletePropertySubscription = {
         propertyName: string;
         createdAt: string;
         status: string;
-        tableName: string | null;
+        tableName: string;
+        priceTotal: number;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
