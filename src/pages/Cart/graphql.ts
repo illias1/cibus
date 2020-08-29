@@ -12,6 +12,7 @@ export const createOrder = /* GraphQL */ `
       }
       createdAt
       status
+      priceTotal
       tableName
       updatedAt
     }
