@@ -107,7 +107,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
             );
           }}
         >
-          Add to Cart
+          {t("item_popup_add_to_cart")}
         </StyledButton>
       </Container>
     </Container>
