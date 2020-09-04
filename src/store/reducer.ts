@@ -102,9 +102,10 @@ export const reducer = reducerWithInitialState(initialState)
     };
   })
   .case(updateOrdersItemStatus, (state, { id, status }) => {
-    const newOrdersArray = state.orders.map((item) =>
-      item?.id === id ? { ...item, status } : item
-    );
+    const newOrdersArray =
+      status === "PAYED" || status === "DENIED"
+        ? state.orders.filter((item) => item!.id !== id)
+        : state.orders.map((item) => (item?.id === id ? { ...item, status } : item));
     localStorage.setItem(LOCAL_STORAGE_ORDERS, JSON.stringify(newOrdersArray));
     return {
       ...state,
