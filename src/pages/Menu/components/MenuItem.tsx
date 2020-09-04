@@ -4,7 +4,7 @@ import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import { Box } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import { CustomTheme } from "../../../../../utils/customCreateTheme";
+import { CustomTheme } from "../../../utils/customCreateTheme";
 
 type TItem = {
   title: string;

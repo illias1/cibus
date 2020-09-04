@@ -7,12 +7,12 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import { useTranslation } from "react-i18next";
-import { StyledButton } from "../../../../../components/Button";
+import { StyledButton } from "../../../components/Button";
 import { useDispatch } from "react-redux";
-import { addToCart, setFeedback } from "../../../../../store/actions";
-import { useTypedSelector } from "../../../../../store/types";
-import image from "../../../../../assets/popup.png";
-import { TItems } from "../../../../../types";
+import { addToCart, setFeedback } from "../../../store/actions";
+import { useTypedSelector } from "../../../store/types";
+import image from "../../../assets/popup.png";
+import { TItems } from "../../../types";
 
 type IItemPopupProps = {
   items: TItems;
