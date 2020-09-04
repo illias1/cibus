@@ -1,11 +1,12 @@
 import { TypedUseSelectorHook, useSelector } from "react-redux";
-import { GetMenuItemQuery } from "../API";
-import { TItems } from "../types";
+import { GetMenuItemQuery, GetOrderQuery } from "../API";
+import { TItems, OrderStatus } from "../types";
 
 export type TStore = {
   userName: string;
   userAlreadyVisited: boolean;
   cart: TCartItem[];
+  orders: GetOrderQuery["getOrder"][];
   groupCart: TGroupCartItem[];
   groupCartOrderPlaced: boolean;
   feedback: {
@@ -28,7 +29,7 @@ export type TCartItem = {
   quantity: number;
   img: string;
 };
-export type TCartItemStatus = "added" | "placed";
+export type TCartItemStatus = "ADDED_TO_CART" | OrderStatus;
 
 export type TGroupCartItem = {
   customerName: string;

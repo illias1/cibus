@@ -30,7 +30,7 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const cartItemsLength = useTypedSelector(
-    (state) => state.cart.filter((item) => item.status === "added").length
+    (state) => state.cart.filter((item) => item.status === "ADDED_TO_CART").length
   );
   const { itemsByCategory, categories } = useTypedSelector((state) => state.menu);
   const { restaurantNameUrl, tableName } = useParams<TParams>();

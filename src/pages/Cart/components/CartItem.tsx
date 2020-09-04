@@ -21,6 +21,23 @@ type TItem = {
   status: TCartItemStatus;
 };
 
+const displayStatusOnImage = (status: TCartItemStatus): string => {
+  switch (status) {
+    case "ADDED_TO_CART":
+      return "cart_item_status_not_placed_yet";
+    case "DENIED":
+      return "cart_item_status_denied";
+    case "READY":
+      return "cart_item_status_ready";
+    case "RECEIVED_BY_RESTAURANT":
+      return "cart_item_status_received_by_restaurant";
+    case "REQUESTED_BY_CUSTOMER":
+      return "cart_item_status_requested_by_customer";
+    default:
+      return "";
+  }
+};
+
 const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, status }) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -42,19 +59,20 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
         <Typography className={classes.ingredients} variant="body1" color="textSecondary">
           {ingredients}
         </Typography>
-        <Box className={classes.horizontal}>
-          <Button className={classes.button} endIcon={<ExpandMoreIcon />}>
-            {t("cart_item_customize_option")}
-          </Button>
-          {status === "added" && (
+        {status === "ADDED_TO_CART" && (
+          <Box className={classes.horizontal}>
+            <Button className={classes.button} endIcon={<ExpandMoreIcon />}>
+              {t("cart_item_customize_option")}
+            </Button>
+
             <IconButton
               onClick={() => dispatch(removeItemFromCart(title))}
               className={classes.iconButton}
             >
               <DeleteOutlineIcon />
             </IconButton>
-          )}
-        </Box>
+          </Box>
+        )}
       </Box>
 
       {/* tried to use the skeleton but doesn't show up with suspense
@@ -86,7 +104,7 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
         }}
       >
         <Typography align="center" variant="body1">
-          {status === "added" ? t("cart_order_not_placed_yet") : t("cart_order_placed")}
+          {t(displayStatusOnImage(status))}
         </Typography>
       </div>
     </Card>

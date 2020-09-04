@@ -7,29 +7,22 @@ import { useTranslation } from "react-i18next";
 type ITotalPriceProps = {
   price: number;
   tip?: number;
+  subtotal?: boolean;
 };
 
-const TotalPrice: React.FC<ITotalPriceProps> = ({ price, tip = 0 }) => {
+const TotalPrice: React.FC<ITotalPriceProps> = ({ price, tip = 0, subtotal }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   return (
     <Box className={classes.root}>
-      <Typography variant="h5">{t("cart_total")}</Typography>
+      <Typography variant="h5">{subtotal ? t("cart_subtotal") : t("cart_total")}</Typography>
       <Box className={classes.priceArea}>
         {Boolean(tip) && (
           <>
-            <Typography
-              color="textSecondary"
-              align="right"
-              className={classes.tipInfo}
-            >
+            <Typography color="textSecondary" align="right" className={classes.tipInfo}>
               {t("cart_subtotal")} {t("price_euro", { price: price - tip })}
             </Typography>
-            <Typography
-              color="textSecondary"
-              align="right"
-              className={classes.tipInfo}
-            >
+            <Typography color="textSecondary" align="right" className={classes.tipInfo}>
               {t("cart_tip")} {t("price_euro", { price: tip })}
             </Typography>
           </>
@@ -37,13 +30,16 @@ const TotalPrice: React.FC<ITotalPriceProps> = ({ price, tip = 0 }) => {
         <Typography align="right" variant="h5">
           {t("price_euro", { price })}
         </Typography>
-        <Typography
-          className={classes.fontFamily}
-          color="textSecondary"
-          variant="body1"
-        >
-          {t("cart_vat_included")} - {t("cart_tip_not_included")}
-        </Typography>
+        {!subtotal && (
+          <Typography
+            align="right"
+            className={classes.fontFamily}
+            color="textSecondary"
+            variant="body1"
+          >
+            {t("cart_vat_included")} - {t("cart_tip_not_included")}
+          </Typography>
+        )}
       </Box>
     </Box>
   );

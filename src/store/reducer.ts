@@ -5,16 +5,18 @@ import {
   setUserAlreadyVisited,
   addToCart,
   removeItemFromCart,
-  setCartItemsStatus,
   setGroupOrderPlaced,
   setFeedback,
   setupMenu,
   setValid,
+  addToOrders,
+  updateOrdersItemStatus,
 } from "./actions";
 import {
   LOCAL_STORAGE_USER_NAME,
   LOCAL_STORAGE_USER_ALREADY_VISITED,
   LOCAL_STORAGE_CART,
+  LOCAL_STORAGE_ORDERS,
 } from "../utils/_constants";
 import { GetMenuItemQuery } from "../API";
 
@@ -51,24 +53,7 @@ export const reducer = reducerWithInitialState(initialState)
       cart: state.cart.filter((item) => item.item.title !== title),
     };
   })
-  .case(setCartItemsStatus, (state, status) => {
-    localStorage.setItem(
-      LOCAL_STORAGE_CART,
-      JSON.stringify(
-        state.cart.map((item) => ({
-          ...item,
-          status,
-        }))
-      )
-    );
-    return {
-      ...state,
-      cart: state.cart.map((item) => ({
-        ...item,
-        status,
-      })),
-    };
-  })
+
   .case(setGroupOrderPlaced, (state, payload) => ({
     ...state,
     groupCartOrderPlaced: payload,
@@ -104,5 +89,25 @@ export const reducer = reducerWithInitialState(initialState)
         categories: categoriesWithoutRepetition,
         itemsByCategory,
       },
+    };
+  })
+  .case(addToOrders, (state, newlyCreatedOrder) => {
+    localStorage.removeItem(LOCAL_STORAGE_CART);
+    const newOrdersArray = [...state.orders, newlyCreatedOrder];
+    localStorage.setItem(LOCAL_STORAGE_ORDERS, JSON.stringify(newOrdersArray));
+    return {
+      ...state,
+      orders: newOrdersArray,
+      cart: [],
+    };
+  })
+  .case(updateOrdersItemStatus, (state, { id, status }) => {
+    const newOrdersArray = state.orders.map((item) =>
+      item?.id === id ? { ...item, status } : item
+    );
+    localStorage.setItem(LOCAL_STORAGE_ORDERS, JSON.stringify(newOrdersArray));
+    return {
+      ...state,
+      orders: newOrdersArray,
     };
   });

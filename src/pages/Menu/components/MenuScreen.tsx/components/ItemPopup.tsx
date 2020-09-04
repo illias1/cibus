@@ -83,7 +83,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
           className={classes.cartBtn}
           disabled={
             cartItems
-              .filter((item) => item.status === "added")
+              .filter((item) => item.status === "ADDED_TO_CART")
               .findIndex((item) => item.item.title === title) < 0
               ? false
               : true
@@ -91,7 +91,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
           onCLick={() => {
             dispatch(
               addToCart({
-                status: "added",
+                status: "ADDED_TO_CART",
                 item: { title, price, ingredients, allergy, img: "", notes, cal },
                 quantity,
                 img,

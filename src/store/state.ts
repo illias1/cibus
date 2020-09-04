@@ -3,6 +3,7 @@ import {
   LOCAL_STORAGE_USER_NAME,
   LOCAL_STORAGE_USER_ALREADY_VISITED,
   LOCAL_STORAGE_CART,
+  LOCAL_STORAGE_ORDERS,
 } from "../utils/_constants";
 
 const sampleGroupCart: TGroupCartItem[] = [
@@ -27,6 +28,8 @@ export const initialState: TStore = {
   userName: localStorage.getItem(LOCAL_STORAGE_USER_NAME) || "",
   userAlreadyVisited: localStorage.getItem(LOCAL_STORAGE_USER_ALREADY_VISITED) ? true : false,
   cart: (JSON.parse(localStorage.getItem(LOCAL_STORAGE_CART) || "[]") as TCartItem[]) || [],
+  orders:
+    (JSON.parse(localStorage.getItem(LOCAL_STORAGE_ORDERS) || "[]") as TStore["orders"]) || [],
   groupCart: sampleGroupCart,
   groupCartOrderPlaced: false,
   feedback: {

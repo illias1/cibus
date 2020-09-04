@@ -5,7 +5,7 @@ import { useTypedSelector } from "../../../store/types";
 import { useTranslation } from "react-i18next";
 import Box from "@material-ui/core/Box";
 import { useHistory, useParams } from "react-router-dom";
-import { TParams, OrderStatus } from "../../../types";
+import { TParams, OrderStatusEnum, OrderStatus } from "../../../types";
 import { createOrder, GetPropertyQueryForCart, getPropertyForCart } from "../graphql";
 // components
 import TwoButtons from "./TwoButtons";
@@ -13,28 +13,39 @@ import Loader from "../../../components/Loader";
 import CartTotal from "./TotalPrice";
 import CartItem from "./CartItem";
 import ConfrimationPopup from "./ConfrimationPopup";
-import { setCartItemsStatus } from "../../../store/actions";
 import { convertNumberToPrecision } from "../../../utils/numberToPrecision";
 import { mutation } from "../../../utils/useMutation";
 import {
   CreateOrderMutationVariables,
   CreateOrderMutation,
   GetPropertyQueryVariables,
+  GetOrderQuery,
+  GetOrderQueryVariables,
 } from "../../../API";
-import { useQuery } from "../../../utils/useQuery";
+import { useQuery, typedQuery } from "../../../utils/useQuery";
 import { validateOpeningAndTable } from "../../../utils/validateOpeningAndTable";
+import { addToOrders, updateOrdersItemStatus } from "../../../store/actions";
+import { Typography } from "@material-ui/core";
 
 type IIndividualTabProps = {};
-const PENDING: OrderStatus = "REQUESTED";
+
+export const getOrder = /* GraphQL */ `
+  query GetOrder($id: ID!) {
+    getOrder(id: $id) {
+      id
+      status
+    }
+  }
+`;
 
 const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   const classes = useStyles();
-  const { cart, valid } = useTypedSelector((state) => state);
+  const { cart, valid, orders } = useTypedSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
   const priceTotal = convertNumberToPrecision(
     cart
-      .filter((item) => item.status === "added")
+      .filter((item) => item.status === "ADDED_TO_CART")
       .reduce((prev, curr): number => prev + curr.quantity * curr.item.price, 0)
   );
   const { restaurantNameUrl, tableName } = useParams<TParams>();
@@ -52,9 +63,22 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
       validateOpeningAndTable(tableName, data, dispatch, t);
     }
   }, [data]);
-  // if (loading) {
-  //   return <Loader />;
-  // }
+  React.useEffect(() => {
+    orders.forEach(async (order) => {
+      const { query } = await typedQuery<GetOrderQuery, GetOrderQueryVariables>(getOrder, {
+        id: order!.id,
+      });
+      console.log("query", query);
+      if (query && query.getOrder) {
+        dispatch(
+          updateOrdersItemStatus({
+            id: query.getOrder.id,
+            status: query.getOrder.status as OrderStatus,
+          })
+        );
+      }
+    });
+  }, []);
   return (
     <div>
       {loading && <Loader />}
@@ -68,12 +92,12 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
             {
               input: {
                 propertyName: restaurantNameUrl,
-                status: PENDING,
+                status: OrderStatusEnum["REQUESTED_BY_CUSTOMER"],
                 priceTotal: priceTotal,
                 tableName,
                 orderItem: [
                   ...cart
-                    .filter((item) => item.status !== "placed")
+                    .filter((item) => item.status === "ADDED_TO_CART")
                     .map((item) => ({
                       name: item.item.title,
                       price: item.item.price,
@@ -84,8 +108,8 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
             },
             "AWS_IAM"
           );
-          if (mutationResult.data) {
-            dispatch(setCartItemsStatus("placed"));
+          if (mutationResult.data && mutationResult.data.createOrder) {
+            dispatch(addToOrders(mutationResult.data.createOrder));
           } else {
             alert(JSON.stringify(mutationResult.error));
           }
@@ -104,7 +128,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
           />
         ))}
       </Box>
-      <CartTotal price={priceTotal} />
+      {cart.length > 0 && <CartTotal price={priceTotal} />}
 
       <TwoButtons
         onCLickLeft={() => {
@@ -114,8 +138,30 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         leftLabel="cart_add_more"
         rightLabel="cart_place_my_order"
         rightDisable={
-          cart.findIndex((item) => item.status === "added") < 0 || !valid ? true : false
+          cart.findIndex((item) => item.status === "ADDED_TO_CART") < 0 || !valid ? true : false
         }
+      />
+
+      {orders.map((order, index) => (
+        <Box className={classes.orderBox} key={index}>
+          <Typography align="center" variant="h6">
+            {new Date(order!.createdAt).toLocaleString()}
+          </Typography>
+          {order?.orderItem.map((item, itemIndex) => (
+            <CartItem
+              key={itemIndex}
+              quantity={item.quantity}
+              img=""
+              title={item.name}
+              price={item.price}
+              status={order.status as OrderStatus}
+            />
+          ))}
+          <CartTotal subtotal={true} price={order!.priceTotal} />
+        </Box>
+      ))}
+      <CartTotal
+        price={orders.reduce((prev, curr) => (curr?.priceTotal ? curr.priceTotal + prev : prev), 0)}
       />
     </div>
   );
@@ -124,6 +170,10 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     items: {},
+    orderBox: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+    },
   })
 );
 
