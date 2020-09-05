@@ -23,11 +23,13 @@ import {
   GetPropertyQueryVariables,
   GetOrderQuery,
   GetOrderQueryVariables,
+  Language,
 } from "../../API";
 import { useQuery, typedQuery } from "../../utils/useQuery";
 import { validateOpeningAndTable } from "../../utils/validateOpeningAndTable";
-import { addToOrders, updateOrdersItemStatus } from "../../store/actions";
+import { addToOrders, updateOrdersItemStatus, setCurrency } from "../../store/actions";
 import { Typography } from "@material-ui/core";
+import { priceDisplay } from "../../utils/priceDisplay";
 
 type IIndividualTabProps = {};
 
@@ -42,7 +44,7 @@ export const getOrder = /* GraphQL */ `
 
 const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   const classes = useStyles();
-  const { cart, valid, orders } = useTypedSelector((state) => state);
+  const { cart, valid, orders, currency } = useTypedSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
   const priceTotal = convertNumberToPrecision(
@@ -51,7 +53,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
       .reduce((prev, curr): number => prev + curr.quantity * curr.item.price, 0)
   );
   const { restaurantNameUrl, tableName } = useParams<TParams>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [popupOpen, setpopupOpen] = React.useState<boolean>(false);
   const handleClose = () => {
     setpopupOpen(false);
@@ -63,6 +65,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   React.useEffect(() => {
     if (data.getProperty) {
       validateOpeningAndTable(tableName, data, dispatch, t);
+      dispatch(setCurrency(data.getProperty.currency));
     }
   }, [data]);
   React.useEffect(() => {
@@ -130,7 +133,11 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
             img={item.img}
             title={item.item.title}
             ingredients={item.item.ingredients}
-            price={item.item.price}
+            price={priceDisplay(
+              currency,
+              item.item.price,
+              (i18n.language as Language) || (localStorage.getItem("i18nextLng") as Language)
+            )}
             quantity={item.quantity}
           />
         ))}
@@ -160,7 +167,11 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
               quantity={item.quantity}
               img=""
               title={item.name}
-              price={item.price}
+              price={priceDisplay(
+                currency,
+                item.price,
+                (i18n.language as Language) || (localStorage.getItem("i18nextLng") as Language)
+              )}
               status={order.status as OrderStatus}
             />
           ))}

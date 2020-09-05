@@ -13,7 +13,9 @@ import { addToCart, setFeedback } from "../../../store/actions";
 import { useTypedSelector } from "../../../store/types";
 import image from "../../../assets/popup.png";
 import { TItems } from "../../../types";
-
+import CheckIcon from "@material-ui/icons/Check";
+import { priceDisplay } from "../../../utils/priceDisplay";
+import { Language } from "../../../API";
 type IItemPopupProps = {
   items: TItems;
   handleClose: () => void;
@@ -27,9 +29,15 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
 }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const cartItems = useTypedSelector((state) => state.cart);
-  const { t } = useTranslation();
+  const { currency, cart } = useTypedSelector((state) => state);
+  const { t, i18n } = useTranslation();
   const [quantity, setquantity] = React.useState<number>(1);
+  const isItemInCart =
+    cart
+      .filter((item) => item.status === "ADDED_TO_CART")
+      .findIndex((item) => item.item.title === title) < 0
+      ? false
+      : true;
   const body = (
     <Container className={classes.root}>
       <div
@@ -77,17 +85,13 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
               +
             </ButtonBase>
           </Box>
-          <Typography variant="h5">{t("price_euro", { price: price * quantity })}</Typography>
+          <Typography variant="h5">
+            {priceDisplay(currency, price * quantity, i18n.language as Language)}
+          </Typography>
         </Box>
         <StyledButton
           className={classes.cartBtn}
-          disabled={
-            cartItems
-              .filter((item) => item.status === "ADDED_TO_CART")
-              .findIndex((item) => item.item.title === title) < 0
-              ? false
-              : true
-          }
+          disabled={isItemInCart}
           onCLick={() => {
             dispatch(
               addToCart({
@@ -107,7 +111,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
             );
           }}
         >
-          {t("item_popup_add_to_cart")}
+          {isItemInCart ? <CheckIcon /> : t("item_popup_add_to_cart")}
         </StyledButton>
       </Container>
     </Container>

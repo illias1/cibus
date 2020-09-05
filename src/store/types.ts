@@ -1,5 +1,5 @@
 import { TypedUseSelectorHook, useSelector } from "react-redux";
-import { GetMenuItemQuery, GetOrderQuery } from "../API";
+import { GetMenuItemQuery, GetOrderQuery, Currency } from "../API";
 import { TItems, OrderStatus } from "../types";
 
 export type TStore = {
@@ -16,6 +16,7 @@ export type TStore = {
   };
   menu: TMenu;
   valid: boolean;
+  currency: Currency;
 };
 
 type TMenu = {

@@ -5,6 +5,9 @@ import Typography from "@material-ui/core/Typography";
 import { Box } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { CustomTheme } from "../../../utils/customCreateTheme";
+import { Language } from "../../../API";
+import { priceDisplay } from "../../../utils/priceDisplay";
+import { useTypedSelector } from "../../../store/types";
 
 type TItem = {
   title: string;
@@ -16,7 +19,8 @@ type TItem = {
 
 const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img }) => {
   const classes = useStyles();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { currency } = useTypedSelector((state) => state);
   return (
     <Card className={classes.root} onClick={onClick}>
       <Box className={classes.content}>
@@ -24,7 +28,9 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img }) => {
           <Typography className={classes.title} variant="h6">
             {title}
           </Typography>
-          <Typography variant="body1">{t("price_euro", { price })}</Typography>
+          <Typography className={classes.price} variant="body1">
+            {priceDisplay(currency, price, i18n.language as Language)}
+          </Typography>
         </Box>
         <Typography className={classes.ingredients} variant="body1" color="textSecondary">
           {ingredients}
@@ -75,6 +81,9 @@ const useStyles = makeStyles((theme: CustomTheme) =>
       "-webkit-line-clamp": 2 /* numb,r of lines to show */,
       "-webkit-box-orient": "vertical",
       fontFamily: theme.typography.secondaryFontFamily,
+    },
+    price: {
+      minWidth: "fit-content",
     },
   })
 );

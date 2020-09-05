@@ -12,9 +12,10 @@ import { useDispatch } from "react-redux";
 import { removeItemFromCart } from "../../../store/actions";
 import { TCartItemStatus } from "../../../store/types";
 import { IMAGE_OVERLAY_COLOR } from "../../../utils/_constants";
+import { priceDisplay } from "../../../utils/priceDisplay";
 type TItem = {
   title: string;
-  price: number;
+  price: string;
   ingredients?: string[];
   img: string;
   quantity: number;
@@ -49,8 +50,8 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
           <Typography className={classes.title} variant="h6">
             {title}
           </Typography>
-          <Box>
-            <Typography variant="body1">{t("price_euro", { price: price })}</Typography>
+          <Box className={classes.priceQuantity}>
+            <Typography variant="body1">{price}</Typography>
             <Typography align="right" variant="body1">
               {quantity > 1 && `x${quantity}`}
             </Typography>
@@ -165,6 +166,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     iconButton: {
       padding: 0,
+    },
+    priceQuantity: {
+      minWidth: "fit-content",
     },
   })
 );

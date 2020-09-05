@@ -1,6 +1,6 @@
 import actionCreatorFactory from "typescript-fsa";
 import { TCartItem, TCartItemStatus, TStore } from "./types";
-import { GetMenuItemQuery } from "../API";
+import { GetMenuItemQuery, Currency } from "../API";
 import { OrderStatus } from "../types";
 
 const actionCreator = actionCreatorFactory();
@@ -19,3 +19,4 @@ export const setFeedback = actionCreator<TStore["feedback"]>("setFeedback");
 
 export const setupMenu = actionCreator<GetMenuItemQuery["getMenuItem"][]>("setupMenu");
 export const setValid = actionCreator<boolean>("setValid");
+export const setCurrency = actionCreator<Currency>("setCurrency");

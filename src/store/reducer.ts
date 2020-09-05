@@ -11,6 +11,7 @@ import {
   setValid,
   addToOrders,
   updateOrdersItemStatus,
+  setCurrency,
 } from "./actions";
 import {
   LOCAL_STORAGE_USER_NAME,
@@ -61,6 +62,10 @@ export const reducer = reducerWithInitialState(initialState)
   .case(setFeedback, (state, feedback) => ({
     ...state,
     feedback,
+  }))
+  .case(setCurrency, (state, currency) => ({
+    ...state,
+    currency,
   }))
   .case(setupMenu, (state, payload) => {
     const categories = [...(payload.map((item) => item!.i18n[0].category) as string[]), ""];

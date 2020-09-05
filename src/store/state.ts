@@ -5,6 +5,7 @@ import {
   LOCAL_STORAGE_CART,
   LOCAL_STORAGE_ORDERS,
 } from "../utils/_constants";
+import { Currency } from "../API";
 
 const sampleGroupCart: TGroupCartItem[] = [
   {
@@ -42,4 +43,5 @@ export const initialState: TStore = {
     itemsByCategory: [],
   },
   valid: false,
+  currency: Currency["USD"],
 };
