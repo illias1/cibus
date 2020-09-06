@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme: CustomTheme) =>
       flexDirection: "row",
       boxShadow: "0px 3px 50px #00000029",
       margin: "0 0 10px 0",
+      alignItems: "center",
     },
     content: {
       padding: 23,
