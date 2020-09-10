@@ -1,3 +1,5 @@
+import { GetMenuItemQuery } from "./API";
+
 export type TParams = {
   restaurantNameUrl: string;
   tableName: string;
@@ -16,12 +18,11 @@ export const OrderStatusEnum = {
   READY: "READY",
   PAYED: "PAYED",
 };
-export type TItems = {
-  title: string;
-  price: number;
-  ingredients: string[];
-  cal: string;
-  allergy: string[];
-  notes: string[];
-  img: string;
+
+export type TNonNullMenuItem = NonNullable<GetMenuItemQuery["getMenuItem"]>;
+
+export type TMenuItemi18nTranslated = TNonNullMenuItem["i18n"][number];
+
+export type TMenuItemTranslated = Omit<TNonNullMenuItem, "i18n"> & {
+  i18n: TMenuItemi18nTranslated;
 };
