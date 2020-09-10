@@ -1,7 +1,7 @@
 import actionCreatorFactory from "typescript-fsa";
 import { TCartItem, TStore } from "./types";
-import { GetMenuItemQuery, Currency } from "../API";
-import { OrderStatus } from "../types";
+import { Currency, Language } from "../API";
+import { OrderStatus, TNonNullPropertyQuery } from "../types";
 
 const actionCreator = actionCreatorFactory();
 
@@ -13,7 +13,11 @@ export const updateOrdersItemStatus = actionCreator<{
   status: OrderStatus;
 }>("updateOrdersItemStatus");
 export const setFeedback = actionCreator<TStore["feedback"]>("setFeedback");
+export const updateItemAddedToCart = actionCreator<TCartItem>("updateItemAddedToCart");
 
-export const setupMenu = actionCreator<GetMenuItemQuery["getMenuItem"][]>("setupMenu");
+export const setupMenu = actionCreator<{
+  payload: TNonNullPropertyQuery["menu"];
+  currentLang: Language;
+}>("setupMenu");
 export const setValid = actionCreator<boolean>("setValid");
 export const setCurrency = actionCreator<Currency>("setCurrency");

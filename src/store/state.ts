@@ -13,7 +13,9 @@ export const initialState: TStore = {
   },
   menu: {
     categories: [],
-    itemsByCategory: [],
+    itemsByCategory: {},
+    favorites: [],
+    originalMenuItemList: [],
   },
   valid: false,
   currency: Currency["USD"],

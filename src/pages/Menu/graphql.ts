@@ -19,6 +19,7 @@ export const getProperty = /* GraphQL */ `
             category
           }
           price
+          favorite
           status
           allergyInfo
           callories

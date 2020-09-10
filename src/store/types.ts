@@ -1,6 +1,6 @@
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 import { GetOrderQuery, Currency } from "../API";
-import { OrderStatus, TMenuItemTranslated } from "../types";
+import { OrderStatus, TMenuItemTranslated, TNonNullMenuItem } from "../types";
 
 export type TStore = {
   cart: TCartItem[];
@@ -17,11 +17,15 @@ export type TStore = {
 
 type TMenu = {
   categories: string[];
-  itemsByCategory: { category: string; items: TMenuItemTranslated[] }[];
+  itemsByCategory: TcategorizedMenuItems;
+  favorites: TMenuItemTranslated[];
+  originalMenuItemList: TNonNullMenuItem[];
 };
+export type TcategorizedMenuItems = Record<string, Record<string, TMenuItemTranslated>>;
 
 export type TCartItem = TMenuItemTranslated & {
   quantity: number;
+  customerComment?: string;
 };
 export type TCartItemStatus = "ADDED_TO_CART" | OrderStatus;
 
