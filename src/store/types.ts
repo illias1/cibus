@@ -1,13 +1,10 @@
 import { TypedUseSelectorHook, useSelector } from "react-redux";
-import { GetMenuItemQuery } from "../API";
-import { TItems } from "../types";
+import { GetOrderQuery, Currency } from "../API";
+import { OrderStatus, TMenuItemTranslated, TNonNullMenuItem } from "../types";
 
 export type TStore = {
-  userName: string;
-  userAlreadyVisited: boolean;
   cart: TCartItem[];
-  groupCart: TGroupCartItem[];
-  groupCartOrderPlaced: boolean;
+  orders: GetOrderQuery["getOrder"][];
   feedback: {
     open: boolean;
     message: string;
@@ -15,20 +12,22 @@ export type TStore = {
   };
   menu: TMenu;
   valid: boolean;
+  currency: Currency;
 };
 
 type TMenu = {
   categories: string[];
-  itemsByCategory: { category: string; items: GetMenuItemQuery["getMenuItem"][] }[];
+  itemsByCategory: TcategorizedMenuItems;
+  favorites: TMenuItemTranslated[];
+  originalMenuItemList: TNonNullMenuItem[];
 };
+export type TcategorizedMenuItems = Record<string, Record<string, TMenuItemTranslated>>;
 
-export type TCartItem = {
-  item: TItems;
-  status: TCartItemStatus;
+export type TCartItem = TMenuItemTranslated & {
   quantity: number;
-  img: string;
+  customerComment?: string;
 };
-export type TCartItemStatus = "added" | "placed";
+export type TCartItemStatus = "ADDED_TO_CART" | OrderStatus;
 
 export type TGroupCartItem = {
   customerName: string;

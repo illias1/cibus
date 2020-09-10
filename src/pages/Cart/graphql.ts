@@ -1,3 +1,5 @@
+import { Currency } from "../../API";
+
 export const createOrder = /* GraphQL */ `
   mutation CreateOrder($input: CreateOrderInput!, $condition: ModelOrderConditionInput) {
     createOrder(input: $input, condition: $condition) {
@@ -26,6 +28,7 @@ export const getPropertyForCart = /* GraphQL */ `
       NonUniqueName
       open
       tables
+      currency
     }
   }
 `;
@@ -36,5 +39,6 @@ export type GetPropertyQueryForCart = {
     NonUniqueName: string;
     open: boolean;
     tables: Array<string | null>;
+    currency: Currency;
   };
 };

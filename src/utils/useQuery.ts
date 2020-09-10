@@ -50,3 +50,35 @@ export const useQuery = <ResultType extends {}, VariablesType extends {} = {}>(
     refetch,
   };
 };
+
+type TtypedQuery<DataType> = {
+  data: DataType | null;
+  queryError: any | null;
+};
+export const typedQuery = async <ResultType extends {}, VariablesType extends {} = {}>(
+  query: string,
+  variables?: VariablesType
+) => {
+  const fetchQuery = async (query: string, variables?: VariablesType) => {
+    try {
+      const { data } = (await API.graphql({
+        query,
+        variables,
+      })) as {
+        data: ResultType;
+      };
+      return {
+        query: data,
+        queryError: null,
+      };
+    } catch (error) {
+      console.warn(error);
+      return {
+        query: null,
+        queryError: error,
+      };
+    }
+  };
+
+  return fetchQuery(query, variables);
+};

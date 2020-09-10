@@ -7,48 +7,90 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import { useTranslation } from "react-i18next";
-import { StyledButton } from "../../../../../components/Button";
+import { StyledButton } from "../../../components/Button";
 import { useDispatch } from "react-redux";
-import { addToCart, setFeedback } from "../../../../../store/actions";
-import { useTypedSelector } from "../../../../../store/types";
-import image from "../../../../../assets/popup.png";
-import { TItems } from "../../../../../types";
-
+import { addToCart, setFeedback, updateItemAddedToCart } from "../../../store/actions";
+import { useTypedSelector } from "../../../store/types";
+import { ReactComponent as Placeholder } from "../../../assets/placeholder.svg";
+import { priceDisplay } from "../../../utils/priceDisplay";
+import { Language } from "../../../API";
+import { TMenuItemTranslated } from "../../../types";
 type IItemPopupProps = {
-  items: TItems;
+  item: TMenuItemTranslated;
   handleClose: () => void;
   open: boolean;
 };
 
-const ItemPopup: React.FC<IItemPopupProps> = ({
-  items: { title, price, ingredients, allergy, notes, cal, img },
-  handleClose,
-  open,
-}) => {
+const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const cartItems = useTypedSelector((state) => state.cart);
-  const { t } = useTranslation();
+  const { currency, cart } = useTypedSelector((state) => state);
+  const { t, i18n } = useTranslation();
   const [quantity, setquantity] = React.useState<number>(1);
+  const [customerComment, setcustomerComment] = React.useState<string>("");
+  const thisItemInCart = cart.find((cartitem) => cartitem.id === item!.id);
+  React.useEffect(() => {
+    if (thisItemInCart) {
+      console.log("this item is already in the cart");
+      setquantity(thisItemInCart.quantity);
+      if (thisItemInCart.customerComment) {
+        setcustomerComment(thisItemInCart.customerComment);
+      }
+    }
+  }, [thisItemInCart]);
+  React.useEffect(() => {
+    return () => {
+      setquantity(1);
+      setcustomerComment("");
+    };
+  }, [item]);
+  const handleClick = () => {
+    if (thisItemInCart) {
+      dispatch(
+        updateItemAddedToCart({
+          ...item,
+          quantity,
+          customerComment,
+        })
+      );
+    } else {
+      dispatch(
+        addToCart({
+          ...item,
+          quantity,
+          customerComment,
+        })
+      );
+    }
+    handleClose();
+    dispatch(
+      setFeedback({
+        open: true,
+        message: thisItemInCart
+          ? t("feedback_order_item_modified")
+          : t("feedback_item_added_to_cart"),
+        duration: 1500,
+      })
+    );
+  };
   const body = (
     <Container className={classes.root}>
-      <div
-        style={{
-          background: `linear-gradient( rgba(256, 256, 256, 0), rgba(256, 256, 256, 1)), url(${image})`,
-        }}
-        className={classes.image}
-      />
+      {item.image ? (
+        <div
+          style={{
+            background: `linear-gradient( rgba(256, 256, 256, 0), rgba(256, 256, 256, 1)), url(${item.image})`,
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+          }}
+          className={classes.image}
+        />
+      ) : (
+        <Placeholder style={{ width: "100%", height: 200 }} />
+      )}
       <Container>
-        <Typography variant="h4">{title}</Typography>
+        <Typography variant="h5">{item.i18n.name}</Typography>
         <Typography color="textSecondary" variant="body2">
-          {ingredients}
-        </Typography>
-        <Typography className={classes.paragraph} variant="body1">
-          {t("menu_allergy_info_label")}
-        </Typography>
-
-        <Typography color="textSecondary" variant="body2">
-          {allergy}
+          {item.i18n.description}
         </Typography>
         <Typography className={classes.paragraph} variant="body1">
           {t("menu_special_instructions_label")}
@@ -58,6 +100,8 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
           placeholder={t("item_popup_note_placeholder")}
           multiline
           fullWidth
+          value={customerComment}
+          onChange={(e) => setcustomerComment(e.target.value)}
         />
 
         <Box className={classes.priceZone}>
@@ -77,37 +121,12 @@ const ItemPopup: React.FC<IItemPopupProps> = ({
               +
             </ButtonBase>
           </Box>
-          <Typography variant="h5">{t("price_euro", { price: price * quantity })}</Typography>
+          <Typography variant="h5">
+            {priceDisplay(currency, item.price * quantity, i18n.language as Language)}
+          </Typography>
         </Box>
-        <StyledButton
-          className={classes.cartBtn}
-          disabled={
-            cartItems
-              .filter((item) => item.status === "added")
-              .findIndex((item) => item.item.title === title) < 0
-              ? false
-              : true
-          }
-          onCLick={() => {
-            dispatch(
-              addToCart({
-                status: "added",
-                item: { title, price, ingredients, allergy, img: "", notes, cal },
-                quantity,
-                img,
-              })
-            );
-            handleClose();
-            dispatch(
-              setFeedback({
-                open: true,
-                message: t("feedback_item_added_to_cart"),
-                duration: 1500,
-              })
-            );
-          }}
-        >
-          {t("item_popup_add_to_cart")}
+        <StyledButton className={classes.cartBtn} onCLick={handleClick}>
+          {thisItemInCart ? t("item_popup_button_revisited") : t("item_popup_add_to_cart")}
         </StyledButton>
       </Container>
     </Container>
@@ -140,7 +159,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     image: {
       width: "100%",
-      height: 265,
+      height: 196,
     },
     priceZone: {
       display: "flex",
@@ -158,6 +177,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paragraph: {
       marginTop: theme.spacing(2),
+      backgroundColor: theme.palette.grey[200],
+      marginLeft: -theme.spacing(2),
+      marginRight: -theme.spacing(2),
+      paddingLeft: theme.spacing(2),
     },
     cartBtn: {
       margin: "0 auto 1em",

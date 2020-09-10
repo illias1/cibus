@@ -8,20 +8,40 @@ import { useTranslation } from "react-i18next";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import IconButton from "@material-ui/core/IconButton";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import WarningIcon from "@material-ui/icons/Warning";
 import { useDispatch } from "react-redux";
 import { removeItemFromCart } from "../../../store/actions";
 import { TCartItemStatus } from "../../../store/types";
 import { IMAGE_OVERLAY_COLOR } from "../../../utils/_constants";
 type TItem = {
   title: string;
-  price: number;
-  ingredients?: string[];
-  img: string;
+  price: string;
+  ingredients: string | null;
+  img: string | null;
   quantity: number;
   status: TCartItemStatus;
+  id?: string;
 };
 
-const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, status }) => {
+const displayStatusOnImage = (status: TCartItemStatus): string => {
+  switch (status) {
+    case "ADDED_TO_CART":
+      return "cart_item_status_not_placed_yet";
+    case "DENIED":
+      return "cart_item_status_denied";
+    case "READY":
+      return "cart_item_status_ready";
+    case "RECEIVED_BY_RESTAURANT":
+      return "cart_item_status_received_by_restaurant";
+    case "REQUESTED_BY_CUSTOMER":
+      return "cart_item_status_requested_by_customer";
+    default:
+      return "";
+  }
+};
+
+const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, status, id }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -32,50 +52,33 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
           <Typography className={classes.title} variant="h6">
             {title}
           </Typography>
-          <Box>
-            <Typography variant="body1">{t("price_euro", { price: price })}</Typography>
+          <Box className={classes.priceQuantity}>
+            <Typography variant="body1">{price}</Typography>
             <Typography align="right" variant="body1">
               {quantity > 1 && `x${quantity}`}
             </Typography>
           </Box>
         </Box>
-        <Typography className={classes.ingredients} variant="body1" color="textSecondary">
-          {ingredients}
-        </Typography>
-        <Box className={classes.horizontal}>
-          <Button className={classes.button} endIcon={<ExpandMoreIcon />}>
-            {t("cart_item_customize_option")}
-          </Button>
-          {status === "added" && (
+        {ingredients && (
+          <Typography className={classes.ingredients} variant="body1" color="textSecondary">
+            {ingredients}
+          </Typography>
+        )}
+        {status === "ADDED_TO_CART" && (
+          <Box className={classes.horizontal}>
+            <Button className={classes.button} endIcon={<ExpandMoreIcon />}>
+              {t("cart_item_customize_option")}
+            </Button>
+
             <IconButton
-              onClick={() => dispatch(removeItemFromCart(title))}
+              onClick={() => dispatch(removeItemFromCart(id!))}
               className={classes.iconButton}
             >
               <DeleteOutlineIcon />
             </IconButton>
-          )}
-        </Box>
-      </Box>
-
-      {/* tried to use the skeleton but doesn't show up with suspense
-      if using the img onLoad as ternary - image never renders so never loads so skeleton persists 
-      if adding display none to image till loads - skeleton takes less space than needed */}
-      {/* <Suspense
-        fallback={() => (
-          <Skeleton variant="rect" animation="wave" className={classes.cover} />
+          </Box>
         )}
-      > */}
-      {/* <img
-        className={classes.cover}
-        src={img}
-        alt="sdf"
-        // onLoad={() => {
-        // setimageLoaded(true);
-        // console.log("image loaded");
-        // }}
-        // onError={() => console.log("image load errror")}
-      /> */}
-      {/* </Suspense> */}
+      </Box>
 
       <div
         className={classes.cover}
@@ -86,7 +89,12 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
         }}
       >
         <Typography align="center" variant="body1">
-          {status === "added" ? t("cart_order_not_placed_yet") : t("cart_order_placed")}
+          {t(displayStatusOnImage(status))}
+          {status === "ADDED_TO_CART" ? (
+            <WarningIcon color="secondary" />
+          ) : (
+            <CheckCircleIcon style={{ color: "lightgreen", marginTop: 5 }} />
+          )}
         </Typography>
       </div>
     </Card>
@@ -147,6 +155,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     iconButton: {
       padding: 0,
+    },
+    priceQuantity: {
+      minWidth: "fit-content",
     },
   })
 );

@@ -3,47 +3,47 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { useTranslation } from "react-i18next";
+import { useTypedSelector } from "../../../store/types";
+import { priceDisplay } from "../../../utils/priceDisplay";
+import { Language } from "../../../API";
 
 type ITotalPriceProps = {
   price: number;
   tip?: number;
+  subtotal?: boolean;
 };
 
-const TotalPrice: React.FC<ITotalPriceProps> = ({ price, tip = 0 }) => {
+const TotalPrice: React.FC<ITotalPriceProps> = ({ price, tip = 0, subtotal }) => {
   const classes = useStyles();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { currency } = useTypedSelector((state) => state);
   return (
-    <Box className={classes.root}>
-      <Typography variant="h5">{t("cart_total")}</Typography>
+    <Box style={{ height: subtotal ? "fit-content" : "" }} className={classes.root}>
+      <Typography variant="h5">{subtotal ? t("cart_subtotal") : t("cart_total")}</Typography>
       <Box className={classes.priceArea}>
         {Boolean(tip) && (
           <>
-            <Typography
-              color="textSecondary"
-              align="right"
-              className={classes.tipInfo}
-            >
-              {t("cart_subtotal")} {t("price_euro", { price: price - tip })}
+            <Typography color="textSecondary" align="right" className={classes.tipInfo}>
+              {t("cart_subtotal")} {priceDisplay(currency, price - tip, i18n.language as Language)}
             </Typography>
-            <Typography
-              color="textSecondary"
-              align="right"
-              className={classes.tipInfo}
-            >
-              {t("cart_tip")} {t("price_euro", { price: tip })}
+            <Typography color="textSecondary" align="right" className={classes.tipInfo}>
+              {t("cart_tip")} {priceDisplay(currency, tip, i18n.language as Language)}
             </Typography>
           </>
         )}
         <Typography align="right" variant="h5">
-          {t("price_euro", { price })}
+          {priceDisplay(currency, price, i18n.language as Language)}
         </Typography>
-        <Typography
-          className={classes.fontFamily}
-          color="textSecondary"
-          variant="body1"
-        >
-          {t("cart_vat_included")} - {t("cart_tip_not_included")}
-        </Typography>
+        {!subtotal && (
+          <Typography
+            align="right"
+            className={classes.fontFamily}
+            color="textSecondary"
+            variant="body1"
+          >
+            {t("cart_vat_included")} - {t("cart_tip_not_included")}
+          </Typography>
+        )}
       </Box>
     </Box>
   );

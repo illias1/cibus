@@ -4,7 +4,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { augmentedTheme, CustomTheme } from "./utils/customCreateTheme";
 import WithSnackbar from "./components/withSnackbar";
-const MenuScreen = lazy(() => import("./pages/Menu/components/MenuScreen.tsx/MenuScreen"));
+const MenuScreen = lazy(() => import("./pages/Menu"));
 const HomePage = lazy(() => import("./pages/Home"));
 const CartPage = lazy(() => import("./pages/Cart"));
 
