@@ -4,22 +4,23 @@ import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import { Box } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import { CustomTheme } from "../../../utils/customCreateTheme";
 import { Language } from "../../../API";
-import { priceDisplay } from "../../../utils/priceDisplay";
 import { useTypedSelector } from "../../../store/types";
+import { priceDisplay } from "../utils";
+import { CustomTheme } from "../../../utils/customCreateTheme";
 
 type TItem = {
   title: string;
   price: number;
   ingredients?: string;
+  id: string;
   img: string;
   onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined;
 };
 
-const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img }) => {
+const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img, id }) => {
   const classes = useStyles();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { currency } = useTypedSelector((state) => state);
   return (
     <Card className={classes.root} onClick={onClick}>
@@ -36,7 +37,16 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img }) => {
           {ingredients}
         </Typography>
       </Box>
-      <img className={classes.cover} src={img} alt={title} />
+
+      <img
+        id={id}
+        className={classes.cover}
+        src={img}
+        alt={title}
+        onError={() => {
+          document.getElementById(id)!.style.display = "none";
+        }}
+      />
     </Card>
   );
 };

@@ -9,40 +9,74 @@ import CategoriesSlider from "./components/CategoriesSlider";
 import ItemPopup from "./components/ItemPopup";
 import background from "../../assets/background.png";
 import MenuFallback from "./components/MenuFallback";
-
+import LanguageSwitch from "../../components/LanguageSwitch";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { useHistory, useParams } from "react-router-dom";
-import { TParams, TItems } from "../../types";
+import { TParams, TMenuItemTranslated } from "../../types";
 import Badge from "@material-ui/core/Badge";
 import { useTypedSelector } from "../../store/types";
 import { useQuery } from "../../utils/useQuery";
-import { GetPropertyQuery, GetPropertyQueryVariables } from "../../API";
+import { GetPropertyQuery, GetPropertyQueryVariables, Language, MenuItemStatus } from "../../API";
 import { getProperty } from "./graphql";
 import { useDispatch } from "react-redux";
-import { setupMenu } from "../../store/actions";
+import { setupMenu, setFeedback } from "../../store/actions";
 import { useTranslation } from "react-i18next";
 import { validateOpeningAndTable } from "../../utils/validateOpeningAndTable";
+import Footer from "../../components/Footer";
 type IMenuScreenProps = {};
+
+const initialMenuItemTranslated = {
+  __typename: "MenuItem" as const,
+  id: "",
+  propertyName: "",
+  i18n: {
+    __typename: "I18nMenuItem" as const,
+    language: Language["en"],
+    name: "",
+    category: "",
+    description: "",
+  },
+  price: 0,
+  status: MenuItemStatus["AVAILABLE"],
+  favorite: false,
+  allergyInfo: "",
+  callories: "",
+  image: "",
+  notes: "",
+  createdAt: "",
+  updatedAt: "",
+  owner: "",
+};
 
 const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
-  const { t } = useTranslation();
-  const cartItemsLength = useTypedSelector(
-    (state) => state.cart.filter((item) => item.status === "ADDED_TO_CART").length
-  );
-  const { itemsByCategory, categories } = useTypedSelector((state) => state.menu);
+  const { t, i18n } = useTranslation();
+  const cartItemsLength = useTypedSelector((state) => state.cart.length);
+  const { itemsByCategory, categories, favorites } = useTypedSelector((state) => state.menu);
   const { restaurantNameUrl, tableName } = useParams<TParams>();
   const { loading, data } = useQuery<GetPropertyQuery, GetPropertyQueryVariables>(getProperty, {
     name: restaurantNameUrl,
   });
   React.useEffect(() => {
-    if (data && data.getProperty && data.getProperty.menu && data.getProperty.menu.items) {
-      // ts doesnt't give error in vscode but throws at runtime
-      // @ts-ignore
-      dispatch(setupMenu(data.getProperty.menu.items));
+    console.log("data", data);
+    if (data && data.getProperty && data.getProperty.menu) {
+      dispatch(
+        setupMenu({
+          payload: data.getProperty.menu,
+          currentLang: i18n.language as Language,
+        })
+      );
       validateOpeningAndTable(tableName, data, dispatch, t);
+    }
+    if (data.getProperty === null) {
+      dispatch(
+        setFeedback({
+          open: true,
+          message: "Property doesn't exist",
+        })
+      );
     }
   }, [data]);
 
@@ -50,30 +84,10 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
   const handleClose = () => {
     setpopupOpen(false);
   };
-  const [items, setitems] = React.useState<TItems>({
-    title: "",
-    ingredients: [""],
-    price: 0,
-    allergy: [],
-    img: "",
-    notes: [],
-    cal: "",
-  });
+  const [item, setitem] = React.useState<TMenuItemTranslated>(initialMenuItemTranslated);
   return (
     <>
-      <ItemPopup
-        open={popupOpen}
-        handleClose={handleClose}
-        items={{
-          allergy: items.allergy,
-          price: items!.price,
-          title: items.title,
-          ingredients: items?.ingredients,
-          img: items.img,
-          cal: items.cal,
-          notes: items.notes,
-        }}
-      />
+      <ItemPopup open={popupOpen} handleClose={handleClose} item={item} />
 
       <Badge className={classes.cartFAB} badgeContent={cartItemsLength} color="primary">
         <Fab
@@ -84,6 +98,7 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
           <ShoppingBasketIcon />
         </Fab>
       </Badge>
+      <LanguageSwitch />
       {loading ? (
         <MenuFallback />
       ) : (
@@ -105,34 +120,55 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
           </div>
           <CategoriesSlider categories={categories} />
           <Box className={classes.root}>
-            {itemsByCategory.map(({ items, category }, i) => (
+            <Typography
+              gutterBottom={true}
+              id={`category-${favorites}`}
+              className={classes.title}
+              variant="h4"
+            >
+              {t("menu_chef_favorites")}
+            </Typography>
+            <Box className={classes.horizontalParent}>
+              {favorites.map((fav) => (
+                <div className={classes.horizontalChild}>
+                  <MenuItem
+                    onClick={(e) => {
+                      setpopupOpen(true);
+                      setitem(fav);
+                    }}
+                    title={fav.i18n.name}
+                    ingredients={fav.i18n.description || ""}
+                    price={fav.price}
+                    img={fav.image || ""}
+                    id={fav.id}
+                  />
+                </div>
+              ))}
+            </Box>
+            {Object.entries(itemsByCategory).map(([category, items]) => (
               <React.Fragment key={category}>
-                <Typography id={`category-${category}`} className={classes.title} variant="h4">
+                <Typography
+                  gutterBottom={true}
+                  id={`category-${category}`}
+                  className={classes.title}
+                  variant="h4"
+                >
                   {category}
                 </Typography>
                 {/* { title, price, ingredients, allergy, img, cal, notes } */}
-                {items.map((item, index) => (
-                  <React.Fragment key={index}>
+                {Object.entries(items).map(([id, item]) => (
+                  <React.Fragment key={id}>
                     {item ? (
                       <MenuItem
                         onClick={(e) => {
                           setpopupOpen(true);
-                          setitems({
-                            title: item!.i18n[0].name,
-                            price: item!.price,
-                            ingredients: ((item!.i18n[0].description as unknown) as string[]) || [
-                              "",
-                            ],
-                            allergy: (item.allergyInfo as unknown) as string[],
-                            img: item.image || "",
-                            cal: item.callories || "",
-                            notes: [""],
-                          });
+                          setitem(item);
                         }}
-                        title={item!.i18n[0].name}
-                        ingredients={item!.i18n[0].description || ""}
-                        price={item!.price}
+                        title={item.i18n.name}
+                        ingredients={item.i18n.description || ""}
+                        price={item.price}
                         img={item.image || ""}
+                        id={item.id}
                       />
                     ) : null}
                   </React.Fragment>
@@ -142,6 +178,7 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
           </Box>
         </>
       )}
+      <Footer />
     </>
   );
 };
@@ -162,7 +199,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: "18px 23px",
     },
     title: {
-      font: "SemiBold 17px/20px Josefin Sans",
+      font: "normal normal bold 43px/40px Josefin Sans",
       letterSpacing: 0,
     },
 
@@ -170,6 +207,7 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "fixed",
       bottom: "9px",
       right: "12px",
+      zIndex: 2,
     },
     restName: {
       color: theme.palette.common.white,
@@ -177,6 +215,19 @@ const useStyles = makeStyles((theme: Theme) =>
     restAddress: {
       color: theme.palette.text.hint,
       marginBottom: theme.spacing(4),
+    },
+    horizontalChild: {
+      flex: "0 0 auto",
+      width: "83%",
+      marginRight: "14px",
+      overflow: "inherit",
+      borderRadius: "20px",
+    },
+    horizontalParent: {
+      display: "flex",
+      overflowX: "auto",
+      marginRight: "-23px",
+      marginBottom: theme.spacing(2),
     },
   })
 );

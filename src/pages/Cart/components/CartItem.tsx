@@ -8,18 +8,20 @@ import { useTranslation } from "react-i18next";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import IconButton from "@material-ui/core/IconButton";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import WarningIcon from "@material-ui/icons/Warning";
 import { useDispatch } from "react-redux";
 import { removeItemFromCart } from "../../../store/actions";
 import { TCartItemStatus } from "../../../store/types";
 import { IMAGE_OVERLAY_COLOR } from "../../../utils/_constants";
-import { priceDisplay } from "../../../utils/priceDisplay";
 type TItem = {
   title: string;
   price: string;
-  ingredients?: string[];
-  img: string;
+  ingredients: string | null;
+  img: string | null;
   quantity: number;
   status: TCartItemStatus;
+  id?: string;
 };
 
 const displayStatusOnImage = (status: TCartItemStatus): string => {
@@ -39,7 +41,7 @@ const displayStatusOnImage = (status: TCartItemStatus): string => {
   }
 };
 
-const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, status }) => {
+const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, status, id }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -57,9 +59,11 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
             </Typography>
           </Box>
         </Box>
-        <Typography className={classes.ingredients} variant="body1" color="textSecondary">
-          {ingredients}
-        </Typography>
+        {ingredients && (
+          <Typography className={classes.ingredients} variant="body1" color="textSecondary">
+            {ingredients}
+          </Typography>
+        )}
         {status === "ADDED_TO_CART" && (
           <Box className={classes.horizontal}>
             <Button className={classes.button} endIcon={<ExpandMoreIcon />}>
@@ -67,7 +71,7 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
             </Button>
 
             <IconButton
-              onClick={() => dispatch(removeItemFromCart(title))}
+              onClick={() => dispatch(removeItemFromCart(id!))}
               className={classes.iconButton}
             >
               <DeleteOutlineIcon />
@@ -75,26 +79,6 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
           </Box>
         )}
       </Box>
-
-      {/* tried to use the skeleton but doesn't show up with suspense
-      if using the img onLoad as ternary - image never renders so never loads so skeleton persists 
-      if adding display none to image till loads - skeleton takes less space than needed */}
-      {/* <Suspense
-        fallback={() => (
-          <Skeleton variant="rect" animation="wave" className={classes.cover} />
-        )}
-      > */}
-      {/* <img
-        className={classes.cover}
-        src={img}
-        alt="sdf"
-        // onLoad={() => {
-        // setimageLoaded(true);
-        // console.log("image loaded");
-        // }}
-        // onError={() => console.log("image load errror")}
-      /> */}
-      {/* </Suspense> */}
 
       <div
         className={classes.cover}
@@ -106,6 +90,11 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
       >
         <Typography align="center" variant="body1">
           {t(displayStatusOnImage(status))}
+          {status === "ADDED_TO_CART" ? (
+            <WarningIcon color="secondary" />
+          ) : (
+            <CheckCircleIcon style={{ color: "lightgreen", marginTop: 5 }} />
+          )}
         </Typography>
       </div>
     </Card>

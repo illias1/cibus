@@ -1,8 +1,10 @@
 {
   "general_confirm": "Confirm",
   "menu_allergy_info_label": "Allergy Info",
+  "menu_chef_favorites": "Chef’s Favorites",
   "menu_special_instructions_label": "Special Instructions",
   "item_popup_note_placeholder": "Add a note [extra sauce, no onions, etc.]",
+  "item_popup_button_revisited": "Modify order",
   "cart_item_customize_option": "Customize",
   "cart_individual_order_tab_label": "Your Order",
   "cart_total": "Total",
@@ -18,7 +20,7 @@
   "cart_subtotal": "Sub Total",
   "cart_pay_all": "Pay All",
   "cart_pay_my_order": "Pay My Order",
-  "cart_order_not_placed_yet": "Order not placed yet",
+  "cart_item_status_not_placed_yet": "Order not placed yet",
   "cart_item_status_requested_by_customer": "Order Placed",
   "item_popup_add_to_cart": "Add to Cart",
   "cart_item_status_received_by_restaurant": "Order Accepted",
@@ -27,5 +29,8 @@
   "feedback_table_number_is_wrong": "Table number is wrong",
   "feedback_is_closed": "{{name}} is closed",
   "feedback_item_added_to_cart": "Added to cart!",
-  "cart_after_order_place_message": "You order has been placed. We will start processing when your friends at your party place their order."
+  "feedback_order_item_modified": "Order modified!",
+  "cart_after_order_place_message": "You order has been placed. We will start processing when your friends at your party place their order.",
+  "powered_by": "<><p>This menu is powered by</p> <p><1>cibus.online</1></p></>",
+  "cibus_check_more_info": "Check <1><5>cibus.online</5></1> for more information."
 }

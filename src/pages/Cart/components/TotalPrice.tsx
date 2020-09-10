@@ -18,7 +18,7 @@ const TotalPrice: React.FC<ITotalPriceProps> = ({ price, tip = 0, subtotal }) =>
   const { t, i18n } = useTranslation();
   const { currency } = useTypedSelector((state) => state);
   return (
-    <Box className={classes.root}>
+    <Box style={{ height: subtotal ? "fit-content" : "" }} className={classes.root}>
       <Typography variant="h5">{subtotal ? t("cart_subtotal") : t("cart_total")}</Typography>
       <Box className={classes.priceArea}>
         {Boolean(tip) && (
