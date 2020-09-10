@@ -23,7 +23,11 @@ const Footer: React.FC<IFooterProps> = ({ ...props }) => {
       >
         <Trans i18nKey="cibus_check_more_info">
           Check
-          {<a style={{ color: theme.palette.text.primary }} href="https://cibus.online/"></a>}
+          {
+            <a style={{ color: theme.palette.text.primary }} href="https://cibus.online/">
+              cibus.online
+            </a>
+          }
           for more information
         </Trans>
         {<br />}

@@ -13,8 +13,6 @@ import {
 } from "./actions";
 import { LOCAL_STORAGE_CART, LOCAL_STORAGE_ORDERS, UNCATEGORIZED } from "../utils/_constants";
 import { TcategorizedMenuItems } from "./types";
-import i18n from "../i18n";
-import { Language } from "../API";
 import { correctLanguagei18nItem } from "../utils/useCorrectLanguage";
 import { TMenuItemTranslated, TNonNullMenuItem } from "../types";
 

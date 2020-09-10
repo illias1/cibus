@@ -11,7 +11,7 @@ import { StyledButton } from "../../../components/Button";
 import { useDispatch } from "react-redux";
 import { addToCart, setFeedback, updateItemAddedToCart } from "../../../store/actions";
 import { useTypedSelector } from "../../../store/types";
-import image from "../../../assets/popup.png";
+import { ReactComponent as Placeholder } from "../../../assets/placeholder.svg";
 import { priceDisplay } from "../../../utils/priceDisplay";
 import { Language } from "../../../API";
 import { TMenuItemTranslated } from "../../../types";
@@ -75,12 +75,18 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
   };
   const body = (
     <Container className={classes.root}>
-      <div
-        style={{
-          background: `linear-gradient( rgba(256, 256, 256, 0), rgba(256, 256, 256, 1)), url(${image})`,
-        }}
-        className={classes.image}
-      />
+      {item.image ? (
+        <div
+          style={{
+            background: `linear-gradient( rgba(256, 256, 256, 0), rgba(256, 256, 256, 1)), url(${item.image})`,
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+          }}
+          className={classes.image}
+        />
+      ) : (
+        <Placeholder style={{ width: "100%", height: 200 }} />
+      )}
       <Container>
         <Typography variant="h5">{item.i18n.name}</Typography>
         <Typography color="textSecondary" variant="body2">
