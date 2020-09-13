@@ -13,7 +13,7 @@ import { addToCart, setFeedback, updateItemAddedToCart } from "../../../store/ac
 import { useTypedSelector } from "../../../store/types";
 import { ReactComponent as Placeholder } from "../../../assets/placeholder.svg";
 import { priceDisplay } from "../../../utils/priceDisplay";
-import { Language } from "../../../API";
+import { Language, MenuItemStatus } from "../../../API";
 import { TMenuItemTranslated } from "../../../types";
 type IItemPopupProps = {
   item: TMenuItemTranslated;
@@ -125,7 +125,16 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
             {priceDisplay(currency, item.price * quantity, i18n.language as Language)}
           </Typography>
         </Box>
-        <StyledButton className={classes.cartBtn} onCLick={handleClick}>
+        {item.status === MenuItemStatus.OUT_OF_STOCK && (
+          <Typography align="center" color="error">
+            {t("item_popup_currently_unavailable")}
+          </Typography>
+        )}
+        <StyledButton
+          disabled={item.status === MenuItemStatus.OUT_OF_STOCK}
+          className={classes.cartBtn}
+          onCLick={handleClick}
+        >
           {thisItemInCart ? t("item_popup_button_revisited") : t("item_popup_add_to_cart")}
         </StyledButton>
       </Container>

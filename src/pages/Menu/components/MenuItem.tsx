@@ -16,14 +16,19 @@ type TItem = {
   id: string;
   img: string;
   onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined;
+  available: boolean;
 };
 
-const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img, id }) => {
+const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img, id, available }) => {
   const classes = useStyles();
   const { i18n } = useTranslation();
   const { currency } = useTypedSelector((state) => state);
   return (
-    <Card className={classes.root} onClick={onClick}>
+    <Card
+      style={{ backgroundColor: available ? "" : "lightgray" }}
+      className={classes.root}
+      onClick={onClick}
+    >
       <Box className={classes.content}>
         <Box className={classes.tileAndPrice}>
           <Typography className={classes.title} variant="h6">

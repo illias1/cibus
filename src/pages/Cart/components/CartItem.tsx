@@ -90,12 +90,12 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
       >
         <Typography align="center" variant="body1">
           {t(displayStatusOnImage(status))}
-          {status === "ADDED_TO_CART" ? (
-            <WarningIcon color="secondary" />
-          ) : (
-            <CheckCircleIcon style={{ color: "lightgreen", marginTop: 5 }} />
-          )}
         </Typography>
+        {status === "ADDED_TO_CART" ? (
+          <WarningIcon color="secondary" />
+        ) : (
+          <CheckCircleIcon style={{ color: "lightgreen", marginTop: 5 }} />
+        )}
       </div>
     </Card>
   );
@@ -124,6 +124,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
+      flexDirection: "column",
     },
 
     horizontal: {

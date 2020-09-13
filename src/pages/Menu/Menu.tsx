@@ -130,8 +130,9 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
             </Typography>
             <Box className={classes.horizontalParent}>
               {favorites.map((fav) => (
-                <div className={classes.horizontalChild}>
+                <div key={fav.id} className={classes.horizontalChild}>
                   <MenuItem
+                    available={fav.status === MenuItemStatus.AVAILABLE}
                     onClick={(e) => {
                       setpopupOpen(true);
                       setitem(fav);
@@ -160,6 +161,7 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
                   <React.Fragment key={id}>
                     {item ? (
                       <MenuItem
+                        available={item.status === MenuItemStatus.AVAILABLE}
                         onClick={(e) => {
                           setpopupOpen(true);
                           setitem(item);

@@ -4,6 +4,7 @@
   "menu_chef_favorites": "Favoritos del chef",
   "menu_special_instructions_label": "Instrucciones Especiales",
   "item_popup_note_placeholder": "Agregar una nota [salsa extra, no pepinillos, etc.]",
+  "item_popup_currently_unavailable": "Ahorra no disponible",
   "cart_item_customize_option": "Personalizar",
   "item_popup_button_revisited": "Modificar la orden",
   "cart_individual_order_tab_label": "Tu orden",

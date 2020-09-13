@@ -5,6 +5,7 @@
   "menu_special_instructions_label": "Special Instructions",
   "item_popup_note_placeholder": "Add a note [extra sauce, no onions, etc.]",
   "item_popup_button_revisited": "Modify order",
+  "item_popup_currently_unavailable": "Currently unavailable",
   "cart_item_customize_option": "Customize",
   "cart_individual_order_tab_label": "Your Order",
   "cart_total": "Total",

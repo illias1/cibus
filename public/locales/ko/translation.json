@@ -3,6 +3,7 @@
   "menu_allergy_info_label": "",
   "menu_special_instructions_label": "조리시 요청사항",
   "menu_chef_favorites": "추천 메뉴",
+  "item_popup_currently_unavailable": "현재 이것을 주문 할 수 없습니다",
   "item_popup_note_placeholder": "입력해주세요(맵기 조절 등)",
   "cart_item_customize_option": "수량 및 요청사항 수정",
   "item_popup_button_revisited": "주문 변경",
