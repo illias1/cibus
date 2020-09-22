@@ -31,7 +31,12 @@
   "feedback_is_closed": "{{name}} está cerrado",
   "feedback_item_added_to_cart": "Añadido al carrito",
   "feedback_order_item_modified": "La Orden modificada!",
-  "cart_after_order_place_message": "El Pedido enviado!",
+  "cart_after_order_place_message": "Confirma el pedido por favor!",
   "powered_by": "<><p>This menu is powered by</p> <p><1>cibus.online</1></p></>",
-  "cibus_check_more_info": "ve <1><5>cibus.online</5></1> para mas information."
+  "cibus_check_more_info": "ve <1><5>cibus.online</5></1> para mas information.",
+  "menu_comp_helper_max_number": "Choose maximum {{number}} item",
+  "menu_comp_helper_max_number_plural": "Choose maximum {{number}} item(s)",
+  "menu_comp_helper_exact_number": "Choose exactly {{number}} item",
+  "menu_comp_helper_exact_number_plural": "Choose exactly {{number}} item(s)",
+  "input_your_name": "So lo quieres, puedes poner tu nombre ;)"
 }

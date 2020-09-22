@@ -33,5 +33,6 @@
   "feedback_item_added_to_cart": "추가되었습니다",
   "cart_after_order_place_message": "주문을 확인해주세요",
   "powered_by": "<><p>이 메뉴는 <1>cibus.online</1>에 의해 지원됩니다</p></>",
-  "cibus_check_more_info": "더 많은 정보는 <1><5>cibus.online</5></1>에서 확인하실 수 있습니다"
+  "cibus_check_more_info": "더 많은 정보는 <1><5>cibus.online</5></1>에서 확인하실 수 있습니다",
+  "input_your_name": "원하시면 이름을 입력하세요 ;)"
 }

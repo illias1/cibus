@@ -9,26 +9,59 @@ import TextField from "@material-ui/core/TextField";
 import { useTranslation } from "react-i18next";
 import { StyledButton } from "../../../components/Button";
 import { useDispatch } from "react-redux";
-import { addToCart, setFeedback, updateItemAddedToCart } from "../../../store/actions";
+import { addToCart, updateItemAddedToCart } from "../../../store/actions";
 import { useTypedSelector } from "../../../store/types";
 import { ReactComponent as Placeholder } from "../../../assets/placeholder.svg";
 import { priceDisplay } from "../../../utils/priceDisplay";
-import { Language, MenuItemStatus } from "../../../API";
-import { TMenuItemTranslated } from "../../../types";
+import { Language, MenuCompType, MenuItemStatus } from "../../../API";
+import { TMenuComponentTranslated, TMenuItemTranslated } from "../../../types";
+import MenuComponentRadio from "../../../components/MenuComponentRadio";
+import MenuComponentCheckBox from "../../../components/MenuComponentCheckbox";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { prepareItemToAddToCart } from "../utils";
 type IItemPopupProps = {
   item: TMenuItemTranslated;
   handleClose: () => void;
   open: boolean;
 };
+// string - component id
+// value - choice index if radio, array of options with associated boolean value if checkbox
+export type TComponentChoice = Record<string, number | boolean[]>;
 
 const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const { currency, cart } = useTypedSelector((state) => state);
+
+  const {
+    cart,
+    menu: { menuComponents },
+    property: { currency },
+  } = useTypedSelector((state) => state);
   const { t, i18n } = useTranslation();
   const [quantity, setquantity] = React.useState<number>(1);
   const [customerComment, setcustomerComment] = React.useState<string>("");
   const thisItemInCart = cart.find((cartitem) => cartitem.id === item!.id);
+  const foundComps = React.useMemo(
+    () =>
+      menuComponents.reduce(
+        (prev, curr) => (item.addComponents?.includes(curr.id) ? prev.concat([curr]) : prev),
+        [] as TMenuComponentTranslated[]
+      ),
+    [item]
+  );
+  const { register, handleSubmit, errors, control, getValues } = useForm<TComponentChoice>({});
+  const handleClick: SubmitHandler<TComponentChoice> = (data) => {
+    console.log("data from form", data);
+    const preparedItem = prepareItemToAddToCart(foundComps, data, item, quantity, customerComment);
+    if (thisItemInCart) {
+      dispatch(updateItemAddedToCart(preparedItem));
+    } else {
+      dispatch(addToCart(preparedItem));
+    }
+    handleClose();
+  };
+  // ============================================================================================================================================
+  // EFFECTS
   React.useEffect(() => {
     if (thisItemInCart) {
       console.log("this item is already in the cart");
@@ -36,43 +69,18 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
       if (thisItemInCart.customerComment) {
         setcustomerComment(thisItemInCart.customerComment);
       }
+      // TODO : SET ALREADY CHOSEN VALUES
     }
   }, [thisItemInCart]);
+
   React.useEffect(() => {
     return () => {
       setquantity(1);
       setcustomerComment("");
     };
   }, [item]);
-  const handleClick = () => {
-    if (thisItemInCart) {
-      dispatch(
-        updateItemAddedToCart({
-          ...item,
-          quantity,
-          customerComment,
-        })
-      );
-    } else {
-      dispatch(
-        addToCart({
-          ...item,
-          quantity,
-          customerComment,
-        })
-      );
-    }
-    handleClose();
-    dispatch(
-      setFeedback({
-        open: true,
-        message: thisItemInCart
-          ? t("feedback_order_item_modified")
-          : t("feedback_item_added_to_cart"),
-        duration: 1500,
-      })
-    );
-  };
+  // ============================================================================================================================================
+  // UI
   const body = (
     <Container className={classes.root}>
       {item.image ? (
@@ -103,40 +111,69 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
           value={customerComment}
           onChange={(e) => setcustomerComment(e.target.value)}
         />
-
-        <Box className={classes.priceZone}>
-          <Box>
-            <ButtonBase
-              className={classes.mathBtn}
-              onClick={() => {
-                if (quantity > 1) {
-                  setquantity(quantity - 1);
-                }
-              }}
-            >
-              -
-            </ButtonBase>
-            {quantity}
-            <ButtonBase className={classes.mathBtn} onClick={() => setquantity(quantity + 1)}>
-              +
-            </ButtonBase>
+        <form onSubmit={handleSubmit(handleClick)}>
+          {foundComps.map(({ id, translations, restrictions, type }, index) => (
+            <React.Fragment key={id}>
+              {foundComps ? (
+                type === MenuCompType.RADIO ? (
+                  <MenuComponentRadio
+                    type={type}
+                    id={id}
+                    restrictions={restrictions}
+                    translations={translations}
+                    currency={currency}
+                    control={control}
+                  />
+                ) : (
+                  <MenuComponentCheckBox
+                    errors={errors}
+                    getValues={getValues}
+                    type={type}
+                    id={id}
+                    restrictions={restrictions}
+                    translations={translations}
+                    currency={currency}
+                    register={register}
+                  />
+                )
+              ) : null}
+            </React.Fragment>
+          ))}
+          <Box className={classes.priceZone}>
+            <Box>
+              <ButtonBase
+                className={classes.mathBtn}
+                onClick={() => {
+                  if (quantity > 1) {
+                    setquantity(quantity - 1);
+                  }
+                }}
+              >
+                -
+              </ButtonBase>
+              {quantity}
+              <ButtonBase className={classes.mathBtn} onClick={() => setquantity(quantity + 1)}>
+                +
+              </ButtonBase>
+            </Box>
+            <Typography variant="h5">
+              {priceDisplay(currency, item.price * quantity, i18n.language as Language)}
+            </Typography>
           </Box>
-          <Typography variant="h5">
-            {priceDisplay(currency, item.price * quantity, i18n.language as Language)}
-          </Typography>
-        </Box>
-        {item.status === MenuItemStatus.OUT_OF_STOCK && (
-          <Typography align="center" color="error">
-            {t("item_popup_currently_unavailable")}
-          </Typography>
-        )}
-        <StyledButton
-          disabled={item.status === MenuItemStatus.OUT_OF_STOCK}
-          className={classes.cartBtn}
-          onCLick={handleClick}
-        >
-          {thisItemInCart ? t("item_popup_button_revisited") : t("item_popup_add_to_cart")}
-        </StyledButton>
+          {item.status === MenuItemStatus.OUT_OF_STOCK && (
+            <Typography align="center" color="error">
+              {t("item_popup_currently_unavailable")}
+            </Typography>
+          )}
+          <StyledButton
+            disabled={item.status === MenuItemStatus.OUT_OF_STOCK}
+            className={classes.cartBtn}
+            // onCLick={handleClick}
+            type="submit"
+          >
+            {thisItemInCart ? t("item_popup_button_revisited") : t("item_popup_add_to_cart")}
+          </StyledButton>
+        </form>
       </Container>
     </Container>
   );
@@ -203,4 +240,4 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default ItemPopup;
+export default React.memo(ItemPopup);

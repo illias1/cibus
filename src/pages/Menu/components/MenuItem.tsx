@@ -22,7 +22,7 @@ type TItem = {
 const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img, id, available }) => {
   const classes = useStyles();
   const { i18n } = useTranslation();
-  const { currency } = useTypedSelector((state) => state);
+  const { currency } = useTypedSelector((state) => state.property);
   return (
     <Card
       style={{ backgroundColor: available ? "" : "lightgray" }}
