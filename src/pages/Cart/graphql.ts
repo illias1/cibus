@@ -6,6 +6,7 @@ export const createOrder = /* GraphQL */ `
       id
       propertyName
       orderItem {
+        id
         name
         price
         quantity
