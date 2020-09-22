@@ -1,6 +1,13 @@
 import { TypedUseSelectorHook, useSelector } from "react-redux";
-import { GetOrderQuery, Currency } from "../API";
-import { OrderStatus, TMenuItemTranslated, TNonNullMenuItem } from "../types";
+import { GetOrderQuery } from "../API";
+import { GetPropertyQueryForCart } from "../pages/Cart/graphql";
+import {
+  OrderStatus,
+  TMenuComponentTranslated,
+  TMenuItemTranslated,
+  TNonNullMenuItem,
+  TNonNullPropertyQuery,
+} from "../types";
 
 export type TStore = {
   cart: TCartItem[];
@@ -12,7 +19,8 @@ export type TStore = {
   };
   menu: TMenu;
   valid: boolean;
-  currency: Currency;
+  property: GetPropertyQueryForCart["getProperty"];
+  initialized: boolean;
 };
 
 type TMenu = {
@@ -20,12 +28,21 @@ type TMenu = {
   itemsByCategory: TcategorizedMenuItems;
   favorites: TMenuItemTranslated[];
   originalMenuItemList: TNonNullMenuItem[];
+  menuComponents: TMenuComponentTranslated[];
+  originalMenuComp: TNonNullPropertyQuery["menuComponents"];
 };
 export type TcategorizedMenuItems = Record<string, Record<string, TMenuItemTranslated>>;
 
 export type TCartItem = TMenuItemTranslated & {
   quantity: number;
   customerComment?: string;
+  options: TComponentChosenOptions[];
+  optionsTotalPrice: number;
+};
+type TComponentChosenOptions = {
+  id: string;
+  label: string;
+  optionChoice: TMenuComponentTranslated["translations"]["optionChoice"];
 };
 export type TCartItemStatus = "ADDED_TO_CART" | OrderStatus;
 

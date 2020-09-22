@@ -55,6 +55,67 @@ export type ModelSizeInput = {
   between?: Array<number | null> | null;
 };
 
+export enum MenuCompType {
+  RADIO = "RADIO",
+  CHECKBOX = "CHECKBOX",
+}
+
+export enum Language {
+  ar = "ar",
+  az = "az",
+  be = "be",
+  bg = "bg",
+  bn = "bn",
+  bs = "bs",
+  ca = "ca",
+  cs = "cs",
+  da = "da",
+  de = "de",
+  en = "en",
+  es = "es",
+  et = "et",
+  fa = "fa",
+  fi = "fi",
+  fr = "fr",
+  gl = "gl",
+  el = "el",
+  he = "he",
+  hi = "hi",
+  hr = "hr",
+  hu = "hu",
+  hy = "hy",
+  it = "it",
+  id = "id",
+  ja = "ja",
+  ka = "ka",
+  kk = "kk",
+  ko = "ko",
+  ky = "ky",
+  lt = "lt",
+  lv = "lv",
+  mk = "mk",
+  mn = "mn",
+  ms = "ms",
+  nb = "nb",
+  nl = "nl",
+  nn = "nn",
+  pl = "pl",
+  pt = "pt",
+  ro = "ro",
+  ru = "ru",
+  sk = "sk",
+  sl = "sl",
+  sr = "sr",
+  sv = "sv",
+  th = "th",
+  tr = "tr",
+  uk = "uk",
+  ur = "ur",
+  uz = "uz",
+  zh = "zh",
+  vi = "vi",
+}
+
 export enum Currency {
   AED = "AED",
   AFN = "AFN",
@@ -220,6 +281,11 @@ export enum Currency {
   ZWD = "ZWD",
 }
 
+export enum MenuItemStatus {
+  AVAILABLE = "AVAILABLE",
+  OUT_OF_STOCK = "OUT_OF_STOCK",
+}
+
 export type UpdateUserInput = {
   id: string;
   email?: string | null;
@@ -235,8 +301,44 @@ export type CreatePropertyInput = {
   NonUniqueName: string;
   open: boolean;
   ownerId: string;
+  menuComponents?: Array<MenuComponentInput> | null;
   tables: Array<string | null>;
   currency: Currency;
+  address?: AddressInput | null;
+  image?: PropertyImageInput | null;
+};
+
+export type MenuComponentInput = {
+  id: string;
+  type: MenuCompType;
+  translations: Array<MenuCompTranslInput>;
+  restrictions?: MenuCompRestrInput | null;
+};
+
+export type MenuCompTranslInput = {
+  language: Language;
+  label: string;
+  optionChoice: Array<ItemOptionChoiceInput>;
+};
+
+export type ItemOptionChoiceInput = {
+  name: string;
+  addPrice?: number | null;
+};
+
+export type MenuCompRestrInput = {
+  max?: number | null;
+  exact?: number | null;
+};
+
+export type AddressInput = {
+  country?: string | null;
+  city?: string | null;
+  exact?: string | null;
+};
+
+export type PropertyImageInput = {
+  main?: string | null;
 };
 
 export type ModelPropertyConditionInput = {
@@ -261,74 +363,16 @@ export type ModelCurrencyInput = {
   ne?: Currency | null;
 };
 
-export enum Language {
-  ar = "ar",
-  az = "az",
-  be = "be",
-  bg = "bg",
-  bn = "bn",
-  bs = "bs",
-  ca = "ca",
-  cs = "cs",
-  da = "da",
-  de = "de",
-  en = "en",
-  es = "es",
-  et = "et",
-  fa = "fa",
-  fi = "fi",
-  fr = "fr",
-  gl = "gl",
-  el = "el",
-  he = "he",
-  hi = "hi",
-  hr = "hr",
-  hu = "hu",
-  hy = "hy",
-  it = "it",
-  id = "id",
-  ja = "ja",
-  ka = "ka",
-  kk = "kk",
-  ko = "ko",
-  ky = "ky",
-  lt = "lt",
-  lv = "lv",
-  mk = "mk",
-  mn = "mn",
-  ms = "ms",
-  nb = "nb",
-  nl = "nl",
-  nn = "nn",
-  pl = "pl",
-  pt = "pt",
-  ro = "ro",
-  ru = "ru",
-  sk = "sk",
-  sl = "sl",
-  sr = "sr",
-  sv = "sv",
-  th = "th",
-  tr = "tr",
-  uk = "uk",
-  ur = "ur",
-  uz = "uz",
-  zh = "zh",
-  vi = "vi",
-}
-
-export enum MenuItemStatus {
-  AVAILABLE = "AVAILABLE",
-  OUT_OF_STOCK = "OUT_OF_STOCK",
-}
-
 export type UpdatePropertyInput = {
   name: string;
   NonUniqueName?: string | null;
   open?: boolean | null;
   ownerId?: string | null;
+  menuComponents?: Array<MenuComponentInput> | null;
   tables?: Array<string | null> | null;
   currency?: Currency | null;
+  address?: AddressInput | null;
+  image?: PropertyImageInput | null;
 };
 
 export type DeletePropertyInput = {
@@ -340,9 +384,9 @@ export type CreateMenuItemInput = {
   propertyName: string;
   i18n: Array<I18nMenuItemInput>;
   price: number;
+  addComponents?: Array<string | null> | null;
   status: MenuItemStatus;
   favorite?: boolean | null;
-  allergyInfo?: string | null;
   callories?: string | null;
   image?: string | null;
   notes?: string | null;
@@ -358,9 +402,9 @@ export type I18nMenuItemInput = {
 export type ModelMenuItemConditionInput = {
   propertyName?: ModelStringInput | null;
   price?: ModelFloatInput | null;
+  addComponents?: ModelIDInput | null;
   status?: ModelMenuItemStatusInput | null;
   favorite?: ModelBooleanInput | null;
-  allergyInfo?: ModelStringInput | null;
   callories?: ModelStringInput | null;
   image?: ModelStringInput | null;
   notes?: ModelStringInput | null;
@@ -381,6 +425,22 @@ export type ModelFloatInput = {
   attributeType?: ModelAttributeTypes | null;
 };
 
+export type ModelIDInput = {
+  ne?: string | null;
+  eq?: string | null;
+  le?: string | null;
+  lt?: string | null;
+  ge?: string | null;
+  gt?: string | null;
+  contains?: string | null;
+  notContains?: string | null;
+  between?: Array<string | null> | null;
+  beginsWith?: string | null;
+  attributeExists?: boolean | null;
+  attributeType?: ModelAttributeTypes | null;
+  size?: ModelSizeInput | null;
+};
+
 export type ModelMenuItemStatusInput = {
   eq?: MenuItemStatus | null;
   ne?: MenuItemStatus | null;
@@ -391,9 +451,9 @@ export type UpdateMenuItemInput = {
   propertyName?: string | null;
   i18n?: Array<I18nMenuItemInput> | null;
   price?: number | null;
+  addComponents?: Array<string | null> | null;
   status?: MenuItemStatus | null;
   favorite?: boolean | null;
-  allergyInfo?: string | null;
   callories?: string | null;
   image?: string | null;
   notes?: string | null;
@@ -411,14 +471,23 @@ export type UpdateOrderInput = {
   status?: string | null;
   tableName?: string | null;
   priceTotal?: number | null;
+  customerName?: string | null;
 };
 
 export type OrderItemInput = {
+  id: string;
   name: string;
   price: number;
   quantity: number;
-  allergyInfo?: string | null;
   customerComment?: string | null;
+  options?: Array<TComponentChosenOptionsInput> | null;
+  optionsTotalPrice?: number | null;
+};
+
+export type TComponentChosenOptionsInput = {
+  id: string;
+  label?: string | null;
+  optionChoice: Array<ItemOptionChoiceInput>;
 };
 
 export type ModelOrderConditionInput = {
@@ -427,6 +496,7 @@ export type ModelOrderConditionInput = {
   status?: ModelStringInput | null;
   tableName?: ModelStringInput | null;
   priceTotal?: ModelFloatInput | null;
+  customerName?: ModelStringInput | null;
   and?: Array<ModelOrderConditionInput | null> | null;
   or?: Array<ModelOrderConditionInput | null> | null;
   not?: ModelOrderConditionInput | null;
@@ -444,6 +514,7 @@ export type CreateOrderInput = {
   status: string;
   tableName: string;
   priceTotal: number;
+  customerName?: string | null;
 };
 
 export type ModelUserFilterInput = {
@@ -453,22 +524,6 @@ export type ModelUserFilterInput = {
   and?: Array<ModelUserFilterInput | null> | null;
   or?: Array<ModelUserFilterInput | null> | null;
   not?: ModelUserFilterInput | null;
-};
-
-export type ModelIDInput = {
-  ne?: string | null;
-  eq?: string | null;
-  le?: string | null;
-  lt?: string | null;
-  ge?: string | null;
-  gt?: string | null;
-  contains?: string | null;
-  notContains?: string | null;
-  between?: Array<string | null> | null;
-  beginsWith?: string | null;
-  attributeExists?: boolean | null;
-  attributeType?: ModelAttributeTypes | null;
-  size?: ModelSizeInput | null;
 };
 
 export type ModelPropertyFilterInput = {
@@ -492,9 +547,9 @@ export type ModelMenuItemFilterInput = {
   id?: ModelIDInput | null;
   propertyName?: ModelStringInput | null;
   price?: ModelFloatInput | null;
+  addComponents?: ModelIDInput | null;
   status?: ModelMenuItemStatusInput | null;
   favorite?: ModelBooleanInput | null;
-  allergyInfo?: ModelStringInput | null;
   callories?: ModelStringInput | null;
   image?: ModelStringInput | null;
   notes?: ModelStringInput | null;
@@ -510,6 +565,7 @@ export type ModelOrderFilterInput = {
   status?: ModelStringInput | null;
   tableName?: ModelStringInput | null;
   priceTotal?: ModelFloatInput | null;
+  customerName?: ModelStringInput | null;
   and?: Array<ModelOrderFilterInput | null> | null;
   or?: Array<ModelOrderFilterInput | null> | null;
   not?: ModelOrderFilterInput | null;
@@ -562,16 +618,67 @@ export type CreateUserMutation = {
         NonUniqueName: string;
         open: boolean;
         ownerId: string;
+        menuComponents: Array<{
+          __typename: "MenuComponent";
+          id: string;
+          type: MenuCompType;
+          translations: Array<{
+            __typename: "MenuCompTransl";
+            language: Language;
+            label: string;
+          }>;
+          restrictions: {
+            __typename: "MenuCompRestr";
+            max: number | null;
+            exact: number | null;
+          } | null;
+        }> | null;
         tables: Array<string | null>;
         currency: Currency;
+        address: {
+          __typename: "Address";
+          country: string | null;
+          city: string | null;
+          exact: string | null;
+        } | null;
+        image: {
+          __typename: "PropertyImage";
+          main: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
           __typename: "ModelMenuItemConnection";
+          items: Array<{
+            __typename: "MenuItem";
+            id: string;
+            propertyName: string;
+            price: number;
+            addComponents: Array<string | null> | null;
+            status: MenuItemStatus;
+            favorite: boolean | null;
+            callories: string | null;
+            image: string | null;
+            notes: string | null;
+            createdAt: string;
+            updatedAt: string;
+            owner: string | null;
+          } | null> | null;
           nextToken: string | null;
         } | null;
         orders: {
           __typename: "ModelOrderConnection";
+          items: Array<{
+            __typename: "Order";
+            id: string;
+            propertyName: string;
+            createdAt: string;
+            status: string;
+            tableName: string;
+            priceTotal: number;
+            customerName: string | null;
+            updatedAt: string;
+          } | null> | null;
           nextToken: string | null;
         } | null;
       } | null> | null;
@@ -602,16 +709,67 @@ export type UpdateUserMutation = {
         NonUniqueName: string;
         open: boolean;
         ownerId: string;
+        menuComponents: Array<{
+          __typename: "MenuComponent";
+          id: string;
+          type: MenuCompType;
+          translations: Array<{
+            __typename: "MenuCompTransl";
+            language: Language;
+            label: string;
+          }>;
+          restrictions: {
+            __typename: "MenuCompRestr";
+            max: number | null;
+            exact: number | null;
+          } | null;
+        }> | null;
         tables: Array<string | null>;
         currency: Currency;
+        address: {
+          __typename: "Address";
+          country: string | null;
+          city: string | null;
+          exact: string | null;
+        } | null;
+        image: {
+          __typename: "PropertyImage";
+          main: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
           __typename: "ModelMenuItemConnection";
+          items: Array<{
+            __typename: "MenuItem";
+            id: string;
+            propertyName: string;
+            price: number;
+            addComponents: Array<string | null> | null;
+            status: MenuItemStatus;
+            favorite: boolean | null;
+            callories: string | null;
+            image: string | null;
+            notes: string | null;
+            createdAt: string;
+            updatedAt: string;
+            owner: string | null;
+          } | null> | null;
           nextToken: string | null;
         } | null;
         orders: {
           __typename: "ModelOrderConnection";
+          items: Array<{
+            __typename: "Order";
+            id: string;
+            propertyName: string;
+            createdAt: string;
+            status: string;
+            tableName: string;
+            priceTotal: number;
+            customerName: string | null;
+            updatedAt: string;
+          } | null> | null;
           nextToken: string | null;
         } | null;
       } | null> | null;
@@ -642,16 +800,67 @@ export type DeleteUserMutation = {
         NonUniqueName: string;
         open: boolean;
         ownerId: string;
+        menuComponents: Array<{
+          __typename: "MenuComponent";
+          id: string;
+          type: MenuCompType;
+          translations: Array<{
+            __typename: "MenuCompTransl";
+            language: Language;
+            label: string;
+          }>;
+          restrictions: {
+            __typename: "MenuCompRestr";
+            max: number | null;
+            exact: number | null;
+          } | null;
+        }> | null;
         tables: Array<string | null>;
         currency: Currency;
+        address: {
+          __typename: "Address";
+          country: string | null;
+          city: string | null;
+          exact: string | null;
+        } | null;
+        image: {
+          __typename: "PropertyImage";
+          main: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
           __typename: "ModelMenuItemConnection";
+          items: Array<{
+            __typename: "MenuItem";
+            id: string;
+            propertyName: string;
+            price: number;
+            addComponents: Array<string | null> | null;
+            status: MenuItemStatus;
+            favorite: boolean | null;
+            callories: string | null;
+            image: string | null;
+            notes: string | null;
+            createdAt: string;
+            updatedAt: string;
+            owner: string | null;
+          } | null> | null;
           nextToken: string | null;
         } | null;
         orders: {
           __typename: "ModelOrderConnection";
+          items: Array<{
+            __typename: "Order";
+            id: string;
+            propertyName: string;
+            createdAt: string;
+            status: string;
+            tableName: string;
+            priceTotal: number;
+            customerName: string | null;
+            updatedAt: string;
+          } | null> | null;
           nextToken: string | null;
         } | null;
       } | null> | null;
@@ -672,8 +881,38 @@ export type CreatePropertyMutation = {
     NonUniqueName: string;
     open: boolean;
     ownerId: string;
+    menuComponents: Array<{
+      __typename: "MenuComponent";
+      id: string;
+      type: MenuCompType;
+      translations: Array<{
+        __typename: "MenuCompTransl";
+        language: Language;
+        label: string;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }>;
+      restrictions: {
+        __typename: "MenuCompRestr";
+        max: number | null;
+        exact: number | null;
+      } | null;
+    }> | null;
     tables: Array<string | null>;
     currency: Currency;
+    address: {
+      __typename: "Address";
+      country: string | null;
+      city: string | null;
+      exact: string | null;
+    } | null;
+    image: {
+      __typename: "PropertyImage";
+      main: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -690,9 +929,9 @@ export type CreatePropertyMutation = {
           description: string | null;
         }>;
         price: number;
+        addComponents: Array<string | null> | null;
         status: MenuItemStatus;
         favorite: boolean | null;
-        allergyInfo: string | null;
         callories: string | null;
         image: string | null;
         notes: string | null;
@@ -710,16 +949,23 @@ export type CreatePropertyMutation = {
         propertyName: string;
         orderItem: Array<{
           __typename: "OrderItem";
+          id: string;
           name: string;
           price: number;
           quantity: number;
-          allergyInfo: string | null;
           customerComment: string | null;
+          options: Array<{
+            __typename: "TComponentChosenOptions";
+            id: string;
+            label: string | null;
+          }> | null;
+          optionsTotalPrice: number | null;
         }>;
         createdAt: string;
         status: string;
         tableName: string;
         priceTotal: number;
+        customerName: string | null;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -739,8 +985,38 @@ export type UpdatePropertyMutation = {
     NonUniqueName: string;
     open: boolean;
     ownerId: string;
+    menuComponents: Array<{
+      __typename: "MenuComponent";
+      id: string;
+      type: MenuCompType;
+      translations: Array<{
+        __typename: "MenuCompTransl";
+        language: Language;
+        label: string;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }>;
+      restrictions: {
+        __typename: "MenuCompRestr";
+        max: number | null;
+        exact: number | null;
+      } | null;
+    }> | null;
     tables: Array<string | null>;
     currency: Currency;
+    address: {
+      __typename: "Address";
+      country: string | null;
+      city: string | null;
+      exact: string | null;
+    } | null;
+    image: {
+      __typename: "PropertyImage";
+      main: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -757,9 +1033,9 @@ export type UpdatePropertyMutation = {
           description: string | null;
         }>;
         price: number;
+        addComponents: Array<string | null> | null;
         status: MenuItemStatus;
         favorite: boolean | null;
-        allergyInfo: string | null;
         callories: string | null;
         image: string | null;
         notes: string | null;
@@ -777,16 +1053,23 @@ export type UpdatePropertyMutation = {
         propertyName: string;
         orderItem: Array<{
           __typename: "OrderItem";
+          id: string;
           name: string;
           price: number;
           quantity: number;
-          allergyInfo: string | null;
           customerComment: string | null;
+          options: Array<{
+            __typename: "TComponentChosenOptions";
+            id: string;
+            label: string | null;
+          }> | null;
+          optionsTotalPrice: number | null;
         }>;
         createdAt: string;
         status: string;
         tableName: string;
         priceTotal: number;
+        customerName: string | null;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -806,8 +1089,38 @@ export type DeletePropertyMutation = {
     NonUniqueName: string;
     open: boolean;
     ownerId: string;
+    menuComponents: Array<{
+      __typename: "MenuComponent";
+      id: string;
+      type: MenuCompType;
+      translations: Array<{
+        __typename: "MenuCompTransl";
+        language: Language;
+        label: string;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }>;
+      restrictions: {
+        __typename: "MenuCompRestr";
+        max: number | null;
+        exact: number | null;
+      } | null;
+    }> | null;
     tables: Array<string | null>;
     currency: Currency;
+    address: {
+      __typename: "Address";
+      country: string | null;
+      city: string | null;
+      exact: string | null;
+    } | null;
+    image: {
+      __typename: "PropertyImage";
+      main: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -824,9 +1137,9 @@ export type DeletePropertyMutation = {
           description: string | null;
         }>;
         price: number;
+        addComponents: Array<string | null> | null;
         status: MenuItemStatus;
         favorite: boolean | null;
-        allergyInfo: string | null;
         callories: string | null;
         image: string | null;
         notes: string | null;
@@ -844,16 +1157,23 @@ export type DeletePropertyMutation = {
         propertyName: string;
         orderItem: Array<{
           __typename: "OrderItem";
+          id: string;
           name: string;
           price: number;
           quantity: number;
-          allergyInfo: string | null;
           customerComment: string | null;
+          options: Array<{
+            __typename: "TComponentChosenOptions";
+            id: string;
+            label: string | null;
+          }> | null;
+          optionsTotalPrice: number | null;
         }>;
         createdAt: string;
         status: string;
         tableName: string;
         priceTotal: number;
+        customerName: string | null;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -879,9 +1199,9 @@ export type CreateMenuItemMutation = {
       description: string | null;
     }>;
     price: number;
+    addComponents: Array<string | null> | null;
     status: MenuItemStatus;
     favorite: boolean | null;
-    allergyInfo: string | null;
     callories: string | null;
     image: string | null;
     notes: string | null;
@@ -909,9 +1229,9 @@ export type UpdateMenuItemMutation = {
       description: string | null;
     }>;
     price: number;
+    addComponents: Array<string | null> | null;
     status: MenuItemStatus;
     favorite: boolean | null;
-    allergyInfo: string | null;
     callories: string | null;
     image: string | null;
     notes: string | null;
@@ -939,9 +1259,9 @@ export type DeleteMenuItemMutation = {
       description: string | null;
     }>;
     price: number;
+    addComponents: Array<string | null> | null;
     status: MenuItemStatus;
     favorite: boolean | null;
-    allergyInfo: string | null;
     callories: string | null;
     image: string | null;
     notes: string | null;
@@ -963,16 +1283,28 @@ export type UpdateOrderMutation = {
     propertyName: string;
     orderItem: Array<{
       __typename: "OrderItem";
+      id: string;
       name: string;
       price: number;
       quantity: number;
-      allergyInfo: string | null;
       customerComment: string | null;
+      options: Array<{
+        __typename: "TComponentChosenOptions";
+        id: string;
+        label: string | null;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }> | null;
+      optionsTotalPrice: number | null;
     }>;
     createdAt: string;
     status: string;
     tableName: string;
     priceTotal: number;
+    customerName: string | null;
     updatedAt: string;
   } | null;
 };
@@ -989,16 +1321,28 @@ export type DeleteOrderMutation = {
     propertyName: string;
     orderItem: Array<{
       __typename: "OrderItem";
+      id: string;
       name: string;
       price: number;
       quantity: number;
-      allergyInfo: string | null;
       customerComment: string | null;
+      options: Array<{
+        __typename: "TComponentChosenOptions";
+        id: string;
+        label: string | null;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }> | null;
+      optionsTotalPrice: number | null;
     }>;
     createdAt: string;
     status: string;
     tableName: string;
     priceTotal: number;
+    customerName: string | null;
     updatedAt: string;
   } | null;
 };
@@ -1015,16 +1359,28 @@ export type CreateOrderMutation = {
     propertyName: string;
     orderItem: Array<{
       __typename: "OrderItem";
+      id: string;
       name: string;
       price: number;
       quantity: number;
-      allergyInfo: string | null;
       customerComment: string | null;
+      options: Array<{
+        __typename: "TComponentChosenOptions";
+        id: string;
+        label: string | null;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }> | null;
+      optionsTotalPrice: number | null;
     }>;
     createdAt: string;
     status: string;
     tableName: string;
     priceTotal: number;
+    customerName: string | null;
     updatedAt: string;
   } | null;
 };
@@ -1050,16 +1406,67 @@ export type GetUserQuery = {
         NonUniqueName: string;
         open: boolean;
         ownerId: string;
+        menuComponents: Array<{
+          __typename: "MenuComponent";
+          id: string;
+          type: MenuCompType;
+          translations: Array<{
+            __typename: "MenuCompTransl";
+            language: Language;
+            label: string;
+          }>;
+          restrictions: {
+            __typename: "MenuCompRestr";
+            max: number | null;
+            exact: number | null;
+          } | null;
+        }> | null;
         tables: Array<string | null>;
         currency: Currency;
+        address: {
+          __typename: "Address";
+          country: string | null;
+          city: string | null;
+          exact: string | null;
+        } | null;
+        image: {
+          __typename: "PropertyImage";
+          main: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
           __typename: "ModelMenuItemConnection";
+          items: Array<{
+            __typename: "MenuItem";
+            id: string;
+            propertyName: string;
+            price: number;
+            addComponents: Array<string | null> | null;
+            status: MenuItemStatus;
+            favorite: boolean | null;
+            callories: string | null;
+            image: string | null;
+            notes: string | null;
+            createdAt: string;
+            updatedAt: string;
+            owner: string | null;
+          } | null> | null;
           nextToken: string | null;
         } | null;
         orders: {
           __typename: "ModelOrderConnection";
+          items: Array<{
+            __typename: "Order";
+            id: string;
+            propertyName: string;
+            createdAt: string;
+            status: string;
+            tableName: string;
+            priceTotal: number;
+            customerName: string | null;
+            updatedAt: string;
+          } | null> | null;
           nextToken: string | null;
         } | null;
       } | null> | null;
@@ -1093,10 +1500,33 @@ export type ListUsersQuery = {
           NonUniqueName: string;
           open: boolean;
           ownerId: string;
+          menuComponents: Array<{
+            __typename: "MenuComponent";
+            id: string;
+            type: MenuCompType;
+          }> | null;
           tables: Array<string | null>;
           currency: Currency;
+          address: {
+            __typename: "Address";
+            country: string | null;
+            city: string | null;
+            exact: string | null;
+          } | null;
+          image: {
+            __typename: "PropertyImage";
+            main: string | null;
+          } | null;
           createdAt: string;
           updatedAt: string;
+          menu: {
+            __typename: "ModelMenuItemConnection";
+            nextToken: string | null;
+          } | null;
+          orders: {
+            __typename: "ModelOrderConnection";
+            nextToken: string | null;
+          } | null;
         } | null> | null;
         nextToken: string | null;
       } | null;
@@ -1116,8 +1546,38 @@ export type GetPropertyQuery = {
     NonUniqueName: string;
     open: boolean;
     ownerId: string;
+    menuComponents: Array<{
+      __typename: "MenuComponent";
+      id: string;
+      type: MenuCompType;
+      translations: Array<{
+        __typename: "MenuCompTransl";
+        language: Language;
+        label: string;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }>;
+      restrictions: {
+        __typename: "MenuCompRestr";
+        max: number | null;
+        exact: number | null;
+      } | null;
+    }> | null;
     tables: Array<string | null>;
     currency: Currency;
+    address: {
+      __typename: "Address";
+      country: string | null;
+      city: string | null;
+      exact: string | null;
+    } | null;
+    image: {
+      __typename: "PropertyImage";
+      main: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -1134,9 +1594,9 @@ export type GetPropertyQuery = {
           description: string | null;
         }>;
         price: number;
+        addComponents: Array<string | null> | null;
         status: MenuItemStatus;
         favorite: boolean | null;
-        allergyInfo: string | null;
         callories: string | null;
         image: string | null;
         notes: string | null;
@@ -1154,16 +1614,23 @@ export type GetPropertyQuery = {
         propertyName: string;
         orderItem: Array<{
           __typename: "OrderItem";
+          id: string;
           name: string;
           price: number;
           quantity: number;
-          allergyInfo: string | null;
           customerComment: string | null;
+          options: Array<{
+            __typename: "TComponentChosenOptions";
+            id: string;
+            label: string | null;
+          }> | null;
+          optionsTotalPrice: number | null;
         }>;
         createdAt: string;
         status: string;
         tableName: string;
         priceTotal: number;
+        customerName: string | null;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -1188,8 +1655,38 @@ export type ListPropertysQuery = {
       NonUniqueName: string;
       open: boolean;
       ownerId: string;
+      menuComponents: Array<{
+        __typename: "MenuComponent";
+        id: string;
+        type: MenuCompType;
+        translations: Array<{
+          __typename: "MenuCompTransl";
+          language: Language;
+          label: string;
+          optionChoice: Array<{
+            __typename: "ItemOptionChoice";
+            name: string;
+            addPrice: number | null;
+          }>;
+        }>;
+        restrictions: {
+          __typename: "MenuCompRestr";
+          max: number | null;
+          exact: number | null;
+        } | null;
+      }> | null;
       tables: Array<string | null>;
       currency: Currency;
+      address: {
+        __typename: "Address";
+        country: string | null;
+        city: string | null;
+        exact: string | null;
+      } | null;
+      image: {
+        __typename: "PropertyImage";
+        main: string | null;
+      } | null;
       createdAt: string;
       updatedAt: string;
       menu: {
@@ -1198,10 +1695,17 @@ export type ListPropertysQuery = {
           __typename: "MenuItem";
           id: string;
           propertyName: string;
+          i18n: Array<{
+            __typename: "I18nMenuItem";
+            language: Language;
+            name: string;
+            category: string | null;
+            description: string | null;
+          }>;
           price: number;
+          addComponents: Array<string | null> | null;
           status: MenuItemStatus;
           favorite: boolean | null;
-          allergyInfo: string | null;
           callories: string | null;
           image: string | null;
           notes: string | null;
@@ -1217,10 +1721,20 @@ export type ListPropertysQuery = {
           __typename: "Order";
           id: string;
           propertyName: string;
+          orderItem: Array<{
+            __typename: "OrderItem";
+            id: string;
+            name: string;
+            price: number;
+            quantity: number;
+            customerComment: string | null;
+            optionsTotalPrice: number | null;
+          }>;
           createdAt: string;
           status: string;
           tableName: string;
           priceTotal: number;
+          customerName: string | null;
           updatedAt: string;
         } | null> | null;
         nextToken: string | null;
@@ -1247,9 +1761,9 @@ export type GetMenuItemQuery = {
       description: string | null;
     }>;
     price: number;
+    addComponents: Array<string | null> | null;
     status: MenuItemStatus;
     favorite: boolean | null;
-    allergyInfo: string | null;
     callories: string | null;
     image: string | null;
     notes: string | null;
@@ -1280,9 +1794,9 @@ export type ListMenuItemsQuery = {
         description: string | null;
       }>;
       price: number;
+      addComponents: Array<string | null> | null;
       status: MenuItemStatus;
       favorite: boolean | null;
-      allergyInfo: string | null;
       callories: string | null;
       image: string | null;
       notes: string | null;
@@ -1317,9 +1831,9 @@ export type MenuItemsByPropertyQuery = {
         description: string | null;
       }>;
       price: number;
+      addComponents: Array<string | null> | null;
       status: MenuItemStatus;
       favorite: boolean | null;
-      allergyInfo: string | null;
       callories: string | null;
       image: string | null;
       notes: string | null;
@@ -1342,16 +1856,28 @@ export type GetOrderQuery = {
     propertyName: string;
     orderItem: Array<{
       __typename: "OrderItem";
+      id: string;
       name: string;
       price: number;
       quantity: number;
-      allergyInfo: string | null;
       customerComment: string | null;
+      options: Array<{
+        __typename: "TComponentChosenOptions";
+        id: string;
+        label: string | null;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }> | null;
+      optionsTotalPrice: number | null;
     }>;
     createdAt: string;
     status: string;
     tableName: string;
     priceTotal: number;
+    customerName: string | null;
     updatedAt: string;
   } | null;
 };
@@ -1371,16 +1897,28 @@ export type ListOrdersQuery = {
       propertyName: string;
       orderItem: Array<{
         __typename: "OrderItem";
+        id: string;
         name: string;
         price: number;
         quantity: number;
-        allergyInfo: string | null;
         customerComment: string | null;
+        options: Array<{
+          __typename: "TComponentChosenOptions";
+          id: string;
+          label: string | null;
+          optionChoice: Array<{
+            __typename: "ItemOptionChoice";
+            name: string;
+            addPrice: number | null;
+          }>;
+        }> | null;
+        optionsTotalPrice: number | null;
       }>;
       createdAt: string;
       status: string;
       tableName: string;
       priceTotal: number;
+      customerName: string | null;
       updatedAt: string;
     } | null> | null;
     nextToken: string | null;
@@ -1405,16 +1943,28 @@ export type OrderByPropertyByCreatedAtQuery = {
       propertyName: string;
       orderItem: Array<{
         __typename: "OrderItem";
+        id: string;
         name: string;
         price: number;
         quantity: number;
-        allergyInfo: string | null;
         customerComment: string | null;
+        options: Array<{
+          __typename: "TComponentChosenOptions";
+          id: string;
+          label: string | null;
+          optionChoice: Array<{
+            __typename: "ItemOptionChoice";
+            name: string;
+            addPrice: number | null;
+          }>;
+        }> | null;
+        optionsTotalPrice: number | null;
       }>;
       createdAt: string;
       status: string;
       tableName: string;
       priceTotal: number;
+      customerName: string | null;
       updatedAt: string;
     } | null> | null;
     nextToken: string | null;
@@ -1439,16 +1989,28 @@ export type OrderByPropertyByCreatedAtByStatusQuery = {
       propertyName: string;
       orderItem: Array<{
         __typename: "OrderItem";
+        id: string;
         name: string;
         price: number;
         quantity: number;
-        allergyInfo: string | null;
         customerComment: string | null;
+        options: Array<{
+          __typename: "TComponentChosenOptions";
+          id: string;
+          label: string | null;
+          optionChoice: Array<{
+            __typename: "ItemOptionChoice";
+            name: string;
+            addPrice: number | null;
+          }>;
+        }> | null;
+        optionsTotalPrice: number | null;
       }>;
       createdAt: string;
       status: string;
       tableName: string;
       priceTotal: number;
+      customerName: string | null;
       updatedAt: string;
     } | null> | null;
     nextToken: string | null;
@@ -1473,16 +2035,28 @@ export type OrderByPropertyByStatusQuery = {
       propertyName: string;
       orderItem: Array<{
         __typename: "OrderItem";
+        id: string;
         name: string;
         price: number;
         quantity: number;
-        allergyInfo: string | null;
         customerComment: string | null;
+        options: Array<{
+          __typename: "TComponentChosenOptions";
+          id: string;
+          label: string | null;
+          optionChoice: Array<{
+            __typename: "ItemOptionChoice";
+            name: string;
+            addPrice: number | null;
+          }>;
+        }> | null;
+        optionsTotalPrice: number | null;
       }>;
       createdAt: string;
       status: string;
       tableName: string;
       priceTotal: number;
+      customerName: string | null;
       updatedAt: string;
     } | null> | null;
     nextToken: string | null;
@@ -1500,16 +2074,28 @@ export type OnCreateOrderSubscription = {
     propertyName: string;
     orderItem: Array<{
       __typename: "OrderItem";
+      id: string;
       name: string;
       price: number;
       quantity: number;
-      allergyInfo: string | null;
       customerComment: string | null;
+      options: Array<{
+        __typename: "TComponentChosenOptions";
+        id: string;
+        label: string | null;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }> | null;
+      optionsTotalPrice: number | null;
     }>;
     createdAt: string;
     status: string;
     tableName: string;
     priceTotal: number;
+    customerName: string | null;
     updatedAt: string;
   } | null;
 };
@@ -1526,16 +2112,28 @@ export type OnUpdateOrderSubscription = {
     propertyName: string;
     orderItem: Array<{
       __typename: "OrderItem";
+      id: string;
       name: string;
       price: number;
       quantity: number;
-      allergyInfo: string | null;
       customerComment: string | null;
+      options: Array<{
+        __typename: "TComponentChosenOptions";
+        id: string;
+        label: string | null;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }> | null;
+      optionsTotalPrice: number | null;
     }>;
     createdAt: string;
     status: string;
     tableName: string;
     priceTotal: number;
+    customerName: string | null;
     updatedAt: string;
   } | null;
 };
@@ -1561,16 +2159,67 @@ export type OnCreateUserSubscription = {
         NonUniqueName: string;
         open: boolean;
         ownerId: string;
+        menuComponents: Array<{
+          __typename: "MenuComponent";
+          id: string;
+          type: MenuCompType;
+          translations: Array<{
+            __typename: "MenuCompTransl";
+            language: Language;
+            label: string;
+          }>;
+          restrictions: {
+            __typename: "MenuCompRestr";
+            max: number | null;
+            exact: number | null;
+          } | null;
+        }> | null;
         tables: Array<string | null>;
         currency: Currency;
+        address: {
+          __typename: "Address";
+          country: string | null;
+          city: string | null;
+          exact: string | null;
+        } | null;
+        image: {
+          __typename: "PropertyImage";
+          main: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
           __typename: "ModelMenuItemConnection";
+          items: Array<{
+            __typename: "MenuItem";
+            id: string;
+            propertyName: string;
+            price: number;
+            addComponents: Array<string | null> | null;
+            status: MenuItemStatus;
+            favorite: boolean | null;
+            callories: string | null;
+            image: string | null;
+            notes: string | null;
+            createdAt: string;
+            updatedAt: string;
+            owner: string | null;
+          } | null> | null;
           nextToken: string | null;
         } | null;
         orders: {
           __typename: "ModelOrderConnection";
+          items: Array<{
+            __typename: "Order";
+            id: string;
+            propertyName: string;
+            createdAt: string;
+            status: string;
+            tableName: string;
+            priceTotal: number;
+            customerName: string | null;
+            updatedAt: string;
+          } | null> | null;
           nextToken: string | null;
         } | null;
       } | null> | null;
@@ -1600,16 +2249,67 @@ export type OnUpdateUserSubscription = {
         NonUniqueName: string;
         open: boolean;
         ownerId: string;
+        menuComponents: Array<{
+          __typename: "MenuComponent";
+          id: string;
+          type: MenuCompType;
+          translations: Array<{
+            __typename: "MenuCompTransl";
+            language: Language;
+            label: string;
+          }>;
+          restrictions: {
+            __typename: "MenuCompRestr";
+            max: number | null;
+            exact: number | null;
+          } | null;
+        }> | null;
         tables: Array<string | null>;
         currency: Currency;
+        address: {
+          __typename: "Address";
+          country: string | null;
+          city: string | null;
+          exact: string | null;
+        } | null;
+        image: {
+          __typename: "PropertyImage";
+          main: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
           __typename: "ModelMenuItemConnection";
+          items: Array<{
+            __typename: "MenuItem";
+            id: string;
+            propertyName: string;
+            price: number;
+            addComponents: Array<string | null> | null;
+            status: MenuItemStatus;
+            favorite: boolean | null;
+            callories: string | null;
+            image: string | null;
+            notes: string | null;
+            createdAt: string;
+            updatedAt: string;
+            owner: string | null;
+          } | null> | null;
           nextToken: string | null;
         } | null;
         orders: {
           __typename: "ModelOrderConnection";
+          items: Array<{
+            __typename: "Order";
+            id: string;
+            propertyName: string;
+            createdAt: string;
+            status: string;
+            tableName: string;
+            priceTotal: number;
+            customerName: string | null;
+            updatedAt: string;
+          } | null> | null;
           nextToken: string | null;
         } | null;
       } | null> | null;
@@ -1639,16 +2339,67 @@ export type OnDeleteUserSubscription = {
         NonUniqueName: string;
         open: boolean;
         ownerId: string;
+        menuComponents: Array<{
+          __typename: "MenuComponent";
+          id: string;
+          type: MenuCompType;
+          translations: Array<{
+            __typename: "MenuCompTransl";
+            language: Language;
+            label: string;
+          }>;
+          restrictions: {
+            __typename: "MenuCompRestr";
+            max: number | null;
+            exact: number | null;
+          } | null;
+        }> | null;
         tables: Array<string | null>;
         currency: Currency;
+        address: {
+          __typename: "Address";
+          country: string | null;
+          city: string | null;
+          exact: string | null;
+        } | null;
+        image: {
+          __typename: "PropertyImage";
+          main: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
           __typename: "ModelMenuItemConnection";
+          items: Array<{
+            __typename: "MenuItem";
+            id: string;
+            propertyName: string;
+            price: number;
+            addComponents: Array<string | null> | null;
+            status: MenuItemStatus;
+            favorite: boolean | null;
+            callories: string | null;
+            image: string | null;
+            notes: string | null;
+            createdAt: string;
+            updatedAt: string;
+            owner: string | null;
+          } | null> | null;
           nextToken: string | null;
         } | null;
         orders: {
           __typename: "ModelOrderConnection";
+          items: Array<{
+            __typename: "Order";
+            id: string;
+            propertyName: string;
+            createdAt: string;
+            status: string;
+            tableName: string;
+            priceTotal: number;
+            customerName: string | null;
+            updatedAt: string;
+          } | null> | null;
           nextToken: string | null;
         } | null;
       } | null> | null;
@@ -1668,8 +2419,38 @@ export type OnCreatePropertySubscription = {
     NonUniqueName: string;
     open: boolean;
     ownerId: string;
+    menuComponents: Array<{
+      __typename: "MenuComponent";
+      id: string;
+      type: MenuCompType;
+      translations: Array<{
+        __typename: "MenuCompTransl";
+        language: Language;
+        label: string;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }>;
+      restrictions: {
+        __typename: "MenuCompRestr";
+        max: number | null;
+        exact: number | null;
+      } | null;
+    }> | null;
     tables: Array<string | null>;
     currency: Currency;
+    address: {
+      __typename: "Address";
+      country: string | null;
+      city: string | null;
+      exact: string | null;
+    } | null;
+    image: {
+      __typename: "PropertyImage";
+      main: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -1686,9 +2467,9 @@ export type OnCreatePropertySubscription = {
           description: string | null;
         }>;
         price: number;
+        addComponents: Array<string | null> | null;
         status: MenuItemStatus;
         favorite: boolean | null;
-        allergyInfo: string | null;
         callories: string | null;
         image: string | null;
         notes: string | null;
@@ -1706,16 +2487,23 @@ export type OnCreatePropertySubscription = {
         propertyName: string;
         orderItem: Array<{
           __typename: "OrderItem";
+          id: string;
           name: string;
           price: number;
           quantity: number;
-          allergyInfo: string | null;
           customerComment: string | null;
+          options: Array<{
+            __typename: "TComponentChosenOptions";
+            id: string;
+            label: string | null;
+          }> | null;
+          optionsTotalPrice: number | null;
         }>;
         createdAt: string;
         status: string;
         tableName: string;
         priceTotal: number;
+        customerName: string | null;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -1734,8 +2522,38 @@ export type OnUpdatePropertySubscription = {
     NonUniqueName: string;
     open: boolean;
     ownerId: string;
+    menuComponents: Array<{
+      __typename: "MenuComponent";
+      id: string;
+      type: MenuCompType;
+      translations: Array<{
+        __typename: "MenuCompTransl";
+        language: Language;
+        label: string;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }>;
+      restrictions: {
+        __typename: "MenuCompRestr";
+        max: number | null;
+        exact: number | null;
+      } | null;
+    }> | null;
     tables: Array<string | null>;
     currency: Currency;
+    address: {
+      __typename: "Address";
+      country: string | null;
+      city: string | null;
+      exact: string | null;
+    } | null;
+    image: {
+      __typename: "PropertyImage";
+      main: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -1752,9 +2570,9 @@ export type OnUpdatePropertySubscription = {
           description: string | null;
         }>;
         price: number;
+        addComponents: Array<string | null> | null;
         status: MenuItemStatus;
         favorite: boolean | null;
-        allergyInfo: string | null;
         callories: string | null;
         image: string | null;
         notes: string | null;
@@ -1772,16 +2590,23 @@ export type OnUpdatePropertySubscription = {
         propertyName: string;
         orderItem: Array<{
           __typename: "OrderItem";
+          id: string;
           name: string;
           price: number;
           quantity: number;
-          allergyInfo: string | null;
           customerComment: string | null;
+          options: Array<{
+            __typename: "TComponentChosenOptions";
+            id: string;
+            label: string | null;
+          }> | null;
+          optionsTotalPrice: number | null;
         }>;
         createdAt: string;
         status: string;
         tableName: string;
         priceTotal: number;
+        customerName: string | null;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -1800,8 +2625,38 @@ export type OnDeletePropertySubscription = {
     NonUniqueName: string;
     open: boolean;
     ownerId: string;
+    menuComponents: Array<{
+      __typename: "MenuComponent";
+      id: string;
+      type: MenuCompType;
+      translations: Array<{
+        __typename: "MenuCompTransl";
+        language: Language;
+        label: string;
+        optionChoice: Array<{
+          __typename: "ItemOptionChoice";
+          name: string;
+          addPrice: number | null;
+        }>;
+      }>;
+      restrictions: {
+        __typename: "MenuCompRestr";
+        max: number | null;
+        exact: number | null;
+      } | null;
+    }> | null;
     tables: Array<string | null>;
     currency: Currency;
+    address: {
+      __typename: "Address";
+      country: string | null;
+      city: string | null;
+      exact: string | null;
+    } | null;
+    image: {
+      __typename: "PropertyImage";
+      main: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -1818,9 +2673,9 @@ export type OnDeletePropertySubscription = {
           description: string | null;
         }>;
         price: number;
+        addComponents: Array<string | null> | null;
         status: MenuItemStatus;
         favorite: boolean | null;
-        allergyInfo: string | null;
         callories: string | null;
         image: string | null;
         notes: string | null;
@@ -1838,16 +2693,23 @@ export type OnDeletePropertySubscription = {
         propertyName: string;
         orderItem: Array<{
           __typename: "OrderItem";
+          id: string;
           name: string;
           price: number;
           quantity: number;
-          allergyInfo: string | null;
           customerComment: string | null;
+          options: Array<{
+            __typename: "TComponentChosenOptions";
+            id: string;
+            label: string | null;
+          }> | null;
+          optionsTotalPrice: number | null;
         }>;
         createdAt: string;
         status: string;
         tableName: string;
         priceTotal: number;
+        customerName: string | null;
         updatedAt: string;
       } | null> | null;
       nextToken: string | null;
@@ -1872,9 +2734,9 @@ export type OnCreateMenuItemSubscription = {
       description: string | null;
     }>;
     price: number;
+    addComponents: Array<string | null> | null;
     status: MenuItemStatus;
     favorite: boolean | null;
-    allergyInfo: string | null;
     callories: string | null;
     image: string | null;
     notes: string | null;
@@ -1901,9 +2763,9 @@ export type OnUpdateMenuItemSubscription = {
       description: string | null;
     }>;
     price: number;
+    addComponents: Array<string | null> | null;
     status: MenuItemStatus;
     favorite: boolean | null;
-    allergyInfo: string | null;
     callories: string | null;
     image: string | null;
     notes: string | null;
@@ -1930,9 +2792,9 @@ export type OnDeleteMenuItemSubscription = {
       description: string | null;
     }>;
     price: number;
+    addComponents: Array<string | null> | null;
     status: MenuItemStatus;
     favorite: boolean | null;
-    allergyInfo: string | null;
     callories: string | null;
     image: string | null;
     notes: string | null;

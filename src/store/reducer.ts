@@ -7,14 +7,16 @@ import {
   setValid,
   addToOrders,
   updateOrdersItemStatus,
-  setCurrency,
   updateItemAddedToCart,
   removeItemFromCart,
+  setPropertyFromCart,
+  setProperty,
 } from "./actions";
 import { LOCAL_STORAGE_CART, LOCAL_STORAGE_ORDERS, UNCATEGORIZED } from "../utils/_constants";
 import { TcategorizedMenuItems } from "./types";
 import { correctLanguagei18nItem } from "../utils/useCorrectLanguage";
 import { TMenuItemTranslated, TNonNullMenuItem } from "../types";
+import i18n from "../i18n";
 
 export const reducer = reducerWithInitialState(initialState)
   .case(setValid, (state, valid) => ({
@@ -26,6 +28,11 @@ export const reducer = reducerWithInitialState(initialState)
     return {
       ...state,
       cart: [...state.cart, payload],
+      feedback: {
+        open: true,
+        message: i18n.t("feedback_item_added_to_cart"),
+        duration: 1500,
+      },
     };
   })
   .case(updateItemAddedToCart, (state, payload) => {
@@ -36,6 +43,11 @@ export const reducer = reducerWithInitialState(initialState)
     return {
       ...state,
       cart: newCart,
+      feedback: {
+        open: true,
+        message: i18n.t("feedback_order_item_modified"),
+        duration: 1500,
+      },
     };
   })
   .case(removeItemFromCart, (state, id) => {
@@ -50,11 +62,7 @@ export const reducer = reducerWithInitialState(initialState)
     ...state,
     feedback,
   }))
-  .case(setCurrency, (state, currency) => ({
-    ...state,
-    currency,
-  }))
-  .case(setupMenu, (state, { payload, currentLang }) => {
+  .case(setupMenu, (state, { payload, currentLang, menuComp }) => {
     if (payload && payload.items) {
       let itemsByCategory: TcategorizedMenuItems = {};
       const favorites: TMenuItemTranslated[] = [];
@@ -80,7 +88,6 @@ export const reducer = reducerWithInitialState(initialState)
       translatedItems.forEach((curr) => {
         if (curr) {
           if (curr.favorite) {
-            console.log("favorite found", curr);
             favorites.push(curr);
           }
 
@@ -96,6 +103,16 @@ export const reducer = reducerWithInitialState(initialState)
           itemsByCategory,
           favorites,
           originalMenuItemList: payload.items.filter((item) => item !== null) as TNonNullMenuItem[],
+          menuComponents: menuComp
+            ? menuComp.map(({ id, translations, type, restrictions }) => ({
+                id,
+                restrictions,
+                type,
+                translations:
+                  translations.find((transl) => transl.language === currentLang) || translations[0],
+              }))
+            : [],
+          originalMenuComp: menuComp,
         },
       };
     }
@@ -121,4 +138,20 @@ export const reducer = reducerWithInitialState(initialState)
       ...state,
       orders: newOrdersArray,
     };
-  });
+  })
+  .case(setPropertyFromCart, (state, property) => ({
+    ...state,
+    property,
+  }))
+  .case(setProperty, (state, { address, NonUniqueName, name, currency, open, tables }) => ({
+    ...state,
+    property: {
+      NonUniqueName,
+      name,
+      address,
+      currency,
+      open,
+      tables,
+    },
+    initialized: true,
+  }));

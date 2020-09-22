@@ -9,7 +9,6 @@ export const createOrder = /* GraphQL */ `
         name
         price
         quantity
-        allergyInfo
         customerComment
       }
       createdAt
@@ -29,6 +28,10 @@ export const getPropertyForCart = /* GraphQL */ `
       open
       tables
       currency
+      address {
+        city
+        exact
+      }
     }
   }
 `;
@@ -40,5 +43,10 @@ export type GetPropertyQueryForCart = {
     open: boolean;
     tables: Array<string | null>;
     currency: Currency;
+    address: {
+      country: string | null;
+      city: string | null;
+      exact: string | null;
+    } | null;
   };
 };
