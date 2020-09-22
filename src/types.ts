@@ -1,4 +1,4 @@
-import { GetMenuItemQuery, GetPropertyQuery } from "./API";
+import { GetMenuItemQuery, GetPropertyQuery, MenuComponentInput, MenuCompTranslInput } from "./API";
 
 export type TParams = {
   restaurantNameUrl: string;
@@ -25,6 +25,10 @@ export type TMenuItemi18nTranslated = TNonNullMenuItem["i18n"][number];
 
 export type TMenuItemTranslated = Omit<TNonNullMenuItem, "i18n"> & {
   i18n: TMenuItemi18nTranslated;
+};
+
+export type TMenuComponentTranslated = Omit<MenuComponentInput, "translations"> & {
+  translations: MenuCompTranslInput;
 };
 
 export type TNonNullPropertyQuery = NonNullable<GetPropertyQuery["getProperty"]>;

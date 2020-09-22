@@ -15,7 +15,8 @@ type ErrorType = {
 
 export const useQuery = <ResultType extends {}, VariablesType extends {} = {}>(
   query: string,
-  variables?: VariablesType
+  variables?: VariablesType,
+  shouldExecute: boolean = true
 ): UseQueryType<ResultType> => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState("");
@@ -40,9 +41,13 @@ export const useQuery = <ResultType extends {}, VariablesType extends {} = {}>(
     fetchQuery(query, variables);
   };
   React.useEffect(() => {
-    fetchQuery(query, variables);
+    console.log("shouldExecute", shouldExecute);
+    if (shouldExecute) {
+      fetchQuery(query, variables);
+    } else {
+      setLoading(false);
+    }
   }, []);
-
   return {
     loading,
     data,

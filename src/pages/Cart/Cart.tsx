@@ -27,10 +27,11 @@ import {
 } from "../../API";
 import { useQuery, typedQuery } from "../../utils/useQuery";
 import { validateOpeningAndTable } from "../../utils/validateOpeningAndTable";
-import { addToOrders, updateOrdersItemStatus, setCurrency } from "../../store/actions";
+import { addToOrders, updateOrdersItemStatus, setPropertyFromCart } from "../../store/actions";
 import { Typography } from "@material-ui/core";
 import { priceDisplay } from "../../utils/priceDisplay";
 import Footer from "../../components/Footer";
+import { LOCAL_STORAGE_CUSTOMER_NAME } from "../../utils/_constants";
 
 type IIndividualTabProps = {};
 
@@ -45,11 +46,20 @@ export const getOrder = /* GraphQL */ `
 
 const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   const classes = useStyles();
-  const { cart, valid, orders, currency } = useTypedSelector((state) => state);
+  const {
+    cart,
+    valid,
+    orders,
+    property: { address, NonUniqueName, currency },
+    initialized,
+  } = useTypedSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
   const priceTotal = convertNumberToPrecision(
-    cart.reduce((prev, curr): number => prev + curr.quantity * curr.price, 0)
+    cart.reduce(
+      (prev, curr): number => prev + curr.quantity * (curr.price + curr.optionsTotalPrice),
+      0
+    )
   );
   const { restaurantNameUrl, tableName } = useParams<TParams>();
   const { t, i18n } = useTranslation();
@@ -59,12 +69,15 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   };
   const { data, loading } = useQuery<GetPropertyQueryForCart, GetPropertyQueryVariables>(
     getPropertyForCart,
-    { name: restaurantNameUrl }
+    { name: restaurantNameUrl },
+    !initialized
   );
   React.useEffect(() => {
+    console.log("data", data);
     if (data.getProperty) {
       validateOpeningAndTable(tableName, data, dispatch, t);
-      dispatch(setCurrency(data.getProperty.currency));
+      dispatch(setPropertyFromCart(data.getProperty));
+      // dispatch(setCurrency(data.getProperty.currency));
     }
   }, [data]);
   React.useEffect(() => {
@@ -85,7 +98,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   }, []);
   return (
     <div>
-      <CartHeader />
+      <CartHeader propAddress={address} propName={NonUniqueName} />
       <LanguageSwitch />
       <Typography align="center" variant="h4">
         {t("cart_individual_order_tab_label")}
@@ -96,7 +109,8 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         open={popupOpen}
         handleClose={handleClose}
         message={t("cart_after_order_place_message")}
-        onConfirmationClick={async () => {
+        onConfirmationClick={async ({ customerName }) => {
+          localStorage.setItem(LOCAL_STORAGE_CUSTOMER_NAME, customerName);
           const mutationResult = await mutation<CreateOrderMutation, CreateOrderMutationVariables>(
             createOrder,
             {
@@ -105,12 +119,16 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
                 status: OrderStatusEnum["REQUESTED_BY_CUSTOMER"],
                 priceTotal: priceTotal,
                 tableName,
+                customerName,
                 orderItem: [
                   ...cart.map((item) => ({
                     name: item.i18n.name,
+                    id: item.id,
                     price: item.price,
                     quantity: item.quantity,
                     customerComment: item.customerComment,
+                    options: item.options,
+                    optionsTotalPrice: item.optionsTotalPrice,
                   })),
                 ],
               },
@@ -119,9 +137,11 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
           );
           if (mutationResult.data && mutationResult.data.createOrder) {
             dispatch(addToOrders(mutationResult.data.createOrder));
+            // history.push(`/${restaurantNameUrl}/${tableName}/thankYou`);
           } else {
             alert(JSON.stringify(mutationResult.error));
           }
+          handleClose();
         }}
       />
       <Box className={classes.items}>
@@ -179,9 +199,14 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
             <CartTotal subtotal={true} price={order!.priceTotal} />
           </Box>
         ))}
-      <CartTotal
-        price={orders.reduce((prev, curr) => (curr?.priceTotal ? curr.priceTotal + prev : prev), 0)}
-      />
+      {orders.length > 0 && (
+        <CartTotal
+          price={orders.reduce(
+            (prev, curr) => (curr?.priceTotal ? curr.priceTotal + prev : prev),
+            0
+          )}
+        />
+      )}
       <div style={{ height: 35 }} />
       <Footer />
     </div>

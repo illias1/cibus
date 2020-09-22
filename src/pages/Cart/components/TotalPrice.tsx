@@ -16,7 +16,7 @@ type ITotalPriceProps = {
 const TotalPrice: React.FC<ITotalPriceProps> = ({ price, tip = 0, subtotal }) => {
   const classes = useStyles();
   const { t, i18n } = useTranslation();
-  const { currency } = useTypedSelector((state) => state);
+  const { currency } = useTypedSelector((state) => state.property);
   return (
     <Box style={{ height: subtotal ? "fit-content" : "" }} className={classes.root}>
       <Typography variant="h5">{subtotal ? t("cart_subtotal") : t("cart_total")}</Typography>

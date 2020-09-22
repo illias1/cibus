@@ -13,7 +13,7 @@ export default function SimplePopover() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<(EventTarget & HTMLButtonElement) | null>(null);
   const { i18n } = useTranslation();
-  const { originalMenuItemList } = useTypedSelector((state) => state.menu);
+  const { originalMenuItemList, originalMenuComp } = useTypedSelector((state) => state.menu);
   const dispatch = useDispatch();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
@@ -28,6 +28,7 @@ export default function SimplePopover() {
           items: originalMenuItemList,
           nextToken: "",
         },
+        menuComp: originalMenuComp,
         currentLang: lang,
       })
     );

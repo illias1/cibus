@@ -16,7 +16,21 @@ export const initialState: TStore = {
     itemsByCategory: {},
     favorites: [],
     originalMenuItemList: [],
+    menuComponents: [],
+    originalMenuComp: [],
   },
   valid: false,
-  currency: Currency["USD"],
+  property: {
+    name: "",
+    NonUniqueName: "",
+    tables: [],
+    open: false,
+    currency: Currency["USD"],
+    address: {
+      country: "",
+      city: "",
+      exact: "",
+    },
+  },
+  initialized: false,
 };

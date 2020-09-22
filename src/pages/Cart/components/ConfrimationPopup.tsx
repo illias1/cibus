@@ -1,12 +1,14 @@
 import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { Typography, Divider, Button } from "@material-ui/core";
+import { Typography, Divider, Button, TextField } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { LOCAL_STORAGE_CUSTOMER_NAME } from "../../../utils/_constants";
 
 type IConfrimationPopupProps = {
   message: string;
-  onConfirmationClick: () => void;
+  onConfirmationClick: SubmitHandler<{ customerName: string }>;
   open: boolean;
   handleClose: () => void;
 };
@@ -17,6 +19,7 @@ const ConfrimationPopup: React.FC<IConfrimationPopupProps> = ({
   onConfirmationClick,
   message,
 }) => {
+  const { register, handleSubmit } = useForm<{ customerName: string }>({});
   const classes = useStyles();
   const { t } = useTranslation();
   const body = (
@@ -24,15 +27,18 @@ const ConfrimationPopup: React.FC<IConfrimationPopupProps> = ({
       <Typography variant="subtitle2">{message}</Typography>
       <Divider />
       <div className={classes.divider} />
-      <Button
-        onClick={() => {
-          onConfirmationClick();
-          handleClose();
-        }}
-        className={classes.button}
-      >
-        {t("general_confirm")}
-      </Button>
+      <form className={classes.form} onSubmit={handleSubmit(onConfirmationClick)}>
+        <TextField
+          inputProps={{ style: { textAlign: "center" } }}
+          name="customerName"
+          inputRef={register}
+          placeholder={t("input_your_name")}
+          defaultValue={localStorage.getItem(LOCAL_STORAGE_CUSTOMER_NAME)}
+        />
+        <Button type="submit" className={classes.button}>
+          {t("general_confirm")}
+        </Button>
+      </form>
     </div>
   );
   return (
@@ -77,6 +83,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
     button: {
       textTransform: "none",
+    },
+    form: {
+      display: "flex",
+      flexDirection: "column",
+      width: "100%",
     },
   })
 );

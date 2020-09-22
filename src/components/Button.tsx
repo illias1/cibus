@@ -3,10 +3,11 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
 type IButtonProps = {
-  onCLick: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined;
   color?: "inherit" | "primary" | "secondary" | "default" | undefined;
+  onCLick?: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined;
   disabled?: boolean;
   className?: string;
+  type?: "button" | "reset" | "submit" | undefined;
 };
 
 export const StyledButton: React.FC<IButtonProps> = ({
@@ -15,6 +16,7 @@ export const StyledButton: React.FC<IButtonProps> = ({
   color = "primary",
   disabled = false,
   className,
+  type,
 }) => {
   const classes = useStyles();
   return (
@@ -25,6 +27,7 @@ export const StyledButton: React.FC<IButtonProps> = ({
         variant="contained"
         onClick={onCLick}
         disabled={disabled}
+        type={type}
       >
         {children}
       </Button>

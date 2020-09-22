@@ -2,10 +2,17 @@ import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import headerImage from "../../../assets/hero-photo.png";
+import { GetPropertyQuery } from "../../../API";
 
-type ICartHeaderProps = {};
+type ICartHeaderProps = {
+  propName: string;
+  propAddress: Omit<
+    NonNullable<NonNullable<GetPropertyQuery["getProperty"]>["address"]>,
+    "__typename"
+  > | null;
+};
 
-const CartHeader: React.FC<ICartHeaderProps> = ({ ...props }) => {
+const CartHeader: React.FC<ICartHeaderProps> = ({ propAddress, propName }) => {
   const classes = useStyles();
   return (
     <div
@@ -16,10 +23,10 @@ const CartHeader: React.FC<ICartHeaderProps> = ({ ...props }) => {
       className={classes.root}
     >
       <Typography align="center" className={classes.text} variant="h5">
-        Eleven Madison Park
+        {propName}
       </Typography>
       <Typography align="center" className={classes.text} variant="h6">
-        11 Madison Ave, New York, NY 10010,
+        {propAddress?.city}, {propAddress?.exact}
       </Typography>
     </div>
   );

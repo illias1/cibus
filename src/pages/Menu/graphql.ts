@@ -5,9 +5,30 @@ export const getProperty = /* GraphQL */ `
       NonUniqueName
       open
       ownerId
+      currency
       tables
+      address {
+        exact
+        city
+      }
       createdAt
       updatedAt
+      menuComponents {
+        id
+        type
+        translations {
+          language
+          label
+          optionChoice {
+            name
+            addPrice
+          }
+        }
+        restrictions {
+          max
+          exact
+        }
+      }
       menu {
         items {
           id
@@ -19,9 +40,9 @@ export const getProperty = /* GraphQL */ `
             category
           }
           price
+          addComponents
           favorite
           status
-          allergyInfo
           callories
           image
           notes
@@ -33,7 +54,7 @@ export const getProperty = /* GraphQL */ `
       }
       orders {
         items {
-          id
+          # id
           propertyName
           createdAt
           status
