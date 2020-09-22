@@ -32,6 +32,7 @@ import { Typography } from "@material-ui/core";
 import { priceDisplay } from "../../utils/priceDisplay";
 import Footer from "../../components/Footer";
 import { LOCAL_STORAGE_CUSTOMER_NAME } from "../../utils/_constants";
+import { registerDataLayerTransaction } from "./utils";
 
 type IIndividualTabProps = {};
 
@@ -137,7 +138,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
           );
           if (mutationResult.data && mutationResult.data.createOrder) {
             dispatch(addToOrders(mutationResult.data.createOrder));
-            // history.push(`/${restaurantNameUrl}/${tableName}/thankYou`);
+            registerDataLayerTransaction(mutationResult.data.createOrder, address);
           } else {
             alert(JSON.stringify(mutationResult.error));
           }

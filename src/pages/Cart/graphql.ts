@@ -11,6 +11,15 @@ export const createOrder = /* GraphQL */ `
         price
         quantity
         customerComment
+        optionsTotalPrice
+        options {
+          id
+          label
+          optionChoice {
+            name
+            addPrice
+          }
+        }
       }
       createdAt
       status
