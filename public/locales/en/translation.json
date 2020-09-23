@@ -40,5 +40,8 @@
   "menu_comp_helper_exact_number_plural": "Choose exactly {{number}} item(s)",
   "menu_comp_only_choose_max": "You can only choose {{number}} item",
   "menu_comp_only_choose_max_plural": "You can only choose {{number}} items",
-  "input_your_name": "If you want, you can input your name ;)"
+  "input_your_name": "If you want, you can input your name ;)",
+  "call_stuff": "Call stuff",
+  "stuff_has_been_called": "Stuff has been called",
+  "stuff_call_error": "Error !"
 }

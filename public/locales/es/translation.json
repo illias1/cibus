@@ -38,5 +38,8 @@
   "menu_comp_helper_max_number_plural": "Choose maximum {{number}} item(s)",
   "menu_comp_helper_exact_number": "Choose exactly {{number}} item",
   "menu_comp_helper_exact_number_plural": "Choose exactly {{number}} item(s)",
-  "input_your_name": "So lo quieres, puedes poner tu nombre ;)"
+  "input_your_name": "So lo quieres, puedes poner tu nombre ;)",
+  "call_stuff": "Llamar camarero",
+  "stuff_has_been_called": "Camarero llamado!",
+  "stuff_call_error": "Error !"
 }

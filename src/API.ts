@@ -506,6 +506,24 @@ export type DeleteOrderInput = {
   id?: string | null;
 };
 
+export type UpdateStuffCallInput = {
+  id: string;
+  propertyName?: string | null;
+  tableName?: string | null;
+};
+
+export type ModelStuffCallConditionInput = {
+  propertyName?: ModelStringInput | null;
+  tableName?: ModelStringInput | null;
+  and?: Array<ModelStuffCallConditionInput | null> | null;
+  or?: Array<ModelStuffCallConditionInput | null> | null;
+  not?: ModelStuffCallConditionInput | null;
+};
+
+export type DeleteStuffCallInput = {
+  id?: string | null;
+};
+
 export type CreateOrderInput = {
   id?: string | null;
   propertyName: string;
@@ -515,6 +533,12 @@ export type CreateOrderInput = {
   tableName: string;
   priceTotal: number;
   customerName?: string | null;
+};
+
+export type CreateStuffCallInput = {
+  id?: string | null;
+  propertyName: string;
+  tableName: string;
 };
 
 export type ModelUserFilterInput = {
@@ -594,6 +618,15 @@ export type ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyConditionInp
 export type ModelOrderOrderByPropertyByCreatedAtByStatusCompositeKeyInput = {
   createdAt?: string | null;
   status?: string | null;
+};
+
+export type ModelStuffCallFilterInput = {
+  id?: ModelIDInput | null;
+  propertyName?: ModelStringInput | null;
+  tableName?: ModelStringInput | null;
+  and?: Array<ModelStuffCallFilterInput | null> | null;
+  or?: Array<ModelStuffCallFilterInput | null> | null;
+  not?: ModelStuffCallFilterInput | null;
 };
 
 export type CreateUserMutationVariables = {
@@ -1347,6 +1380,38 @@ export type DeleteOrderMutation = {
   } | null;
 };
 
+export type UpdateStuffCallMutationVariables = {
+  input: UpdateStuffCallInput;
+  condition?: ModelStuffCallConditionInput | null;
+};
+
+export type UpdateStuffCallMutation = {
+  updateStuffCall: {
+    __typename: "StuffCall";
+    id: string;
+    propertyName: string;
+    tableName: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type DeleteStuffCallMutationVariables = {
+  input: DeleteStuffCallInput;
+  condition?: ModelStuffCallConditionInput | null;
+};
+
+export type DeleteStuffCallMutation = {
+  deleteStuffCall: {
+    __typename: "StuffCall";
+    id: string;
+    propertyName: string;
+    tableName: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
 export type CreateOrderMutationVariables = {
   input: CreateOrderInput;
   condition?: ModelOrderConditionInput | null;
@@ -1381,6 +1446,22 @@ export type CreateOrderMutation = {
     tableName: string;
     priceTotal: number;
     customerName: string | null;
+    updatedAt: string;
+  } | null;
+};
+
+export type CreateStuffCallMutationVariables = {
+  input: CreateStuffCallInput;
+  condition?: ModelStuffCallConditionInput | null;
+};
+
+export type CreateStuffCallMutation = {
+  createStuffCall: {
+    __typename: "StuffCall";
+    id: string;
+    propertyName: string;
+    tableName: string;
+    createdAt: string;
     updatedAt: string;
   } | null;
 };
@@ -2063,6 +2144,42 @@ export type OrderByPropertyByStatusQuery = {
   } | null;
 };
 
+export type GetStuffCallQueryVariables = {
+  id: string;
+};
+
+export type GetStuffCallQuery = {
+  getStuffCall: {
+    __typename: "StuffCall";
+    id: string;
+    propertyName: string;
+    tableName: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type ListStuffCallsQueryVariables = {
+  filter?: ModelStuffCallFilterInput | null;
+  limit?: number | null;
+  nextToken?: string | null;
+};
+
+export type ListStuffCallsQuery = {
+  listStuffCalls: {
+    __typename: "ModelStuffCallConnection";
+    items: Array<{
+      __typename: "StuffCall";
+      id: string;
+      propertyName: string;
+      tableName: string;
+      createdAt: string;
+      updatedAt: string;
+    } | null> | null;
+    nextToken: string | null;
+  } | null;
+};
+
 export type OnCreateOrderSubscriptionVariables = {
   propertyName?: string | null;
 };
@@ -2134,6 +2251,21 @@ export type OnUpdateOrderSubscription = {
     tableName: string;
     priceTotal: number;
     customerName: string | null;
+    updatedAt: string;
+  } | null;
+};
+
+export type OnCreateStuffCallSubscriptionVariables = {
+  propertyName?: string | null;
+};
+
+export type OnCreateStuffCallSubscription = {
+  onCreateStuffCall: {
+    __typename: "StuffCall";
+    id: string;
+    propertyName: string;
+    tableName: string;
+    createdAt: string;
     updatedAt: string;
   } | null;
 };

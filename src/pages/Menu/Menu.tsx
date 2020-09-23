@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { setupMenu, setFeedback, setProperty } from "../../store/actions";
 import { useTranslation } from "react-i18next";
 import { validateOpeningAndTable } from "../../utils/validateOpeningAndTable";
+import CallStuffFab from "../../components/CallStuffFab";
 
 type IMenuScreenProps = {};
 
@@ -101,6 +102,7 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
       <ItemPopup open={popupOpen} handleClose={handleClose} item={item} />
 
       <CartFab restaurantNameUrl={restaurantNameUrl} tableName={tableName} />
+      <CallStuffFab restaurantNameUrl={restaurantNameUrl} tableName={tableName} />
       <LanguageSwitch />
       {loading ? (
         <MenuFallback />

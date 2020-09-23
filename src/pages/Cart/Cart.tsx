@@ -33,6 +33,7 @@ import { priceDisplay } from "../../utils/priceDisplay";
 import Footer from "../../components/Footer";
 import { LOCAL_STORAGE_CUSTOMER_NAME } from "../../utils/_constants";
 import { registerDataLayerTransaction } from "./utils";
+import CallStuffFab from "../../components/CallStuffFab";
 
 type IIndividualTabProps = {};
 
@@ -100,6 +101,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   return (
     <div>
       <CartHeader propAddress={address} propName={NonUniqueName} />
+      <CallStuffFab restaurantNameUrl={restaurantNameUrl} tableName={tableName} />
       <LanguageSwitch />
       <Typography align="center" variant="h4">
         {t("cart_individual_order_tab_label")}

@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     cartFAB: {
       position: "fixed",
-      bottom: "9px",
+      bottom: 75,
       right: "12px",
       zIndex: 2,
     },
