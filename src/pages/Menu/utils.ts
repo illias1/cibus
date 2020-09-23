@@ -1,5 +1,5 @@
 import { Currency, ItemOptionChoiceInput, Language } from "../../API";
-import { TStore } from "../../store/types";
+import { TCartItem, TStore } from "../../store/types";
 import { TMenuComponentTranslated, TMenuItemTranslated } from "../../types";
 import { TComponentChoice } from "./components/ItemPopup";
 
@@ -51,4 +51,19 @@ export const prepareItemToAddToCart = (
     options,
   };
   return preparedItem;
+};
+
+export const getRadioDefaultValue = (
+  translations: TMenuComponentTranslated["translations"],
+  thisItemInCart: TCartItem | undefined,
+  index: number
+) => {
+  return (translations.optionChoice.findIndex(
+    (option) => option.name === thisItemInCart?.options[index].optionChoice[0].name
+  ) > -1
+    ? translations.optionChoice.findIndex(
+        (option) => option.name === thisItemInCart?.options[index].optionChoice[0].name
+      )
+    : 0
+  ).toString();
 };

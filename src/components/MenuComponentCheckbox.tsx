@@ -11,10 +11,7 @@ import {
 import { TMenuComponentTranslated } from "../types";
 import { priceDisplay } from "../pages/Menu/utils";
 import { Currency } from "../API";
-import { TComponentChoice } from "../pages/Menu/components/ItemPopup";
 import { useTranslation } from "react-i18next";
-import { setFeedback } from "../store/actions";
-import { useDispatch } from "react-redux";
 import { DeepMap, FieldError } from "react-hook-form";
 
 const MenuComponent: React.FC<
@@ -23,8 +20,9 @@ const MenuComponent: React.FC<
     register: any;
     errors: DeepMap<Record<string, number | boolean[]>, FieldError>;
     getValues: any;
+    defaultValues: boolean[];
   }
-> = ({ id, translations, restrictions, currency, register, errors, getValues }) => {
+> = ({ id, translations, restrictions, currency, register, errors, getValues, defaultValues }) => {
   const { t } = useTranslation();
   const classes = useStyles();
   const [error, seterror] = React.useState<boolean>(false);
@@ -73,13 +71,10 @@ const MenuComponent: React.FC<
             }
             control={
               <Checkbox
-                // value={(thisComponentState[index] as unknown) as string}
                 color="primary"
                 inputRef={register({ validate: restrictionsCheck })}
-                defaultChecked={false}
+                defaultChecked={defaultValues[index]}
                 name={`${id}[${index}]`}
-                // checked={thisComponentState[index]}
-                // onChange={() => handleChange(index)}
               />
             }
             label={`${name} - ${priceDisplay(currency, addPrice || 0, translations.language)}`}

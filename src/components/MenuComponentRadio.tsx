@@ -8,44 +8,13 @@ import { Currency } from "../API";
 import { TComponentChoice } from "../pages/Menu/components/ItemPopup";
 import { Controller } from "react-hook-form";
 
-// const RadioGroup: React.FC<TRadioGroup> = ({ label, name, options, inputRef }) => {
-//   return (
-//     <>
-//       <Typography style={{ marginLeft: 27 }} component="legend" variant="h6">
-//         {label}
-//       </Typography>
-//       <div>
-//         {options.map(({ label: optionLabel, value }, index) => {
-//           return (
-//             <div key={index}>
-//               <input id={index.toString()} name={name} type="radio" value={value} ref={inputRef} />
-//               <label htmlFor={index.toString()}>
-//                 <span>{optionLabel}</span>
-//               </label>
-//             </div>
-//           );
-//         })}
-//       </div>
-//     </>
-//   );
-// };
-
-type TRadioGroup = {
-  label: string;
-  name: string;
-  inputRef: any;
-  options: {
-    label: string;
-    value: string;
-  }[];
-};
-
 const MenuComponent: React.FC<
   TMenuComponentTranslated & {
     currency: Currency;
     control: any;
+    defaultValue: string;
   }
-> = ({ id, translations, currency, control }) => {
+> = ({ id, translations, currency, control, defaultValue }) => {
   const classes = useStyles();
   return (
     <Box className={classes.root}>
@@ -56,7 +25,7 @@ const MenuComponent: React.FC<
         <Controller
           name={id}
           rules={{ required: true }}
-          defaultValue={"0"}
+          defaultValue={defaultValue}
           control={control}
           as={
             <RadioGroup defaultValue="" aria-label="gender">

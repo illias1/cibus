@@ -18,7 +18,7 @@ import { TMenuComponentTranslated, TMenuItemTranslated } from "../../../types";
 import MenuComponentRadio from "../../../components/MenuComponentRadio";
 import MenuComponentCheckBox from "../../../components/MenuComponentCheckbox";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { prepareItemToAddToCart } from "../utils";
+import { getRadioDefaultValue, prepareItemToAddToCart } from "../utils";
 type IItemPopupProps = {
   item: TMenuItemTranslated;
   handleClose: () => void;
@@ -117,6 +117,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
               {foundComps ? (
                 type === MenuCompType.RADIO ? (
                   <MenuComponentRadio
+                    defaultValue={getRadioDefaultValue(translations, thisItemInCart, index)}
                     type={type}
                     id={id}
                     restrictions={restrictions}
@@ -134,6 +135,13 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
                     translations={translations}
                     currency={currency}
                     register={register}
+                    defaultValues={translations.optionChoice.map((option) =>
+                      thisItemInCart?.options[index].optionChoice.find(
+                        (chosenBefore) => chosenBefore.name === option.name
+                      )
+                        ? true
+                        : false
+                    )}
                   />
                 )
               ) : null}
