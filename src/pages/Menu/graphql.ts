@@ -43,23 +43,7 @@ export const getProperty = /* GraphQL */ `
           addComponents
           favorite
           status
-          callories
           image
-          notes
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      orders {
-        items {
-          # id
-          propertyName
-          createdAt
-          status
-          tableName
-          updatedAt
         }
         nextToken
       }

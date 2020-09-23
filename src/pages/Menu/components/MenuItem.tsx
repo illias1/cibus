@@ -8,6 +8,7 @@ import { Language } from "../../../API";
 import { useTypedSelector } from "../../../store/types";
 import { priceDisplay } from "../utils";
 import { CustomTheme } from "../../../utils/customCreateTheme";
+import { Storage } from "aws-amplify";
 
 type TItem = {
   title: string;
@@ -23,6 +24,16 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img, id, av
   const classes = useStyles();
   const { i18n } = useTranslation();
   const { currency } = useTypedSelector((state) => state.property);
+  React.useEffect(() => {
+    if (!img.includes("http")) {
+      Storage.get(img).then((url) => {
+        if (typeof url === "string") {
+          sets3Url(url as string);
+        }
+      });
+    }
+  }, []);
+  const [s3Url, sets3Url] = React.useState<string>("");
   return (
     <Card
       style={{ backgroundColor: available ? "" : "lightgray" }}
@@ -42,16 +53,29 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img, id, av
           {ingredients}
         </Typography>
       </Box>
-
-      <img
-        id={id}
-        className={classes.cover}
-        src={img}
-        alt={title}
-        onError={() => {
-          document.getElementById(id)!.style.display = "none";
-        }}
-      />
+      {img.includes("http") ? (
+        <img
+          id={id}
+          className={classes.cover}
+          src={img}
+          alt={title}
+          onError={() => {
+            document.getElementById(id)!.style.display = "none";
+          }}
+        />
+      ) : s3Url ? (
+        <img
+          id={id}
+          className={classes.cover}
+          src={s3Url}
+          alt={title}
+          onError={() => {
+            document.getElementById(id)!.style.display = "none";
+          }}
+        />
+      ) : (
+        ""
+      )}
     </Card>
   );
 };
