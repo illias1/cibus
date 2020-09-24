@@ -15,6 +15,7 @@ import Loader from "../../components/Loader";
 import CartTotal from "./components/TotalPrice";
 import CartItem from "./components/CartItem";
 import ConfrimationPopup from "./components/ConfrimationPopup";
+import ScrollToTop from "./components/ScrollToTop";
 import { convertNumberToPrecision } from "../../utils/numberToPrecision";
 import { mutation } from "../../utils/useMutation";
 import {
@@ -100,6 +101,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   }, []);
   return (
     <div>
+      <ScrollToTop />
       <CartHeader propAddress={address} propName={NonUniqueName} />
       <CallStuffFab restaurantNameUrl={restaurantNameUrl} tableName={tableName} />
       <LanguageSwitch />

@@ -18,21 +18,26 @@ const MenuComponent: React.FC<
   TMenuComponentTranslated & {
     currency: Currency;
     register: any;
+    trigger: any;
     errors: DeepMap<Record<string, number | boolean[]>, FieldError>;
     getValues: any;
     defaultValues: boolean[];
   }
-> = ({ id, translations, restrictions, currency, register, errors, getValues, defaultValues }) => {
+> = ({
+  id,
+  translations,
+  restrictions,
+  currency,
+  register,
+  errors,
+  getValues,
+  defaultValues,
+  trigger,
+}) => {
   const { t } = useTranslation();
   const classes = useStyles();
-  const [error, seterror] = React.useState<boolean>(false);
   React.useEffect(() => {
-    console.log("errrs", errors);
-    if (errors[id]) {
-      seterror(true);
-    } else {
-      seterror(false);
-    }
+    console.log("err", errors);
   }, [errors]);
   const restrictionsCheck = () => {
     const checkedLength = (getValues(
@@ -47,7 +52,7 @@ const MenuComponent: React.FC<
   };
   return (
     <Box className={classes.root}>
-      <FormControl error={error} component="fieldset">
+      <FormControl error={Boolean(errors[id])} component="fieldset">
         <Typography className={classes.textAligned} component="legend" variant="h6">
           {translations.label}
         </Typography>
@@ -72,9 +77,10 @@ const MenuComponent: React.FC<
             control={
               <Checkbox
                 color="primary"
-                inputRef={register({ validate: restrictionsCheck })}
+                inputRef={register(index === 0 && { validate: restrictionsCheck })}
                 defaultChecked={defaultValues[index]}
                 name={`${id}[${index}]`}
+                onChange={() => trigger(`${id}[0]`)}
               />
             }
             label={`${name} - ${priceDisplay(currency, addPrice || 0, translations.language)}`}

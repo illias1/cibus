@@ -49,7 +49,9 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
       ),
     [item]
   );
-  const { register, handleSubmit, errors, control, getValues } = useForm<TComponentChoice>({});
+  const { register, handleSubmit, errors, control, getValues, trigger } = useForm<TComponentChoice>(
+    {}
+  );
   const handleClick: SubmitHandler<TComponentChoice> = (data) => {
     console.log("data from form", data);
     const preparedItem = prepareItemToAddToCart(foundComps, data, item, quantity, customerComment);
@@ -127,6 +129,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
                   />
                 ) : (
                   <MenuComponentCheckBox
+                    trigger={trigger}
                     errors={errors}
                     getValues={getValues}
                     type={type}
