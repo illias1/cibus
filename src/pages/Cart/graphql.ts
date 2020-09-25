@@ -25,6 +25,7 @@ export const createOrder = /* GraphQL */ `
       status
       priceTotal
       tableName
+      customerName
       updatedAt
     }
   }
@@ -37,6 +38,9 @@ export const getPropertyForCart = /* GraphQL */ `
       NonUniqueName
       open
       tables
+      image {
+        main
+      }
       currency
       address {
         city
@@ -53,6 +57,9 @@ export type GetPropertyQueryForCart = {
     open: boolean;
     tables: Array<string | null>;
     currency: Currency;
+    image: {
+      main: string | null;
+    } | null;
     address: {
       country: string | null;
       city: string | null;

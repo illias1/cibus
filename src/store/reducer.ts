@@ -143,9 +143,10 @@ export const reducer = reducerWithInitialState(initialState)
     ...state,
     property,
   }))
-  .case(setProperty, (state, { address, NonUniqueName, name, currency, open, tables }) => ({
+  .case(setProperty, (state, { address, NonUniqueName, name, currency, open, tables, image }) => ({
     ...state,
     property: {
+      image,
       NonUniqueName,
       name,
       address,

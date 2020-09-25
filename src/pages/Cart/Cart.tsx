@@ -15,7 +15,7 @@ import Loader from "../../components/Loader";
 import CartTotal from "./components/TotalPrice";
 import CartItem from "./components/CartItem";
 import ConfrimationPopup from "./components/ConfrimationPopup";
-import { convertNumberToPrecision } from "../../utils/numberToPrecision";
+import ScrollToTop from "./components/ScrollToTop";
 import { mutation } from "../../utils/useMutation";
 import {
   CreateOrderMutationVariables,
@@ -33,6 +33,7 @@ import { priceDisplay } from "../../utils/priceDisplay";
 import Footer from "../../components/Footer";
 import { LOCAL_STORAGE_CUSTOMER_NAME } from "../../utils/_constants";
 import { registerDataLayerTransaction } from "./utils";
+import CallStuffFab from "../../components/CallStuffFab";
 
 type IIndividualTabProps = {};
 
@@ -56,11 +57,9 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   } = useTypedSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
-  const priceTotal = convertNumberToPrecision(
-    cart.reduce(
-      (prev, curr): number => prev + curr.quantity * (curr.price + curr.optionsTotalPrice),
-      0
-    )
+  const priceTotal = cart.reduce(
+    (prev, curr): number => prev + curr.quantity * (curr.price + curr.optionsTotalPrice),
+    0
   );
   const { restaurantNameUrl, tableName } = useParams<TParams>();
   const { t, i18n } = useTranslation();
@@ -99,7 +98,9 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   }, []);
   return (
     <div>
+      <ScrollToTop />
       <CartHeader propAddress={address} propName={NonUniqueName} />
+      <CallStuffFab restaurantNameUrl={restaurantNameUrl} tableName={tableName} />
       <LanguageSwitch />
       <Typography align="center" variant="h4">
         {t("cart_individual_order_tab_label")}

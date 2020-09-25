@@ -9,32 +9,35 @@ import {
   Typography,
 } from "@material-ui/core";
 import { TMenuComponentTranslated } from "../types";
-import { priceDisplay } from "../pages/Menu/utils";
 import { Currency } from "../API";
-import { TComponentChoice } from "../pages/Menu/components/ItemPopup";
 import { useTranslation } from "react-i18next";
-import { setFeedback } from "../store/actions";
-import { useDispatch } from "react-redux";
 import { DeepMap, FieldError } from "react-hook-form";
+import { priceDisplay } from "../utils/priceDisplay";
 
 const MenuComponent: React.FC<
   TMenuComponentTranslated & {
     currency: Currency;
     register: any;
+    trigger: any;
     errors: DeepMap<Record<string, number | boolean[]>, FieldError>;
     getValues: any;
+    defaultValues: boolean[];
   }
-> = ({ id, translations, restrictions, currency, register, errors, getValues }) => {
+> = ({
+  id,
+  translations,
+  restrictions,
+  currency,
+  register,
+  errors,
+  getValues,
+  defaultValues,
+  trigger,
+}) => {
   const { t } = useTranslation();
   const classes = useStyles();
-  const [error, seterror] = React.useState<boolean>(false);
   React.useEffect(() => {
-    console.log("errrs", errors);
-    if (errors[id]) {
-      seterror(true);
-    } else {
-      seterror(false);
-    }
+    console.log("err", errors);
   }, [errors]);
   const restrictionsCheck = () => {
     const checkedLength = (getValues(
@@ -49,7 +52,7 @@ const MenuComponent: React.FC<
   };
   return (
     <Box className={classes.root}>
-      <FormControl error={error} component="fieldset">
+      <FormControl error={Boolean(errors[id])} component="fieldset">
         <Typography className={classes.textAligned} component="legend" variant="h6">
           {translations.label}
         </Typography>
@@ -73,13 +76,11 @@ const MenuComponent: React.FC<
             }
             control={
               <Checkbox
-                // value={(thisComponentState[index] as unknown) as string}
                 color="primary"
-                inputRef={register({ validate: restrictionsCheck })}
-                defaultChecked={false}
+                inputRef={register(index === 0 && { validate: restrictionsCheck })}
+                defaultChecked={defaultValues[index]}
                 name={`${id}[${index}]`}
-                // checked={thisComponentState[index]}
-                // onChange={() => handleChange(index)}
+                onChange={() => trigger(`${id}[0]`)}
               />
             }
             label={`${name} - ${priceDisplay(currency, addPrice || 0, translations.language)}`}

@@ -1,18 +1,7 @@
-import { Currency, ItemOptionChoiceInput, Language } from "../../API";
-import { TStore } from "../../store/types";
+import { ItemOptionChoiceInput } from "../../API";
+import { TCartItem, TStore } from "../../store/types";
 import { TMenuComponentTranslated, TMenuItemTranslated } from "../../types";
 import { TComponentChoice } from "./components/ItemPopup";
-
-export const priceDisplay = (currency: Currency, price: number, language: Language): string => {
-  switch (currency) {
-    case Currency["USD"]:
-      return `$ ${price}`;
-    case Currency["KRW"]:
-      return language === Language["ko"] ? `${price}원` : `$₩ {price}`;
-    default:
-      return `${price} ${currency}`;
-  }
-};
 
 export const prepareItemToAddToCart = (
   foundComps: TMenuComponentTranslated[],
@@ -51,4 +40,19 @@ export const prepareItemToAddToCart = (
     options,
   };
   return preparedItem;
+};
+
+export const getRadioDefaultValue = (
+  translations: TMenuComponentTranslated["translations"],
+  thisItemInCart: TCartItem | undefined,
+  index: number
+) => {
+  return (translations.optionChoice.findIndex(
+    (option) => option.name === thisItemInCart?.options[index].optionChoice[0].name
+  ) > -1
+    ? translations.optionChoice.findIndex(
+        (option) => option.name === thisItemInCart?.options[index].optionChoice[0].name
+      )
+    : 0
+  ).toString();
 };

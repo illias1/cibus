@@ -11,7 +11,6 @@ import CartFab from "./components/CartFab";
 import BigList from "./components/BigList";
 import LanguageSwitch from "../../components/LanguageSwitch";
 // else
-import background from "../../assets/background.png";
 import MenuFallback from "./components/MenuFallback";
 import { useParams } from "react-router-dom";
 import { TParams, TMenuItemTranslated } from "../../types";
@@ -23,9 +22,13 @@ import { useDispatch } from "react-redux";
 import { setupMenu, setFeedback, setProperty } from "../../store/actions";
 import { useTranslation } from "react-i18next";
 import { validateOpeningAndTable } from "../../utils/validateOpeningAndTable";
+import CallStuffFab from "../../components/CallStuffFab";
+import { NO_TRANSLATE } from "../../utils/_constants";
+import { findS3Image } from "../../utils/findS3Image";
 
 type IMenuScreenProps = {};
 
+export type TMenuItemTranslatedWithS3Image = TMenuItemTranslated & { s3Url?: string };
 const initialMenuItemTranslated: TMenuItemTranslated = {
   __typename: "MenuItem" as const,
   id: "",
@@ -54,17 +57,22 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const {
-    property: { address, NonUniqueName },
+    property: { address, NonUniqueName, image },
     initialized,
   } = useTypedSelector((state) => state);
   const { itemsByCategory, categories, favorites } = useTypedSelector((state) => state.menu);
   const { restaurantNameUrl, tableName } = useParams<TParams>();
-  const { loading, data } = useQuery<GetPropertyQuery, GetPropertyQueryVariables>(getProperty, {
-    name: restaurantNameUrl,
-  });
+  const { loading, data } = useQuery<GetPropertyQuery, GetPropertyQueryVariables>(
+    getProperty,
+    {
+      name: restaurantNameUrl,
+    },
+    !initialized
+  );
   React.useEffect(() => {
     console.log("data", data);
     if (data && data.getProperty && data.getProperty.menu) {
+      findS3Image(data.getProperty.image?.main || "", sets3Url);
       dispatch(
         setupMenu({
           payload: data.getProperty["menu"],
@@ -84,72 +92,66 @@ const MenuScreen: React.FC<IMenuScreenProps> = ({ ...props }) => {
       );
     }
   }, [data]);
-
   const [popupOpen, setpopupOpen] = React.useState<boolean>(false);
   const handleClose = () => {
     setpopupOpen(false);
   };
-  const [item, setitem] = React.useState<TMenuItemTranslated>(initialMenuItemTranslated);
-  const handleMenuItemClick = (item: TMenuItemTranslated) => (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    setpopupOpen(true);
-    setitem(item);
-  };
+  const [item, setitem] = React.useState<TMenuItemTranslatedWithS3Image>(initialMenuItemTranslated);
+  const [s3Url, sets3Url] = React.useState<string>("");
+
   return (
     <>
       <ItemPopup open={popupOpen} handleClose={handleClose} item={item} />
 
       <CartFab restaurantNameUrl={restaurantNameUrl} tableName={tableName} />
+      <CallStuffFab restaurantNameUrl={restaurantNameUrl} tableName={tableName} />
       <LanguageSwitch />
       {loading ? (
         <MenuFallback />
       ) : (
         <>
-          <div
-            style={{
-              backgroundImage: `url(${background})`,
-              backgroundPositionY: "bottom",
-              backgroundSize: "cover",
-            }}
-            className={classes.image}
-          >
-            <Typography variant="h5" className={classes.restName}>
-              {NonUniqueName}
-            </Typography>
-            <Typography variant="h6" className={classes.restAddress}>
-              {address?.city}, {address?.exact}
-            </Typography>
-          </div>
+          {s3Url.length > 0 && (
+            <div
+              style={{
+                backgroundImage: `url(${s3Url})`,
+                backgroundPositionY: "bottom",
+                backgroundPositionX: "center",
+                backgroundSize: "cover",
+              }}
+              className={classes.image}
+            >
+              <Typography variant="h5" className={classes.restName + NO_TRANSLATE}>
+                {NonUniqueName}
+              </Typography>
+              <Typography variant="h6" className={classes.restAddress}>
+                {address?.city}, {address?.exact}
+              </Typography>
+            </div>
+          )}
           <CategoriesSlider categories={categories} />
           <Box className={classes.root}>
-            <Typography
-              gutterBottom={true}
-              id={`category-${favorites}`}
-              className={classes.title}
-              variant="h4"
-            >
-              {t("menu_chef_favorites")}
-            </Typography>
+            {favorites.length > 0 && (
+              <Typography
+                gutterBottom={true}
+                id={`category-${favorites}`}
+                className={classes.title}
+                variant="h4"
+              >
+                {t("menu_chef_favorites")}
+              </Typography>
+            )}
             <Box className={classes.horizontalParent}>
               {favorites.map((fav) => (
                 <div key={fav.id} className={classes.horizontalChild}>
-                  <MenuItem
-                    available={fav.status === MenuItemStatus.AVAILABLE}
-                    onClick={(e) => {
-                      setpopupOpen(true);
-                      setitem(fav);
-                    }}
-                    title={fav.i18n.name}
-                    ingredients={fav.i18n.description || ""}
-                    price={fav.price}
-                    img={fav.image || ""}
-                    id={fav.id}
-                  />
+                  <MenuItem item={fav} setitem={setitem} setpopupOpen={setpopupOpen} />
                 </div>
               ))}
             </Box>
-            <BigList itemsByCategory={itemsByCategory} handleMenuitemClick={handleMenuItemClick} />
+            <BigList
+              itemsByCategory={itemsByCategory}
+              setitem={setitem}
+              setpopupOpen={setpopupOpen}
+            />
           </Box>
         </>
       )}

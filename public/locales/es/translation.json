@@ -7,6 +7,7 @@
   "item_popup_currently_unavailable": "Ahorra no disponible",
   "cart_item_customize_option": "Personalizar",
   "item_popup_button_revisited": "Modificar la orden",
+  "item_popup_already_added": "Ya has anadido al carrito",
   "cart_individual_order_tab_label": "Tu orden",
   "cart_total": "Total",
   "cart_vat_included": "IVA incluido",
@@ -32,11 +33,14 @@
   "feedback_item_added_to_cart": "Añadido al carrito",
   "feedback_order_item_modified": "La Orden modificada!",
   "cart_after_order_place_message": "Confirma el pedido por favor!",
-  "powered_by": "<><p>This menu is powered by</p> <p><1>cibus.online</1></p></>",
-  "cibus_check_more_info": "ve <1><5>cibus.online</5></1> para mas information.",
+  "powered_by": "This menu is powered by <p><1>cibus.online</1></p>",
+  "cibus_check_more_info": "Need an online menu for your establishment? <1/> Check out <3><5>cibus.online</5></3> for more information.",
   "menu_comp_helper_max_number": "Choose maximum {{number}} item",
   "menu_comp_helper_max_number_plural": "Choose maximum {{number}} item(s)",
   "menu_comp_helper_exact_number": "Choose exactly {{number}} item",
   "menu_comp_helper_exact_number_plural": "Choose exactly {{number}} item(s)",
-  "input_your_name": "So lo quieres, puedes poner tu nombre ;)"
+  "input_your_name": "So lo quieres, puedes poner tu nombre ;)",
+  "call_stuff": "Llamar camarero",
+  "stuff_has_been_called": "Camarero llamado!",
+  "stuff_call_error": "Error !"
 }

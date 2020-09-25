@@ -53,8 +53,12 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
             {title}
           </Typography>
           <Box className={classes.priceQuantity}>
-            <Typography variant="body1">{price}</Typography>
-            <Typography align="right" variant="body1">
+            <Typography variant="subtitle2">{price}</Typography>
+            <Typography
+              style={{ position: "absolute", right: 0 }}
+              align="right"
+              variant="subtitle2"
+            >
               {quantity > 1 && `x${quantity}`}
             </Typography>
           </Box>
@@ -114,6 +118,9 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       padding: "10px 10px 10px 23px",
       flexGrow: 1,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
     },
     cover: {
       minWidth: 107,
@@ -147,6 +154,9 @@ const useStyles = makeStyles((theme: Theme) =>
       "-webkit-line-clamp": 2 /* numb,r of lines to show */,
       "-webkit-box-orient": "vertical",
       maxWidth: "90%",
+      minHeight: "26px",
+      lineHeight: "14px",
+      margin: "5px 0",
     },
     button: {
       textTransform: "none",
@@ -159,6 +169,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     priceQuantity: {
       minWidth: "fit-content",
+      position: "relative",
     },
   })
 );
