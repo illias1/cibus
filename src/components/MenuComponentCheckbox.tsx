@@ -9,10 +9,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import { TMenuComponentTranslated } from "../types";
-import { priceDisplay } from "../pages/Menu/utils";
 import { Currency } from "../API";
 import { useTranslation } from "react-i18next";
 import { DeepMap, FieldError } from "react-hook-form";
+import { priceDisplay } from "../utils/priceDisplay";
 
 const MenuComponent: React.FC<
   TMenuComponentTranslated & {

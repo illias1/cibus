@@ -75,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(2),
     backgroundColor: theme.palette.secondary.main,
     color: theme.palette.secondary.contrastText,
+    zIndex: 2,
   },
   popover: {
     marginTop: 35,

@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
+import CancelIcon from "@material-ui/icons/Cancel";
 import { useTranslation } from "react-i18next";
 import { StyledButton } from "../../../components/Button";
 import { useDispatch } from "react-redux";
@@ -14,13 +15,16 @@ import { useTypedSelector } from "../../../store/types";
 import { ReactComponent as Placeholder } from "../../../assets/placeholder.svg";
 import { priceDisplay } from "../../../utils/priceDisplay";
 import { Language, MenuCompType, MenuItemStatus } from "../../../API";
-import { TMenuComponentTranslated, TMenuItemTranslated } from "../../../types";
+import { TMenuComponentTranslated } from "../../../types";
 import MenuComponentRadio from "../../../components/MenuComponentRadio";
 import MenuComponentCheckBox from "../../../components/MenuComponentCheckbox";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { getRadioDefaultValue, prepareItemToAddToCart } from "../utils";
+import IconButton from "@material-ui/core/IconButton";
+import { findS3Image } from "../../../utils/findS3Image";
+import { TMenuItemTranslatedWithS3Image } from "../Menu";
 type IItemPopupProps = {
-  item: TMenuItemTranslated;
+  item: TMenuItemTranslatedWithS3Image;
   handleClose: () => void;
   open: boolean;
 };
@@ -73,7 +77,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
       }
       // TODO : SET ALREADY CHOSEN VALUES
     }
-  }, [thisItemInCart]);
+  }, [open]);
 
   React.useEffect(() => {
     return () => {
@@ -88,7 +92,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
       {item.image ? (
         <div
           style={{
-            background: `linear-gradient( rgba(256, 256, 256, 0), rgba(256, 256, 256, 1)), url(${item.image})`,
+            background: `linear-gradient( rgba(256, 256, 256, 0), rgba(256, 256, 256, 1)), url(${item.s3Url})`,
             backgroundPosition: "center",
             backgroundSize: "cover",
           }}
@@ -97,6 +101,9 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
       ) : (
         <Placeholder style={{ width: "100%", height: 200 }} />
       )}
+      <IconButton onClick={handleClose} color="secondary" className={classes.closeIcon}>
+        <CancelIcon />
+      </IconButton>
       <Container>
         <Typography variant="h5">{item.i18n.name}</Typography>
         <Typography color="textSecondary" variant="body2">
@@ -151,7 +158,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
             </React.Fragment>
           ))}
           <Box className={classes.priceZone}>
-            <Box>
+            <Box style={{ fontSize: 23, minWidth: "fit-content" }}>
               <ButtonBase
                 className={classes.mathBtn}
                 onClick={() => {
@@ -174,6 +181,11 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
           {item.status === MenuItemStatus.OUT_OF_STOCK && (
             <Typography align="center" color="error">
               {t("item_popup_currently_unavailable")}
+            </Typography>
+          )}
+          {thisItemInCart && (
+            <Typography variant="subtitle2" color="secondary" align="center">
+              {t("item_popup_already_added")}
             </Typography>
           )}
           <StyledButton
@@ -226,11 +238,12 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
     },
     mathBtn: {
-      minWidth: "18px",
-      height: "18px",
+      width: "21px",
+      height: "26px",
       border: "2px solid #929EA5",
       borderRadius: 1,
       margin: "0 10px",
+      fontSize: "large",
     },
     paragraph: {
       marginTop: theme.spacing(2),
@@ -247,6 +260,11 @@ const useStyles = makeStyles((theme: Theme) =>
     modal: {
       display: "flex",
       alignItems: "center",
+    },
+    closeIcon: {
+      position: "absolute",
+      top: "3%",
+      right: "3%",
     },
   })
 );

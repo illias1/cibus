@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../../../store/types";
 import { priceDisplay } from "../../../utils/priceDisplay";
 import { Language } from "../../../API";
+import { relative } from "path";
 
 type ITotalPriceProps = {
   price: number;
@@ -31,12 +32,12 @@ const TotalPrice: React.FC<ITotalPriceProps> = ({ price, tip = 0, subtotal }) =>
             </Typography>
           </>
         )}
-        <Typography align="right" variant="h5">
+        <Typography style={{ fontSize: 28 }} align="right" variant="h5">
           {priceDisplay(currency, price, i18n.language as Language)}
         </Typography>
         {!subtotal && (
           <Typography
-            align="right"
+            style={{ position: "absolute", right: 0 }}
             className={classes.fontFamily}
             color="textSecondary"
             variant="body1"
@@ -59,9 +60,12 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: theme.spacing(1),
       boxShadow: "0px 3px 6px #00000029",
       height: 91,
-      padding: "0 45px",
+      padding: "0 37px",
     },
-    priceArea: {},
+    priceArea: {
+      position: "relative",
+      flex: 1,
+    },
     tipInfo: {
       fontSize: 9,
       fontFamily: theme.typography.fontFamily,

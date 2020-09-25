@@ -3,16 +3,15 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { TMenuItemTranslated } from "../../../types";
 import Typography from "@material-ui/core/Typography";
 import MenuItem from "./MenuItem";
-import { MenuItemStatus } from "../../../API";
+import { TMenuItemTranslatedWithS3Image } from "../Menu";
 
 type IBigListProps = {
   itemsByCategory: Record<string, Record<string, TMenuItemTranslated>>;
-  handleMenuitemClick: (
-    item: TMenuItemTranslated
-  ) => (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  setpopupOpen: (value: React.SetStateAction<boolean>) => void;
+  setitem: (value: React.SetStateAction<TMenuItemTranslatedWithS3Image>) => void;
 };
 
-const BigList: React.FC<IBigListProps> = ({ itemsByCategory, handleMenuitemClick }) => {
+const BigList: React.FC<IBigListProps> = ({ itemsByCategory, setitem, setpopupOpen }) => {
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -28,17 +27,7 @@ const BigList: React.FC<IBigListProps> = ({ itemsByCategory, handleMenuitemClick
           </Typography>
           {Object.entries(items).map(([id, item]) => (
             <React.Fragment key={id}>
-              {item ? (
-                <MenuItem
-                  available={item.status === MenuItemStatus.AVAILABLE}
-                  onClick={handleMenuitemClick(item)}
-                  title={item.i18n.name}
-                  ingredients={item.i18n.description || ""}
-                  price={item.price}
-                  img={item.image || ""}
-                  id={item.id}
-                />
-              ) : null}
+              {item ? <MenuItem setitem={setitem} setpopupOpen={setpopupOpen} item={item} /> : null}
             </React.Fragment>
           ))}
         </React.Fragment>

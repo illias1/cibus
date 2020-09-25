@@ -4,73 +4,71 @@ import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import { Box } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import { Language } from "../../../API";
+import { Language, MenuItemStatus } from "../../../API";
 import { useTypedSelector } from "../../../store/types";
-import { priceDisplay } from "../utils";
 import { CustomTheme } from "../../../utils/customCreateTheme";
-import { Storage } from "aws-amplify";
+import { findS3Image } from "../../../utils/findS3Image";
+import { TMenuItemTranslated } from "../../../types";
+import { TMenuItemTranslatedWithS3Image } from "../Menu";
+import { priceDisplay } from "../../../utils/priceDisplay";
 
 type TItem = {
-  title: string;
-  price: number;
-  ingredients?: string;
-  id: string;
-  img: string;
-  onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined;
-  available: boolean;
+  item: TMenuItemTranslated;
+  setpopupOpen: (value: React.SetStateAction<boolean>) => void;
+  setitem: (value: React.SetStateAction<TMenuItemTranslatedWithS3Image>) => void;
 };
 
-const Item: React.FC<TItem> = ({ title, price, ingredients, onClick, img, id, available }) => {
+const Item: React.FC<TItem> = ({ item, setitem, setpopupOpen }) => {
   const classes = useStyles();
   const { i18n } = useTranslation();
   const { currency } = useTypedSelector((state) => state.property);
   React.useEffect(() => {
-    if (!img.includes("http")) {
-      Storage.get(img).then((url) => {
-        if (typeof url === "string") {
-          sets3Url(url as string);
-        }
-      });
-    }
+    findS3Image(item.image, sets3Url);
   }, []);
   const [s3Url, sets3Url] = React.useState<string>("");
   return (
     <Card
-      style={{ backgroundColor: available ? "" : "lightgray" }}
+      style={{ backgroundColor: item.status === MenuItemStatus.AVAILABLE ? "" : "lightgray" }}
       className={classes.root}
-      onClick={onClick}
+      onClick={() => {
+        setpopupOpen(true);
+        setitem({
+          ...item,
+          s3Url,
+        });
+      }}
     >
       <Box className={classes.content}>
         <Box className={classes.tileAndPrice}>
           <Typography className={classes.title} variant="h6">
-            {title}
+            {item.i18n.name}
           </Typography>
-          <Typography className={classes.price} variant="body1">
-            {priceDisplay(currency, price, i18n.language as Language)}
+          <Typography className={classes.price} variant="subtitle1">
+            {priceDisplay(currency, item.price, i18n.language as Language)}
           </Typography>
         </Box>
         <Typography className={classes.ingredients} variant="body1" color="textSecondary">
-          {ingredients}
+          {item.i18n.description}
         </Typography>
       </Box>
-      {img.includes("http") ? (
+      {item.image?.includes("http") ? (
         <img
-          id={id}
+          id={item.id}
           className={classes.cover}
-          src={img}
-          alt={title}
+          src={item.image || ""}
+          alt={item.i18n.name}
           onError={() => {
-            document.getElementById(id)!.style.display = "none";
+            document.getElementById(item.id)!.style.display = "none";
           }}
         />
       ) : s3Url ? (
         <img
-          id={id}
+          id={item.id}
           className={classes.cover}
           src={s3Url}
-          alt={title}
+          alt={item.i18n.name}
           onError={() => {
-            document.getElementById(id)!.style.display = "none";
+            document.getElementById(item.id)!.style.display = "none";
           }}
         />
       ) : (

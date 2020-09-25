@@ -4,3 +4,5 @@ export const LOCAL_STORAGE_CUSTOMER_NAME = "local_storage_customer_name";
 
 export const IMAGE_OVERLAY_COLOR = "rgba(0,0,0,0.83)";
 export const UNCATEGORIZED = "uncategorized";
+
+export const NO_TRANSLATE = " notranslate";

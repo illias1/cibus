@@ -13,6 +13,9 @@ export const getProperty = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      image {
+        main
+      }
       menuComponents {
         id
         type

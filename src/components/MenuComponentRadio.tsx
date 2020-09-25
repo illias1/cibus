@@ -3,10 +3,10 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import { FormControl, FormControlLabel, Radio, RadioGroup, Typography } from "@material-ui/core";
 import { TMenuComponentTranslated } from "../types";
-import { priceDisplay } from "../pages/Menu/utils";
 import { Currency } from "../API";
 import { TComponentChoice } from "../pages/Menu/components/ItemPopup";
 import { Controller } from "react-hook-form";
+import { priceDisplay } from "../utils/priceDisplay";
 
 const MenuComponent: React.FC<
   TMenuComponentTranslated & {

@@ -16,7 +16,6 @@ import CartTotal from "./components/TotalPrice";
 import CartItem from "./components/CartItem";
 import ConfrimationPopup from "./components/ConfrimationPopup";
 import ScrollToTop from "./components/ScrollToTop";
-import { convertNumberToPrecision } from "../../utils/numberToPrecision";
 import { mutation } from "../../utils/useMutation";
 import {
   CreateOrderMutationVariables,
@@ -58,11 +57,9 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
   } = useTypedSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
-  const priceTotal = convertNumberToPrecision(
-    cart.reduce(
-      (prev, curr): number => prev + curr.quantity * (curr.price + curr.optionsTotalPrice),
-      0
-    )
+  const priceTotal = cart.reduce(
+    (prev, curr): number => prev + curr.quantity * (curr.price + curr.optionsTotalPrice),
+    0
   );
   const { restaurantNameUrl, tableName } = useParams<TParams>();
   const { t, i18n } = useTranslation();

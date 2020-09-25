@@ -22,6 +22,9 @@ export const initialState: TStore = {
   valid: false,
   property: {
     name: "",
+    image: {
+      main: "",
+    },
     NonUniqueName: "",
     tables: [],
     open: false,
