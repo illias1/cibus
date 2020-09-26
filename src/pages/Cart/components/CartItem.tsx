@@ -76,9 +76,9 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
 
             <IconButton
               onClick={() => dispatch(removeItemFromCart(id!))}
-              className={classes.iconButton}
+              className={`${classes.iconButton} removeFromCartIconButton`}
             >
-              <DeleteOutlineIcon />
+              <DeleteOutlineIcon className="removeFromCartIconButton" id={title} />
             </IconButton>
           </Box>
         )}

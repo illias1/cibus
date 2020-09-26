@@ -12,11 +12,11 @@ export const registerDataLayerTransaction = (
     ecommerce: {
       purchase: {
         actionField: {
-          id: order.id, // Transaction ID. Required [Combination of Country, City, Name or Restaurant and Table  can be useful to understand the transaction]
-          "Country of the Restaurant": address?.country,
-          "City of the Restaurant": address?.city,
+          id: order.id, // Transaction ID. Required [Combination of Country, City, Name or Affiliation and Table  can be useful to understand the transaction]
+          CountryOfTheAffiliation: address?.country,
+          CityOfTheAffiliation: address?.city,
           affiliation: order.propertyName,
-          "Table in the Restaurant": order.tableName,
+          TableInTheAffiliation: order.tableName,
           revenue: order.priceTotal, // Total transaction value (incl. tax and shipping)
         },
         products: order.orderItem.map((item) => ({
