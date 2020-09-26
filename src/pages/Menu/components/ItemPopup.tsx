@@ -88,7 +88,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
   // ============================================================================================================================================
   // UI
   const body = (
-    <Container className={classes.root}>
+    <Container className={`${classes.root}`}>
       {item.image ? (
         <div
           style={{
@@ -189,6 +189,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
             </Typography>
           )}
           <StyledButton
+            labelClassName="addToCartButton"
             disabled={item.status === MenuItemStatus.OUT_OF_STOCK}
             className={classes.cartBtn}
             // onCLick={handleClick}
@@ -202,11 +203,12 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
   );
   return (
     <Modal
-      className={classes.modal}
+      className={`${classes.modal} menuItemPopup`}
       onClose={handleClose}
       open={open}
       aria-labelledby="item-details-popup"
       aria-describedby="area-to-see-details-and-add-to-cart"
+      id={item.id}
     >
       {body}
     </Modal>

@@ -8,6 +8,7 @@ type IButtonProps = {
   disabled?: boolean;
   className?: string;
   type?: "button" | "reset" | "submit" | undefined;
+  labelClassName?: string;
 };
 
 export const StyledButton: React.FC<IButtonProps> = ({
@@ -17,12 +18,16 @@ export const StyledButton: React.FC<IButtonProps> = ({
   disabled = false,
   className,
   type,
+  labelClassName,
 }) => {
   const classes = useStyles();
   return (
     <>
       <Button
         className={`${classes.root} ${className}`}
+        classes={{
+          label: labelClassName,
+        }}
         color={color}
         variant="contained"
         onClick={onCLick}
