@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { removeItemFromCart } from "../../../store/actions";
 import { TCartItemStatus } from "../../../store/types";
 import { IMAGE_OVERLAY_COLOR } from "../../../utils/_constants";
+import { analyticsRemoveFromCart } from "../utils";
 type TItem = {
   title: string;
   price: string;
@@ -21,7 +22,8 @@ type TItem = {
   img: string | null;
   quantity: number;
   status: TCartItemStatus;
-  id?: string;
+  id: string;
+  analyticsFn?: () => void;
 };
 
 const displayStatusOnImage = (status: TCartItemStatus): string => {
@@ -41,7 +43,16 @@ const displayStatusOnImage = (status: TCartItemStatus): string => {
   }
 };
 
-const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, status, id }) => {
+const Item: React.FC<TItem> = ({
+  title,
+  price,
+  ingredients,
+  quantity,
+  img,
+  status,
+  id,
+  analyticsFn,
+}) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -75,7 +86,11 @@ const Item: React.FC<TItem> = ({ title, price, ingredients, quantity, img, statu
             </Button>
 
             <IconButton
-              onClick={() => dispatch(removeItemFromCart(id!))}
+              style={{ zIndex: 2 }}
+              onClick={() => {
+                analyticsFn!();
+                dispatch(removeItemFromCart(id!));
+              }}
               className={`${classes.iconButton} removeFromCartIconButton`}
             >
               <DeleteOutlineIcon className="removeFromCartIconButton" id={title} />
