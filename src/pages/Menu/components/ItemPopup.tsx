@@ -19,7 +19,7 @@ import { TMenuComponentTranslated } from "../../../types";
 import MenuComponentRadio from "../../../components/MenuComponentRadio";
 import MenuComponentCheckBox from "../../../components/MenuComponentCheckbox";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { getRadioDefaultValue, prepareItemToAddToCart } from "../utils";
+import { analyticsAddToCart, getRadioDefaultValue, prepareItemToAddToCart } from "../utils";
 import IconButton from "@material-ui/core/IconButton";
 import { findS3Image } from "../../../utils/findS3Image";
 import { TMenuItemTranslatedWithS3Image } from "../Menu";
@@ -63,6 +63,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
       dispatch(updateItemAddedToCart(preparedItem));
     } else {
       dispatch(addToCart(preparedItem));
+      analyticsAddToCart(item, currency, quantity);
     }
     handleClose();
   };

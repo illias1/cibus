@@ -32,8 +32,9 @@ import { Typography } from "@material-ui/core";
 import { priceDisplay } from "../../utils/priceDisplay";
 import Footer from "../../components/Footer";
 import { LOCAL_STORAGE_CUSTOMER_NAME } from "../../utils/_constants";
-import { registerDataLayerTransaction } from "./utils";
+import { analyticsRemoveFromCart, analyticsPurchase } from "./utils";
 import CallStuffFab from "../../components/CallStuffFab";
+import { analyticsCheckout } from "../Menu/utils";
 
 type IIndividualTabProps = {};
 
@@ -139,7 +140,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
           );
           if (mutationResult.data && mutationResult.data.createOrder) {
             dispatch(addToOrders(mutationResult.data.createOrder));
-            registerDataLayerTransaction(mutationResult.data.createOrder, address);
+            analyticsPurchase(mutationResult.data.createOrder);
           } else {
             alert(JSON.stringify(mutationResult.error));
           }
@@ -149,6 +150,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
       <Box className={classes.items}>
         {cart.map((item) => (
           <CartItem
+            analyticsFn={() => analyticsRemoveFromCart(item)}
             key={item.id}
             status="ADDED_TO_CART"
             id={item.id}
@@ -170,7 +172,10 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         onCLickLeft={() => {
           history.push(`/${restaurantNameUrl}/${tableName}`);
         }}
-        onCLickRight={() => setpopupOpen(true)}
+        onCLickRight={() => {
+          analyticsCheckout(cart, 2);
+          setpopupOpen(true);
+        }}
         leftLabel="cart_add_more"
         rightLabel="cart_place_my_order"
         rightDisable={cart.length < 1 || !valid}
@@ -185,6 +190,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
             </Typography>
             {order?.orderItem.map((item, itemIndex) => (
               <CartItem
+                id={item.id}
                 key={itemIndex}
                 ingredients={null}
                 quantity={item.quantity}
