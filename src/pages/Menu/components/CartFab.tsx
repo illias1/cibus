@@ -5,6 +5,7 @@ import Fab from "@material-ui/core/Fab";
 import { useTypedSelector } from "../../../store/types";
 import { useHistory } from "react-router-dom";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
+import { analyticsCheckout } from "../utils";
 
 type ICartFabProps = {
   restaurantNameUrl: string;
@@ -12,14 +13,17 @@ type ICartFabProps = {
 };
 
 const CartFab: React.FC<ICartFabProps> = ({ restaurantNameUrl, tableName }) => {
-  const cartItemsLength = useTypedSelector((state) => state.cart.length);
+  const cartItems = useTypedSelector((state) => state.cart);
   const history = useHistory();
 
   const classes = useStyles();
   return (
-    <Badge className={classes.cartFAB} badgeContent={cartItemsLength} color="primary">
+    <Badge className={classes.cartFAB} badgeContent={cartItems.length} color="primary">
       <Fab
-        onClick={() => history.push(`/${restaurantNameUrl}/${tableName}/cart`)}
+        onClick={() => {
+          analyticsCheckout(cartItems, 1);
+          history.push(`/${restaurantNameUrl}/${tableName}/cart`);
+        }}
         color="secondary"
         aria-label="add"
       >

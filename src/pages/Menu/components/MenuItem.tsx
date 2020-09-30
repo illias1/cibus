@@ -11,6 +11,7 @@ import { findS3Image } from "../../../utils/findS3Image";
 import { TMenuItemTranslated } from "../../../types";
 import { TMenuItemTranslatedWithS3Image } from "../Menu";
 import { priceDisplay } from "../../../utils/priceDisplay";
+import { analyticsDetailView } from "../utils";
 
 type TItem = {
   item: TMenuItemTranslated;
@@ -36,6 +37,7 @@ const Item: React.FC<TItem> = ({ item, setitem, setpopupOpen }) => {
           ...item,
           s3Url,
         });
+        analyticsDetailView(item);
       }}
     >
       <Box className={classes.content}>

@@ -1,22 +1,15 @@
 import { CreateOrderMutation } from "../../API";
-import { TStore } from "../../store/types";
+import { TCartItem, TStore } from "../../store/types";
+import { enhEcommBase } from "../../utils/analytics";
 
-export const registerDataLayerTransaction = (
-  order: NonNullable<CreateOrderMutation["createOrder"]>,
-  address: TStore["property"]["address"]
-) => {
-  // @ts-ignore
-  var dataLayer = window.dataLayer || [];
-  dataLayer.push({
+export const analyticsPurchase = (order: NonNullable<CreateOrderMutation["createOrder"]>) => {
+  enhEcommBase({
     event: "transaction",
     ecommerce: {
       purchase: {
         actionField: {
           id: order.id, // Transaction ID. Required [Combination of Country, City, Name or Affiliation and Table  can be useful to understand the transaction]
-          CountryOfTheAffiliation: address?.country,
-          CityOfTheAffiliation: address?.city,
           affiliation: order.propertyName,
-          TableInTheAffiliation: order.tableName,
           revenue: order.priceTotal, // Total transaction value (incl. tax and shipping)
         },
         products: order.orderItem.map((item) => ({
@@ -26,6 +19,28 @@ export const registerDataLayerTransaction = (
           customerComment: item.customerComment,
           quantity: item.quantity,
         })),
+      },
+    },
+  });
+};
+
+export const analyticsRemoveFromCart = (product: TCartItem) => {
+  enhEcommBase({
+    event: "removeFromCart",
+    ecommerce: {
+      remove: {
+        // 'remove' actionFieldObject measures.
+        products: [
+          {
+            //  removing a product to a shopping cart.
+            id: product.id,
+            price: product.price.toString(),
+            brand: product.propertyName,
+            // 'category': 'Apparel',
+            // 'variant': 'Gray',
+            quantity: product.quantity,
+          },
+        ],
       },
     },
   });

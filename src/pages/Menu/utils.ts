@@ -1,6 +1,7 @@
 import { ItemOptionChoiceInput } from "../../API";
 import { TCartItem, TStore } from "../../store/types";
 import { TMenuComponentTranslated, TMenuItemTranslated } from "../../types";
+import { enhEcommBase } from "../../utils/analytics";
 import { TComponentChoice } from "./components/ItemPopup";
 
 export const prepareItemToAddToCart = (
@@ -55,4 +56,68 @@ export const getRadioDefaultValue = (
       )
     : 0
   ).toString();
+};
+
+export const analyticsDetailView = (product: TMenuItemTranslated) => {
+  enhEcommBase({
+    event: "productDetailView",
+    ecommerce: {
+      detail: {
+        products: [
+          {
+            id: product.id,
+            price: product.price.toString(),
+            brand: product.propertyName,
+            // 'category': product.i18n.category,
+            // 'variant': 'Gray'
+          },
+        ],
+      },
+    },
+  });
+};
+export const analyticsAddToCart = (
+  product: TMenuItemTranslated,
+  currencyCode: string,
+  quantity: number
+) => {
+  enhEcommBase({
+    event: "addToCart",
+    ecommerce: {
+      currencyCode: currencyCode,
+      add: {
+        // 'add' actionFieldObject measures.
+        products: [
+          {
+            //  adding a product to a shopping cart.
+            id: product.id,
+            price: product.price.toString(),
+            brand: product.propertyName,
+            // 'category': 'Apparel',
+            // 'variant': 'Gray',
+            quantity: quantity,
+          },
+        ],
+      },
+    },
+  });
+};
+
+export const analyticsCheckout = (cart: TCartItem[], step: number) => {
+  enhEcommBase({
+    event: "checkout",
+    ecommerce: {
+      checkout: {
+        actionField: { step: step },
+        products: cart.map((cartItem) => ({
+          id: cartItem.id,
+          price: (cartItem.price + cartItem.optionsTotalPrice).toString(),
+          brand: cartItem.propertyName,
+          // 'category': 'Apparel',
+          // 'variant': 'Gray',
+          quantity: cartItem.quantity,
+        })),
+      },
+    },
+  });
 };
