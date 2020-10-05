@@ -15,6 +15,7 @@ export const analyticsPurchase = (order: NonNullable<CreateOrderMutation["create
         products: order.orderItem.map((item) => ({
           name: item.name, // Name or ID is required.
           id: item.id,
+          brand: order.propertyName,
           price: (item.price + (item.optionsTotalPrice || 0)).toString(),
           customerComment: item.customerComment,
           quantity: item.quantity,
