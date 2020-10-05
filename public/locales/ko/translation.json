@@ -36,5 +36,13 @@
   "cibus_check_more_info": "Need an online menu for your establishment? <1/> 더 많은 정보는  <3><5>cibus.online</5></3> 에서 확인하실 수 있습니다.",
   "input_your_name": "원하시면 이름을 입력하세요 ;)",
   "stuff_has_been_called": "종업원이 곧 도착합니다 !",
-  "stuff_call_error": "오류가 있습니다 !"
+  "stuff_call_error": "오류가 있습니다 !",
+  "menu_comp_helper_exact_number": "정확히 {{number}} 개 항목 선택",
+  "menu_comp_helper_exact_number_plural": "정확히 {{number}} 개 항목 선택",
+  "menu_comp_helper_max_number": "최대 {{number}} 개 항목 선택",
+  "menu_comp_helper_max_number_plural": "최대 {{number}} 개 항목 선택",
+  "menu_comp_only_choose_max": "{{number}} 개 항목 만 선택할 수 있습니다.",
+  "menu_comp_only_choose_max_plural": "1 개 항목 만 선택할 수 있습니다.",
+  "item_popup_already_added": "이 항목은 이미 장바구니에 있습니다.",
+  "call_stuff": "콜 스태프"
 }
