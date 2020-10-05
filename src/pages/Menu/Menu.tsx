@@ -166,7 +166,7 @@ const useStyles = makeStyles((theme: Theme) =>
       borderBottomLeftRadius: theme.spacing(6),
       borderBottomRightRadius: theme.spacing(6),
       width: "100%",
-      height: "599px",
+      height: "50vh",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
