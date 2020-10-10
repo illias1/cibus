@@ -28,7 +28,7 @@ import {
 import { useQuery, typedQuery } from "../../utils/useQuery";
 import { validateOpeningAndTable } from "../../utils/validateOpeningAndTable";
 import { addToOrders, updateOrdersItemStatus, setPropertyFromCart } from "../../store/actions";
-import { Typography } from "@material-ui/core";
+import { Button, Link, Typography } from "@material-ui/core";
 import { priceDisplay } from "../../utils/priceDisplay";
 import Footer from "../../components/Footer";
 import { LOCAL_STORAGE_CUSTOMER_NAME } from "../../utils/_constants";
@@ -53,7 +53,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
     cart,
     valid,
     orders,
-    property: { address, NonUniqueName, currency },
+    property: { address, NonUniqueName, currency, info },
     initialized,
   } = useTypedSelector((state) => state);
   const dispatch = useDispatch();
@@ -180,6 +180,17 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         rightLabel="cart_place_my_order"
         rightDisable={cart.length < 1 || !valid}
       />
+
+      {info?.Facebook && (
+        <Link variant="button" href="https://www.facebook.com/GrooveCoffeeRoasters">
+          check out on facebook
+        </Link>
+      )}
+      {info?.Facebook && (
+        <Link variant="button" href="https://instagram.com/hustleitaewon">
+          check out on instagram
+        </Link>
+      )}
 
       {orders
         .filter((item) => item?.propertyName === restaurantNameUrl)

@@ -21,6 +21,7 @@ export const initialState: TStore = {
   },
   valid: false,
   property: {
+    info: null,
     name: "",
     image: {
       main: "",
