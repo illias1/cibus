@@ -1,7 +1,7 @@
 import { ItemOptionChoiceInput } from "../../API";
 import { TCartItem, TStore } from "../../store/types";
 import { TMenuComponentTranslated, TMenuItemTranslated } from "../../types";
-import { enhEcommBase } from "../../utils/analytics";
+import { dataLayerPush } from "../../utils/analytics";
 import { TComponentChoice } from "./components/ItemPopup";
 
 export const prepareItemToAddToCart = (
@@ -59,7 +59,7 @@ export const getRadioDefaultValue = (
 };
 
 export const analyticsDetailView = (product: TMenuItemTranslated) => {
-  enhEcommBase({
+  dataLayerPush({
     event: "productDetailView",
     ecommerce: {
       detail: {
@@ -81,7 +81,7 @@ export const analyticsAddToCart = (
   currencyCode: string,
   quantity: number
 ) => {
-  enhEcommBase({
+  dataLayerPush({
     event: "addToCart",
     ecommerce: {
       currencyCode: currencyCode,
@@ -104,7 +104,7 @@ export const analyticsAddToCart = (
 };
 
 export const analyticsCheckout = (cart: TCartItem[], step: number) => {
-  enhEcommBase({
+  dataLayerPush({
     event: "checkout",
     ecommerce: {
       checkout: {

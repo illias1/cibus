@@ -8,10 +8,19 @@ import { ClickAwayListener, Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { setFeedback } from "../store/actions";
+import { dataLayerPush } from "../utils/analytics";
 
 type ICallStuffFabProps = {
   restaurantNameUrl: string;
   tableName: string;
+};
+
+const analyticsCallStaff = (event: string, success: number) => {
+  dataLayerPush({
+    event,
+    // success - 1; error- 0
+    callStaffSuccess: success,
+  });
 };
 
 export const createStuffCall = /* GraphQL */ `
@@ -51,6 +60,7 @@ const CallStuffFab: React.FC<ICallStuffFabProps> = ({ restaurantNameUrl, tableNa
             duration: 1000,
           })
         );
+        analyticsCallStaff("callStaff", 1);
       } else {
         dispatch(
           setFeedback({
@@ -59,6 +69,7 @@ const CallStuffFab: React.FC<ICallStuffFabProps> = ({ restaurantNameUrl, tableNa
             duration: 3000,
           })
         );
+        analyticsCallStaff("callStaff", 0);
       }
     } else {
       setsureToCall(true);
