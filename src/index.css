@@ -17,6 +17,8 @@ h4 {
 
 html {
   scroll-behavior: smooth;
+  max-width: 500px;
+  margin: auto;
 }
 .activeCategoryClass {
   background-color: var(--color-background);
