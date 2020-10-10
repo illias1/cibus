@@ -1,9 +1,9 @@
 import { CreateOrderMutation } from "../../API";
 import { TCartItem, TStore } from "../../store/types";
-import { enhEcommBase } from "../../utils/analytics";
+import { dataLayerPush } from "../../utils/analytics";
 
 export const analyticsPurchase = (order: NonNullable<CreateOrderMutation["createOrder"]>) => {
-  enhEcommBase({
+  dataLayerPush({
     event: "transaction",
     ecommerce: {
       purchase: {
@@ -26,7 +26,7 @@ export const analyticsPurchase = (order: NonNullable<CreateOrderMutation["create
 };
 
 export const analyticsRemoveFromCart = (product: TCartItem) => {
-  enhEcommBase({
+  dataLayerPush({
     event: "removeFromCart",
     ecommerce: {
       remove: {
