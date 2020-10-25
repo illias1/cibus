@@ -35,6 +35,7 @@ import { LOCAL_STORAGE_CUSTOMER_NAME } from "../../utils/_constants";
 import { analyticsRemoveFromCart, analyticsPurchase } from "./utils";
 import CallStuffFab from "../../components/CallStuffFab";
 import { analyticsCheckout } from "../Menu/utils";
+import Social from "./components/Social";
 
 type IIndividualTabProps = {};
 
@@ -181,17 +182,6 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         rightDisable={cart.length < 1 || !valid}
       />
 
-      {info?.Facebook && (
-        <Link variant="button" href="https://www.facebook.com/GrooveCoffeeRoasters">
-          check out on facebook
-        </Link>
-      )}
-      {info?.Facebook && (
-        <Link variant="button" href="https://instagram.com/hustleitaewon">
-          check out on instagram
-        </Link>
-      )}
-
       {orders
         .filter((item) => item?.propertyName === restaurantNameUrl)
         .map((order, index) => (
@@ -227,6 +217,9 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         />
       )}
       <div style={{ height: 35 }} />
+      {(info?.Facebook !== undefined || info?.Instagram !== undefined) && (
+        <Social facebook={info.Facebook} instagram={info.Instagram} />
+      )}
       <Footer />
     </div>
   );
