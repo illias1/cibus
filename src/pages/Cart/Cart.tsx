@@ -35,6 +35,7 @@ import { LOCAL_STORAGE_CUSTOMER_NAME } from "../../utils/_constants";
 import { analyticsRemoveFromCart, analyticsPurchase } from "./utils";
 import CallStuffFab from "../../components/CallStuffFab";
 import { analyticsCheckout } from "../Menu/utils";
+import Social from "./components/Social";
 
 type IIndividualTabProps = {};
 
@@ -53,7 +54,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
     cart,
     valid,
     orders,
-    property: { address, NonUniqueName, currency },
+    property: { address, NonUniqueName, currency, info },
     initialized,
   } = useTypedSelector((state) => state);
   const dispatch = useDispatch();
@@ -97,6 +98,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
       }
     });
   }, []);
+  const atLeastOneSocialLink = info?.Facebook || info?.Instagram;
   return (
     <div>
       <ScrollToTop />
@@ -216,6 +218,11 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         />
       )}
       <div style={{ height: 35 }} />
+      {atLeastOneSocialLink !== undefined &&
+        atLeastOneSocialLink !== null &&
+        atLeastOneSocialLink?.length > 0 && (
+          <Social facebook={info?.Facebook} instagram={info?.Instagram} />
+        )}
       <Footer />
     </div>
   );

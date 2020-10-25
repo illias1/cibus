@@ -41,6 +41,10 @@ export const getPropertyForCart = /* GraphQL */ `
       image {
         main
       }
+      info {
+        Facebook
+        Instagram
+      }
       currency
       address {
         city
@@ -64,6 +68,11 @@ export type GetPropertyQueryForCart = {
       country: string | null;
       city: string | null;
       exact: string | null;
+    } | null;
+    info: {
+      __typename: "Info";
+      Facebook: string | null;
+      Instagram: string | null;
     } | null;
   };
 };

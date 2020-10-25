@@ -143,16 +143,20 @@ export const reducer = reducerWithInitialState(initialState)
     ...state,
     property,
   }))
-  .case(setProperty, (state, { address, NonUniqueName, name, currency, open, tables, image }) => ({
-    ...state,
-    property: {
-      image,
-      NonUniqueName,
-      name,
-      address,
-      currency,
-      open,
-      tables,
-    },
-    initialized: true,
-  }));
+  .case(
+    setProperty,
+    (state, { address, NonUniqueName, name, currency, open, tables, image, info }) => ({
+      ...state,
+      property: {
+        info,
+        image,
+        NonUniqueName,
+        name,
+        address,
+        currency,
+        open,
+        tables,
+      },
+      initialized: true,
+    })
+  );
