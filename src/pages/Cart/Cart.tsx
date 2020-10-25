@@ -28,7 +28,7 @@ import {
 import { useQuery, typedQuery } from "../../utils/useQuery";
 import { validateOpeningAndTable } from "../../utils/validateOpeningAndTable";
 import { addToOrders, updateOrdersItemStatus, setPropertyFromCart } from "../../store/actions";
-import { Button, Link, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { priceDisplay } from "../../utils/priceDisplay";
 import Footer from "../../components/Footer";
 import { LOCAL_STORAGE_CUSTOMER_NAME } from "../../utils/_constants";
@@ -98,6 +98,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
       }
     });
   }, []);
+  const atLeastOneSocialLink = info?.Facebook || info?.Instagram;
   return (
     <div>
       <ScrollToTop />
@@ -217,9 +218,11 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
         />
       )}
       <div style={{ height: 35 }} />
-      {(info?.Facebook !== undefined || info?.Instagram !== undefined) && (
-        <Social facebook={info.Facebook} instagram={info.Instagram} />
-      )}
+      {atLeastOneSocialLink !== undefined &&
+        atLeastOneSocialLink !== null &&
+        atLeastOneSocialLink?.length > 0 && (
+          <Social facebook={info?.Facebook} instagram={info?.Instagram} />
+        )}
       <Footer />
     </div>
   );

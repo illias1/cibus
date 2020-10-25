@@ -8,8 +8,8 @@ import Link from "@material-ui/core/Link";
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 type ISocialProps = {
-  facebook: string | null;
-  instagram: string | null;
+  facebook: string | null | undefined;
+  instagram: string | null | undefined;
 };
 
 const Social: React.FC<ISocialProps> = ({ facebook, instagram }) => {
@@ -21,7 +21,7 @@ const Social: React.FC<ISocialProps> = ({ facebook, instagram }) => {
       </Typography>
 
       <Grid spacing={4} style={{ marginBottom: 0 }} container justify="center">
-        {facebook !== null && facebook.length > 0 && (
+        {facebook !== null && facebook !== undefined && facebook.length > 0 && (
           <Grid item>
             <Link
               variant="button"
@@ -32,7 +32,7 @@ const Social: React.FC<ISocialProps> = ({ facebook, instagram }) => {
             </Link>
           </Grid>
         )}
-        {instagram !== null && instagram.length > 0 && (
+        {instagram !== null && instagram !== undefined && instagram.length > 0 && (
           <Grid item>
             <Link variant="button" target="blank" href={`https://instagram.com/${instagram}`}>
               <InstagramIcon />
