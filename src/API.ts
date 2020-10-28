@@ -306,6 +306,7 @@ export type CreatePropertyInput = {
   currency: Currency;
   address?: AddressInput | null;
   image?: PropertyImageInput | null;
+  info?: InfoInput | null;
 };
 
 export type MenuComponentInput = {
@@ -341,6 +342,11 @@ export type PropertyImageInput = {
   main?: string | null;
 };
 
+export type InfoInput = {
+  Facebook?: string | null;
+  Instagram?: string | null;
+};
+
 export type ModelPropertyConditionInput = {
   NonUniqueName?: ModelStringInput | null;
   open?: ModelBooleanInput | null;
@@ -373,6 +379,7 @@ export type UpdatePropertyInput = {
   currency?: Currency | null;
   address?: AddressInput | null;
   image?: PropertyImageInput | null;
+  info?: InfoInput | null;
 };
 
 export type DeletePropertyInput = {
@@ -678,6 +685,11 @@ export type CreateUserMutation = {
           __typename: "PropertyImage";
           main: string | null;
         } | null;
+        info: {
+          __typename: "Info";
+          Facebook: string | null;
+          Instagram: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
@@ -768,6 +780,11 @@ export type UpdateUserMutation = {
         image: {
           __typename: "PropertyImage";
           main: string | null;
+        } | null;
+        info: {
+          __typename: "Info";
+          Facebook: string | null;
+          Instagram: string | null;
         } | null;
         createdAt: string;
         updatedAt: string;
@@ -860,6 +877,11 @@ export type DeleteUserMutation = {
           __typename: "PropertyImage";
           main: string | null;
         } | null;
+        info: {
+          __typename: "Info";
+          Facebook: string | null;
+          Instagram: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
@@ -945,6 +967,11 @@ export type CreatePropertyMutation = {
     image: {
       __typename: "PropertyImage";
       main: string | null;
+    } | null;
+    info: {
+      __typename: "Info";
+      Facebook: string | null;
+      Instagram: string | null;
     } | null;
     createdAt: string;
     updatedAt: string;
@@ -1050,6 +1077,11 @@ export type UpdatePropertyMutation = {
       __typename: "PropertyImage";
       main: string | null;
     } | null;
+    info: {
+      __typename: "Info";
+      Facebook: string | null;
+      Instagram: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -1153,6 +1185,11 @@ export type DeletePropertyMutation = {
     image: {
       __typename: "PropertyImage";
       main: string | null;
+    } | null;
+    info: {
+      __typename: "Info";
+      Facebook: string | null;
+      Instagram: string | null;
     } | null;
     createdAt: string;
     updatedAt: string;
@@ -1514,6 +1551,11 @@ export type GetUserQuery = {
           __typename: "PropertyImage";
           main: string | null;
         } | null;
+        info: {
+          __typename: "Info";
+          Facebook: string | null;
+          Instagram: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
@@ -1598,6 +1640,11 @@ export type ListUsersQuery = {
             __typename: "PropertyImage";
             main: string | null;
           } | null;
+          info: {
+            __typename: "Info";
+            Facebook: string | null;
+            Instagram: string | null;
+          } | null;
           createdAt: string;
           updatedAt: string;
           menu: {
@@ -1658,6 +1705,11 @@ export type GetPropertyQuery = {
     image: {
       __typename: "PropertyImage";
       main: string | null;
+    } | null;
+    info: {
+      __typename: "Info";
+      Facebook: string | null;
+      Instagram: string | null;
     } | null;
     createdAt: string;
     updatedAt: string;
@@ -1767,6 +1819,11 @@ export type ListPropertysQuery = {
       image: {
         __typename: "PropertyImage";
         main: string | null;
+      } | null;
+      info: {
+        __typename: "Info";
+        Facebook: string | null;
+        Instagram: string | null;
       } | null;
       createdAt: string;
       updatedAt: string;
@@ -2318,6 +2375,11 @@ export type OnCreateUserSubscription = {
           __typename: "PropertyImage";
           main: string | null;
         } | null;
+        info: {
+          __typename: "Info";
+          Facebook: string | null;
+          Instagram: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
@@ -2407,6 +2469,11 @@ export type OnUpdateUserSubscription = {
         image: {
           __typename: "PropertyImage";
           main: string | null;
+        } | null;
+        info: {
+          __typename: "Info";
+          Facebook: string | null;
+          Instagram: string | null;
         } | null;
         createdAt: string;
         updatedAt: string;
@@ -2498,6 +2565,11 @@ export type OnDeleteUserSubscription = {
           __typename: "PropertyImage";
           main: string | null;
         } | null;
+        info: {
+          __typename: "Info";
+          Facebook: string | null;
+          Instagram: string | null;
+        } | null;
         createdAt: string;
         updatedAt: string;
         menu: {
@@ -2582,6 +2654,11 @@ export type OnCreatePropertySubscription = {
     image: {
       __typename: "PropertyImage";
       main: string | null;
+    } | null;
+    info: {
+      __typename: "Info";
+      Facebook: string | null;
+      Instagram: string | null;
     } | null;
     createdAt: string;
     updatedAt: string;
@@ -2686,6 +2763,11 @@ export type OnUpdatePropertySubscription = {
       __typename: "PropertyImage";
       main: string | null;
     } | null;
+    info: {
+      __typename: "Info";
+      Facebook: string | null;
+      Instagram: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
     menu: {
@@ -2788,6 +2870,11 @@ export type OnDeletePropertySubscription = {
     image: {
       __typename: "PropertyImage";
       main: string | null;
+    } | null;
+    info: {
+      __typename: "Info";
+      Facebook: string | null;
+      Instagram: string | null;
     } | null;
     createdAt: string;
     updatedAt: string;

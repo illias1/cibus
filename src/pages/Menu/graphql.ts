@@ -7,12 +7,17 @@ export const getProperty = /* GraphQL */ `
       ownerId
       currency
       tables
+      info {
+        Facebook
+        Instagram
+      }
       address {
         exact
         city
       }
       createdAt
       updatedAt
+
       image {
         main
       }
