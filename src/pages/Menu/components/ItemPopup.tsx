@@ -53,11 +53,28 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
       ),
     [item]
   );
+  const [foundCompAddPrice, setfoundCompAddPrice] = React.useState<Record<string, number>>({});
+  const [price, setprice] = React.useState<number>(item.price * quantity);
+  React.useEffect(() => {
+    setprice(
+      (item.price +
+        Object.entries(foundCompAddPrice).reduce((acc, [_, compPrice]) => acc + compPrice, 0)) *
+        quantity
+    );
+  }, [foundCompAddPrice]);
+  React.useEffect(() => {
+    let initialPrices: Record<string, number> = {};
+    foundComps.forEach((comp) => {
+      initialPrices[comp.id] =
+        comp.type === MenuCompType.CHECKBOX ? 0 : comp.translations.optionChoice[0].addPrice || 0;
+    });
+    setfoundCompAddPrice(initialPrices);
+  }, [foundComps]);
   const { register, handleSubmit, errors, control, getValues, trigger } = useForm<TComponentChoice>(
     {}
   );
+  React.useEffect(() => {}, [foundCompAddPrice, foundComps]);
   const handleClick: SubmitHandler<TComponentChoice> = (data) => {
-    console.log("data from form", data);
     const preparedItem = prepareItemToAddToCart(foundComps, data, item, quantity, customerComment);
     if (thisItemInCart) {
       dispatch(updateItemAddedToCart(preparedItem));
@@ -71,7 +88,6 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
   // EFFECTS
   React.useEffect(() => {
     if (thisItemInCart) {
-      console.log("this item is already in the cart");
       setquantity(thisItemInCart.quantity);
       if (thisItemInCart.customerComment) {
         setcustomerComment(thisItemInCart.customerComment);
@@ -127,6 +143,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
               {foundComps ? (
                 type === MenuCompType.RADIO ? (
                   <MenuComponentRadio
+                    setfoundCompAddPrice={setfoundCompAddPrice}
                     defaultValue={getRadioDefaultValue(translations, thisItemInCart, index)}
                     type={type}
                     id={id}
@@ -137,6 +154,8 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
                   />
                 ) : (
                   <MenuComponentCheckBox
+                    control={control}
+                    setfoundCompAddPrice={setfoundCompAddPrice}
                     trigger={trigger}
                     errors={errors}
                     getValues={getValues}
@@ -176,7 +195,7 @@ const ItemPopup: React.FC<IItemPopupProps> = ({ item, handleClose, open }) => {
               </ButtonBase>
             </Box>
             <Typography variant="h5">
-              {priceDisplay(currency, item.price * quantity, i18n.language as Language)}
+              {priceDisplay(currency, price, i18n.language as Language)}
             </Typography>
           </Box>
           {item.status === MenuItemStatus.OUT_OF_STOCK && (
