@@ -11,7 +11,7 @@ import {
 import { TMenuComponentTranslated } from "../types";
 import { Currency } from "../API";
 import { useTranslation } from "react-i18next";
-import { DeepMap, FieldError } from "react-hook-form";
+import { DeepMap, FieldError, useWatch } from "react-hook-form";
 import { priceDisplay } from "../utils/priceDisplay";
 
 const MenuComponent: React.FC<
@@ -22,6 +22,8 @@ const MenuComponent: React.FC<
     errors: DeepMap<Record<string, number | boolean[]>, FieldError>;
     getValues: any;
     defaultValues: boolean[];
+    setfoundCompAddPrice: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+    control: any;
   }
 > = ({
   id,
@@ -33,12 +35,11 @@ const MenuComponent: React.FC<
   getValues,
   defaultValues,
   trigger,
+  setfoundCompAddPrice,
+  control,
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
-  React.useEffect(() => {
-    console.log("err", errors);
-  }, [errors]);
   const restrictionsCheck = () => {
     const checkedLength = (getValues(
       translations.optionChoice.map((_, index) => `${id}[${index}]`)
@@ -50,6 +51,23 @@ const MenuComponent: React.FC<
     }
     return true;
   };
+  const watchChoice = useWatch({
+    control,
+    name: id, // without supply name will watch the entire form, or ['firstName', 'lastName'] to watch both
+    // defaultValue: 0, // default value before the render
+  }) as boolean[];
+  React.useEffect(() => {
+    if (watchChoice) {
+      setfoundCompAddPrice((prev) => ({
+        ...prev,
+        [id]: translations?.optionChoice.reduce(
+          (acc, option, optionIndex) =>
+            watchChoice[optionIndex] ? acc + (option.addPrice || 0) : acc,
+          0
+        ),
+      }));
+    }
+  }, [watchChoice]);
   return (
     <Box className={classes.root}>
       <FormControl error={Boolean(errors[id])} component="fieldset">
