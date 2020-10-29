@@ -2,6 +2,7 @@ import { ItemOptionChoiceInput } from "../../API";
 import { TCartItem, TStore } from "../../store/types";
 import { TMenuComponentTranslated, TMenuItemTranslated } from "../../types";
 import { dataLayerPush } from "../../utils/analytics";
+import { convertNumberToPrecision } from "../../utils/numberToPrecision";
 import { TComponentChoice } from "./components/ItemPopup";
 
 export const prepareItemToAddToCart = (
@@ -29,14 +30,16 @@ export const prepareItemToAddToCart = (
     ...item,
     quantity,
     customerComment,
-    optionsTotalPrice: options.reduce(
-      (compTotal, comp) =>
-        compTotal +
-        comp.optionChoice.reduce(
-          (optionsTotal, option) => optionsTotal + (option.addPrice || 0),
-          0
-        ),
-      0
+    optionsTotalPrice: convertNumberToPrecision(
+      options.reduce(
+        (compTotal, comp) =>
+          compTotal +
+          comp.optionChoice.reduce(
+            (optionsTotal, option) => optionsTotal + (option.addPrice || 0),
+            0
+          ),
+        0
+      )
     ),
     options,
   };

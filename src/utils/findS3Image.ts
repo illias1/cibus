@@ -6,7 +6,6 @@ export const findS3Image = (
 ) => {
   if (img) {
     if (!img.includes("http")) {
-      console.log("image ", img);
       sets3Url("https://d2i2x3xkfqzpaj.cloudfront.net/public/" + img);
       // Storage.get(img)
       //   .then((url) => {
