@@ -10,14 +10,15 @@ const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 type ISocialProps = {
   facebook: string | null | undefined;
   instagram: string | null | undefined;
+  restName: string;
 };
 
-const Social: React.FC<ISocialProps> = ({ facebook, instagram }) => {
+const Social: React.FC<ISocialProps> = ({ facebook, instagram, restName }) => {
   const classes = useStyles();
   return (
     <>
       <Typography variant="subtitle1" align="center">
-        Check and share <strong> DEMO </strong> on
+        Check and share <strong> {restName.toUpperCase()} </strong> on
       </Typography>
 
       <Grid spacing={4} style={{ marginBottom: 0 }} container justify="center">

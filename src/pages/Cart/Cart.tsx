@@ -221,7 +221,7 @@ const IndividualTab: React.FC<IIndividualTabProps> = ({ ...props }) => {
       {atLeastOneSocialLink !== undefined &&
         atLeastOneSocialLink !== null &&
         atLeastOneSocialLink?.length > 0 && (
-          <Social facebook={info?.Facebook} instagram={info?.Instagram} />
+          <Social restName={NonUniqueName} facebook={info?.Facebook} instagram={info?.Instagram} />
         )}
       <Footer />
     </div>
